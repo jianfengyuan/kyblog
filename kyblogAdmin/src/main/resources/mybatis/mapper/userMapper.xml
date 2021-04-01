@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kyblog.Dao.UserDao">
+    <sql id="selectField">
+        uid, account, password, salt, header_url, qr_code_url, status
+    </sql>
+    <sql id="insertField">
+         account, password, salt, header_url, qr_code_url, status
+    </sql>
+    <select id="selectByAccount" resultType="User">
+        select <include refid="selectField"></include>
+        from user
+        where account=#{account}
+    </select>
+    
+    <insert id="insertUser" parameterType="User" keyProperty="uid">
+        insert into user(<include refid="insertField"></include>)
+        values(#{account},#{password},#{salt},#{headerUrl},#{qrCodeUrl},#{status})
+    </insert>
+
+    <update id="updatePassword">
+        update user set password=#{password} where uid=#{uid}
+    </update>
+</mapper>

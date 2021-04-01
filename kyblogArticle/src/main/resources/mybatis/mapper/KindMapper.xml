@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kyblog.Dao.KindDao">
+    <sql id="commonsValue">
+        <if test="name != null">
+            name = #{name},
+        </if>
+        <if test="articleCount != null">
+            article_count = #{articleCount},
+        </if>
+        <if test="introduce != null">
+            introduce = #{introduce},
+        </if>
+        <if test="status != null">
+            status = #{status},
+        </if>
+    </sql>
+    <sql id="selectField">
+        id, name, article_count, introduce, status
+    </sql>
+
+    <sql id="insertColumn">
+        <if test="name != null ">
+            name,
+        </if>
+        <if test="articleCount != null ">
+            article_count,
+        </if>
+        <if test="introduce != null ">
+            introduce,
+        </if>
+        <if test="status != null ">
+            status,
+        </if>
+    </sql>
+
+    <!--添加语句的值列表-->
+    <sql id="insertValue">
+        <if test="name != null ">
+            #{name},
+        </if>
+        <if test="articleCount != null ">
+            #{articleCount},
+        </if>
+        <if test="introduce != null ">
+            #{introduce},
+        </if>
+        <if test="status != null ">
+            #{status},
+        </if>
+    </sql>
+
+    <select id="queryKindById" resultType="Kind">
+        select <include refid="selectField"></include>
+        from kind
+        where id=#{id}
+    </select>
+
+    <select id="queryKindByName" resultType="Kind">
+        select <include refid="selectField"></include>
+        from kind
+        where name=#{name}
+    </select>
+
+    <select id="queryKinds" resultType="Kind">
+        select <include refid="selectField"></include>
+        where 1=1
+        <if test="status!=null">
+            and status = #{status}
+        </if>
+        <if test="orderMode==1">
+            order by name
+        </if>
+        <if test="orderMode==2">
+            order by article_count
+        </if>
+        limit #{offset}, #{limit}
+    </select>
+    
+    <insert id="insertKind" keyProperty="id">
+        insert into kind
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <include refid="insertColumn"/>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <include refid="insertValue"/>
+        </trim>
+    </insert>
+
+    <update id="updateKind">
+        update kind
+        <set>
+            <include refid="commonsValue"></include>
+        </set>
+        where id=#{id}
+    </update>
+</mapper>

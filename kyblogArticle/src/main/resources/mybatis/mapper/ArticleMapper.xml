@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kyblog.Dao.ArticleDao">
+    <sql id="selectField">
+        id, object_id, title, status, read_count, introduce, publish_time, edict_time
+    </sql>
+    <sql id="insertField">
+        title, object_id, status, read_count, introduce, publish_time, edict_time
+    </sql>
+
+
+    <!--通用对Article各个属性的值的非空判断-->
+    <sql id="commonsValue">
+        <if test="title != null and title != ''">
+            title = #{title},
+        </if>
+        <if test="content != null">
+            content = #{content},
+        </if>
+        <if test="publishTime != null">
+            publish_time = #{publishTime},
+        </if>
+        <if test="edictTime != null">
+            edict_time = #{edictTime},
+        </if>
+        <if test="status != null">
+            status = #{status},
+        </if>
+        <if test="readCount != null">
+            read_count = #{readCount},
+        </if>
+        <if test="introduce != null and introduce != ''">
+            introduce = #{introduce},
+        </if>
+    </sql>
+
+    <select id="queryById" resultType="Article">
+        select <include refid="selectField"></include>
+        from article
+        where status=1
+        and id=#{id}
+
+    </select>
+
+    <insert id="insertArticle" parameterType="Article" keyProperty="id">
+        insert into article (<include refid="insertField"></include>)
+        values (#{title},#{objectId},#{status},#{readCount},#{introduce},#{publishTime},#{edictTime})
+    </insert>
+
+    <update id="deleteById">
+        update article set status=0 where id=#{id}
+    </update>
+    
+    <select id="queryByTagId" resultType="Article">
+        select <include refid="selectField"></include>
+        from article
+        where id in 
+        ( select article_id  from article_tag where tag_id=#{tagId})
+        and status=1
+    </select>
+    
+    <select id="queryArticles" resultType="Article">
+        select <include refid="selectField"></include>
+        from article
+        where 1=1
+        <if test="status != null">
+            and status=#{status}
+        </if>
+        <if test="orderMode == 1">
+            order by read_count
+        </if>
+
+        <if test="orderMode == 2">
+            order by publish_time desc
+        </if>
+        limit #{offset}, #{limit}
+    </select>
+
+    <update id="updateArticle">
+        update article
+        <set>
+            <include refid="commonsValue"></include>
+        </set>
+        where id=#{id}
+    </update>
+</mapper>

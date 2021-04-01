@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kyblog.Dao.ArticleKindDao">
+    <sql id="commonsValue">
+        <if test="articleId != null">
+            article_id = #{articleId},
+        </if>
+        <if test="kindId != null">
+            kind_id = #{kindId},
+        </if>
+        <if test="status != null">
+            status = #{status},
+        </if>
+    </sql>
+    <sql id="selectField">
+        id, article_id, kind_id, status
+    </sql>
+
+    <sql id="insertColumn">
+        <if test="articleId != null ">
+            article_id,
+        </if>
+        <if test="kindId != null ">
+            kind_id,
+        </if>
+        <if test="status != null ">
+            status,
+        </if>
+    </sql>
+
+    <!--添加语句的值列表-->
+    <sql id="insertValue">
+        <if test="articleId != null ">
+            #{articleId},
+        </if>
+        <if test="kindId != null ">
+            #{kindId},
+        </if>
+        <if test="status != null ">
+            #{status},
+        </if>
+    </sql>
+    
+    <update id="updateArticleKind" >
+        update article_kind
+        <set>
+            <include refid="commonsValue"></include>
+        </set>
+        where id=${id}
+    </update>
+
+    <insert id="insertArticleKind" keyProperty="id">
+        insert into article_kind
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <include refid="insertColumn"/>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <include refid="insertValue"/>
+        </trim>
+    </insert>
+
+    <select id="queryArticleKindByArticleId" resultType="ArticleKind">
+        select <include refid="selectField"></include>
+        from article_kind
+        where article_id = #{ArticleId}
+    </select>
+
+    <select id="queryArticleKindByKindId" resultType="ArticleKind">
+        select <include refid="selectField"></include>
+        from article_kind
+        where kind_id = #{kindId}
+    </select>
+
+    <select id="queryArticleKinds" resultType="ArticleKind">
+        select <include refid="selectField"></include>
+        from article_kind
+        where 1=1
+        <if test="kindId!= null">
+            and kind_id=#{kindId}
+        </if>
+        <if test="status != null">
+            and status=#{status}
+        </if>
+    </select>
+</mapper>

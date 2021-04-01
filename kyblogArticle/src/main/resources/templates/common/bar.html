@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div class="left main-sidebar position-fixed" id="sidebar">
+
+    <div class="sidebar-inner leftscroll">
+
+        <div id="sidebar-menu">
+
+            <ul>
+                <li class="submenu">
+                    <a href="dashboard" th:class="${currUri == 'index' ? 'active':''}"><i class="fa fa-dashboard bigfonts"></i><span> 仪表盘 </span> </a>
+                </li>
+
+                <li class="submenu">
+                    <a href="profile" th:class="${currUri == 'profile' ? 'active':''}"><i class="fa fa-user bigfonts"></i><span> 我的资料 </span> </a>
+                </li>
+
+                <li class="submenu">
+                    <a href="articles" th:class="${currUri == 'articles' or currUri == 'new' ? 'active':''}"><i class="fa fa-book bigfonts" ></i><span> 文章 </span></a>
+                </li>
+
+                <li class="submenu">
+                    <a href="kinds" th:class="${currUri == 'kinds' ? 'active':''}"><i class="fa fa-tasks bigfonts"></i><span> 文集 </span> </a>
+                </li>
+
+                <li class="submenu">
+                    <a href="tags" th:class="${currUri == 'tags' ? 'active':''}"><i class="fa fa-tags bigfonts"></i><span> 标签 </span> </a>
+                </li>
+
+                <li class="submenu">
+                    <a href="comments" th:class="${currUri == 'comments' ? 'active':''}"><i class="fa fa-comment bigfonts"></i><span> 评论 </span> <span th:if="${unRead > 0}" class="label radius-circle bg-danger float-right">[[${unRead}]]</span> </a>
+                </li>
+
+                <li class="submenu">
+                    <a href="#"><i class="fa fa-desktop bigfonts"></i><span> 外观 </span></a>
+                    <ul class="list-unstyled">
+                        <li><a href="front" th:class="${currUri == 'front' ? 'active':''}">主页</a></li>
+                        <li><a href="menu" th:class="${currUri == 'menu' ? 'active':''}">菜单</a></li>
+                        <li><a href="link" th:class="${currUri == 'link' ? 'active':''}">友情链接</a></li>
+                    </ul>
+                </li>
+
+                <li class="submenu">
+                    <a href="statistics" th:class="${currUri == 'statistics' ? 'active':''}"><i class="fa fa-bar-chart bigfonts"></i><span> 统计 </span> </a>
+                </li>
+
+            </ul>
+
+            <div class="clearfix"></div>
+
+        </div>
+
+        <div class="clearfix"></div>
+
+    </div>
+
+</div>
+</body>
+</html>
