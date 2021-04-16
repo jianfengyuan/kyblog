@@ -26,7 +26,7 @@ public class ArticleController {
     @Autowired
     private TagService tagService;
 
-    @RequestMapping(path = "/helloworld", method = RequestMethod.GET)
+//    @RequestMapping(path = "/articles/edict", method = RequestMethod.GET)
     public String helloworld() {
 
         return "/alpha/article";
@@ -44,24 +44,25 @@ public class ArticleController {
     }
 
     @RequestMapping(path = "/articles/edit", method = RequestMethod.GET)
-
     public String getArticle(@RequestParam(value = "articleId", required = false) Long id, Model model) {
+        Article article = new Article();
+        List<String> tagNameList = new ArrayList<>();
         model.addAttribute("article", null);
         System.out.println(id);
         if (id != null) {
             Map<String, Object> map = new HashMap<>();
-            Article article = articleService.findArticleById(id);
+            article = articleService.findArticleById(id);
             List<Tag> tagList = tagService.selectTagByArticleId(id);
-            List<String> tagNameList = new ArrayList<>();
+            tagNameList = new ArrayList<>();
             for (Tag tag :
                     tagList) {
                 tagNameList.add(tag.getName());
             }
 
-            model.addAttribute("article", article);
-            model.addAttribute("tag", String.join(";", tagNameList));
             map.put("article", article);
         }
+        model.addAttribute("article", article);
+        model.addAttribute("tag", String.join(";", tagNameList));
         return "/admin/edit";
     }
 

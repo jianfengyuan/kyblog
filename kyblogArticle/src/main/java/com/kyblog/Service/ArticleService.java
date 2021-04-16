@@ -1,11 +1,7 @@
 package com.kyblog.Service;
 
-import com.kyblog.Dao.ArticleDao;
-import com.kyblog.Dao.ArticleTagDao;
-import com.kyblog.Dao.TagDao;
-import com.kyblog.entity.Article;
-import com.kyblog.entity.ArticleTag;
-import com.kyblog.entity.Tag;
+import com.kyblog.Dao.*;
+import com.kyblog.entity.*;
 import com.kyblog.utils.kyblogConstant;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +21,13 @@ public class ArticleService implements kyblogConstant {
     ArticleTagDao articleTagDao;
 
     @Autowired
+    private ArticleKindDao articleKindDao;
+
+    @Autowired
     TagDao tagDao;
+
+    @Autowired
+    KindDao kindDao;
 
     @Autowired
     MongoTemplate mongoTemplate;
@@ -40,6 +42,7 @@ public class ArticleService implements kyblogConstant {
 
     public int publish(String title, String content, String tags, String kind, String introduce, int status) {
         Article article = new Article();
+        ArticleKind articleKind;
         article.setTitle(title);
         article.setContent(content);
         article.setReadCount(0L);
@@ -49,14 +52,18 @@ public class ArticleService implements kyblogConstant {
         }
         article.setIntroduce(introduce);
         article.setStatus(status);
-//        if (kind != null) {
-//            article.setKind(kind);
-//        }
+
         article.setPublishTime(new Date());
         article.setEdictTime(new Date());
         article = mongoTemplate.insert(article);
         System.out.println(article);
         insertArticle(article);
+        if (kind != null) {
+            articleKind = new ArticleKind();
+            Kind k = kindDao.queryKindByName(kind);
+            articleKind.setKindId(k.getId());
+            articleKind.setArticleId(article.getId());
+        }
 //        System.out.println(article);
         List<Tag> tagsList = processTags(tags);
         for (Tag tag:

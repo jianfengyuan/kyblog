@@ -10,14 +10,14 @@
 <!--    <link rel="shortcut icon" href="background/images/favicon.ico">-->
     <!-- Switchery css -->
     <!-- Bootstrap CSS -->
-    <link th:href="@{background/css/bootstrap.min.css}" rel="stylesheet" type="text/css" />
-    <link th:href="@{background/plugins/switchery/switchery.min.css}" rel="stylesheet" />
+    <link th:href="@{/background/css/bootstrap.min.css}" rel="stylesheet" type="text/css" />
+    <link th:href="@{/background/plugins/switchery/switchery.min.css}" rel="stylesheet" />
     <!-- Font Awesome CSS -->
-    <link th:href="@{background/font-awesome/css/font-awesome.min.css}" rel="stylesheet" type="text/css" />
+    <link th:href="@{/background/font-awesome/css/font-awesome.min.css}" rel="stylesheet" type="text/css" />
     <!-- Custom CSS -->
-    <link th:href="@{background/css/style.css}" rel="stylesheet" type="text/css" />
+    <link th:href="@{/background/css/style.css}" rel="stylesheet" type="text/css" />
     <!-- BEGIN CSS for this page -->
-    <link rel="stylesheet" type="text/css" th:href="@{common/css/dataTables.bootstrap4.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/common/css/dataTables.bootstrap4.min.css}"/>
     <style>
         td.details-control {
             background: url('kyblogArticle/background/plugins/datatables/img/details_open.png') no-repeat center center;
@@ -31,8 +31,6 @@
 <body>
 <div th:replace="common/bar::#sidebar(currUri='articles',unRead=0)"></div>
 <div class="content-page">
-
-
     <!-- Start content -->
     <div class="content">
 
@@ -45,7 +43,7 @@
                             已发布 &ensp;
                         </h1>
                         <div class="float-left">
-                            <a href="edit" class="btn btn-sm btn-outline-success"> 写文章</a>
+                            <a th:href="@{/articles/edit}" class="btn btn-sm btn-outline-success"> 写文章</a>
                         </div>
 
                         <ol class="breadcrumb float-right">
@@ -58,9 +56,7 @@
                 </div>
             </div>
             <!-- end row -->
-
             <div class="row">
-
                 <div class="col-xs-12 col-sm-12 col-md-12">
                     <div class="card mb-3">
                         <div class="card-body">

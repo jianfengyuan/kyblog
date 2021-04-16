@@ -2,7 +2,7 @@ package com.kyblog.entity;
 
 public class ArticleKind {
     private Long articleId;
-    private Long kindId;
+    private Integer kindId;
 
     @Override
     public String toString() {
@@ -20,11 +20,11 @@ public class ArticleKind {
         this.articleId = articleId;
     }
 
-    public Long getKindId() {
+    public Integer getKindId() {
         return kindId;
     }
 
-    public void setKindId(Long kindId) {
+    public void setKindId(Integer kindId) {
         this.kindId = kindId;
     }
 }

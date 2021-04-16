@@ -64,8 +64,18 @@
         where name=#{name}
     </select>
 
+    <select id="queryRows" resultType="int">
+        select count(*)
+        from kind
+        where 1=1
+        <if test="status!=null">
+            and status = #{status}
+        </if>
+    </select>
+
     <select id="queryKinds" resultType="Kind">
         select <include refid="selectField"></include>
+        from kind
         where 1=1
         <if test="status!=null">
             and status = #{status}

@@ -11,12 +11,10 @@ import java.util.List;
 @Service
 public class KindService {
     @Autowired
-    private ArticleKindDao articleKindDao;
-    @Autowired
     private KindDao kindDao;
 
-    public List<Kind> selectKinds(Integer status, Integer orderMode) {
-        return kindDao.queryKinds(status, orderMode);
+    public List<Kind> selectKinds(Integer status, Integer orderMode, Integer offset, Integer limit) {
+        return kindDao.queryKinds(status, orderMode, offset, limit);
     }
 
     public int updateKind(Integer id, String name, String introduce, Integer articleCount, Integer status) {
@@ -46,5 +44,9 @@ public class KindService {
             kind.setIntroduce(introduce);
         }
         return kindDao.insertKind(kind);
+    }
+
+    public int selectRows(Integer status) {
+        return kindDao.queryRows(status);
     }
 }

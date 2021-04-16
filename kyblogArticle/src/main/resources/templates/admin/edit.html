@@ -4,10 +4,10 @@
     <meta charset="utf-8" />
     <title>Simple example - Editor.md examples</title>
 
-    <link rel="stylesheet" th:href="@{background/editormd/css/style.css}" />
-    <link rel="stylesheet" th:href="@{background/editormd/css/editormd.css}" />
-    <link rel="stylesheet" th:href="@{background/font-awesome/css/font-awesome.min.css}" />
-    <link rel="stylesheet" th:href="@{common/tagsinput/jquery-tagsinput.min.css}">
+    <link rel="stylesheet" th:href="@{/background/editormd/css/style.css}" />
+    <link rel="stylesheet" th:href="@{/background/editormd/css/editormd.css}" />
+    <link rel="stylesheet" th:href="@{/background/font-awesome/css/font-awesome.min.css}" />
+    <link rel="stylesheet" th:href="@{/common/tagsinput/jquery-tagsinput.min.css}">
     <link rel="shortcut icon" href="https://pandao.github.io/editor.md/favicon.ico" type="image/x-icon" />
 </head>
 <body>
@@ -108,13 +108,13 @@
     <!--    <button class="btn btn-primary btn-sm" onclick="draftPublish()"><i class="fa fa-save"></i> 保存</button>-->
 </div>
 
-<script type="text/javascript" th:src="@{background/js/jquery-3.6.0.min.js}"></script>
-<script type="text/javascript" th:src="@{common/js/bootstrap.min.js}"></script>
-<script type="text/javascript" th:src="@{common/tagsinput/jquery.color.plus-names.min.js}"></script>
-<script type="text/javascript" th:src="@{common/tagsinput/jquery-tagsinput.min.js}"></script>
-<script type="text/javascript" th:src="@{background/editormd/js/editormd.min.js}"></script>
-<script type="text/javascript" th:src="@{background/js/detect.js}"></script>
-<script type="text/javascript" th:src="@{background/js/fastclick.js}"></script>
+<script type="text/javascript" th:src="@{/background/js/jquery-3.6.0.min.js}"></script>
+<script type="text/javascript" th:src="@{/common/js/bootstrap.min.js}"></script>
+<script type="text/javascript" th:src="@{/common/tagsinput/jquery.color.plus-names.min.js}"></script>
+<script type="text/javascript" th:src="@{/common/tagsinput/jquery-tagsinput.min.js}"></script>
+<script type="text/javascript" th:src="@{/background/editormd/js/editormd.min.js}"></script>
+<script type="text/javascript" th:src="@{/background/js/detect.js}"></script>
+<script type="text/javascript" th:src="@{/background/js/fastclick.js}"></script>
 <script>
     var editor;
     $(function () {
@@ -189,7 +189,7 @@
         });
     });
 </script>
-<script type="text/javascript" th:src="@{common/js/article.js}"></script>
+<script type="text/javascript" th:src="@{/common/js/article.js}"></script>
 <script>
     $(function () {
         $('[data-role="tags-input"]').tagsInput();
