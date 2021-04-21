@@ -32,8 +32,9 @@ public class ArticleService implements kyblogConstant {
     @Autowired
     MongoTemplate mongoTemplate;
 
-    public Article findById(Long id) {
-        return articleDao.queryById(id);
+    @Deprecated
+    public Article findById(Long id, Integer status) {
+        return articleDao.queryById(id, status);
     }
 
     public int insertArticle(Article article) {
@@ -63,8 +64,8 @@ public class ArticleService implements kyblogConstant {
             Kind k = kindDao.queryKindByName(kind);
             articleKind.setKindId(k.getId());
             articleKind.setArticleId(article.getId());
+            articleKindDao.insertArticleKind(articleKind);
         }
-//        System.out.println(article);
         List<Tag> tagsList = processTags(tags);
         for (Tag tag:
                 tagsList) {
@@ -76,7 +77,8 @@ public class ArticleService implements kyblogConstant {
             }else{
                 tag = temp;
                 tag.setArticleCount(tag.getArticleCount()+1);
-                tagDao.updateReadCount(tag.getId());
+                tagDao.updateTag(tag);
+//                tagDao.updateReadCount(tag.getId());
             }
             ArticleTag articleTag = new ArticleTag();
             articleTag.setTagId(tag.getId());
@@ -89,39 +91,90 @@ public class ArticleService implements kyblogConstant {
         return 1;
     }
 
-    public int updateArticle(Long articleId, String title, String content, String tags, String kind, String introduce) {
-        Article article = articleDao.queryById(articleId);
+    public int updateArticle(Long articleId, String title, String content, String tags, String kind, String introduce,
+                             Integer status) {
+        Article article = articleDao.queryById(articleId,null);
         List<Tag> newTagList = processTags(tags);
         List<Tag> oldTagList = tagDao.queryByArticleId(articleId);
         Set<Long> articleTagSet = new HashSet<>();
+        Kind k;
+        ArticleKind ak;
         for (Tag tag:
                 newTagList) {
             articleTagSet.add(tag.getId());
         }
+        // 先把原本的文章种类查询出来
+        // 先删再加新的种类, 分类有可能相同, 有可能不同
+        ak = articleKindDao.queryArticleKindByArticleId(article.getId());
+        if (ak != null) {
+            k = kindDao.queryKindById(ak.getKindId());
+            ak.setStatus(KIND_STATUS_DELETED);
+            articleKindDao.updateArticleKind(ak);
+            k.setArticleCount(k.getArticleCount() - 1);
+            kindDao.updateKind(k);
+        }
+        if (kind != null) {
+            k = kindDao.queryKindByName(kind);
+            k.setArticleCount(k.getArticleCount()+1);
+            kindDao.updateKind(k);
+            System.out.println(k);
+            ak = articleKindDao.queryArticleKindByArticleIdAndKindID(
+                    article.getId(), k.getId(),ARTICLE_KIND_STATUS_DELETED);
+            if (ak != null) {
+                ak.setStatus(ARTICLE_KIND_STATUS_ACTIVE);
+                articleKindDao.updateArticleKind(ak);
+            } else {
+                ArticleKind articleKind = new ArticleKind();
+                articleKind.setStatus(ARTICLE_KIND_STATUS_ACTIVE);
+                articleKind.setArticleId(article.getId());
+                articleKind.setKindId(k.getId());
+                articleKindDao.insertArticleKind(articleKind);
+            }
+
+        }
         article.setTitle(title);
         article.setContent(content);
-//        article.setKind(kind);
+        article.setStatus(status);
         article.setIntroduce(introduce);
         article.setEdictTime(new Date());
         articleDao.updateArticle(article);
         for (Tag tag:
+                oldTagList) {
+            ArticleTag articleTag = articleTagDao.queryByTagIdAndArticleId(tag.getId(), articleId, ARTICLE_TAG_STATUS_ACTIVE);
+            tag.setArticleCount(tag.getArticleCount()-1);
+            articleTag.setStatus(ARTICLE_TAG_STATUS_DELETED);
+            articleTagDao.updateArticleTag(articleTag);
+            tagDao.updateTag(tag);
+        }
+
+        for (Tag tag:
                 newTagList) {
-            if (tagDao.queryByName(tag.getName())==null) {
+            Tag tempTag = tagDao.queryByName(tag.getName());
+            if (tempTag == null) {
+                tag.setArticleCount(tag.getArticleCount()+1);
                 tagDao.insertTag(tag);
                 ArticleTag articleTag = new ArticleTag();
                 articleTag.setArticleId(articleId);
                 articleTag.setTagId(tag.getId());
-                articleTag.setStatus(1);
+                articleTag.setStatus(ARTICLE_TAG_STATUS_ACTIVE);
                 articleTagDao.insertArticleTag(articleTag);
+            } else {
+                ArticleTag articleTag = articleTagDao.queryByTagIdAndArticleId(tempTag.getId(), articleId, null);
+                if (articleTag == null) {
+                    articleTag = new ArticleTag();
+                    articleTag.setStatus(ARTICLE_TAG_STATUS_ACTIVE);
+                    articleTag.setArticleId(articleId);
+                    articleTag.setTagId(tempTag.getId());
+                    articleTagDao.insertArticleTag(articleTag);
+                } else if (articleTag.getStatus() == ARTICLE_TAG_STATUS_DELETED) {
+                    articleTag.setStatus(ARTICLE_TAG_STATUS_ACTIVE);
+                    tempTag.setArticleCount(tempTag.getArticleCount() + 1);
+                    articleTagDao.updateArticleTag(articleTag);
+                    tagDao.updateTag(tempTag);
+                }
             }
         }
-        for (Tag tag:
-                oldTagList) {
-            if (!articleTagSet.contains(tag.getId())) {
-                ArticleTag articleTag = articleTagDao.queryByTagIdAndArticleId(tag.getId(), articleId);
-                articleTagDao.updateStatus(articleTag.getId(), 0);
-            }
-        }
+
         return 1;
     }
 
@@ -136,7 +189,8 @@ public class ArticleService implements kyblogConstant {
             if(!"".equals(tag)) {
                 Tag temp = new Tag();
                 temp.setName(tag);
-                temp.setStatus(1);
+                temp.setStatus(TAG_STATUS_ACTIVE);
+                temp.setArticleCount(0);
                 tagList.add(temp);
             }
         }
@@ -144,7 +198,7 @@ public class ArticleService implements kyblogConstant {
     }
 
     public Article findArticleById(Long id) {
-        Article article = articleDao.queryById(id);
+        Article article = articleDao.queryById(id,null);
         if (article == null) {
             return null;
         }
@@ -158,7 +212,7 @@ public class ArticleService implements kyblogConstant {
     }
 
     public List<Article> findArticles(int offset, int limit, int orderMode) {
-        return articleDao.queryArticles(null, 1 ,offset,limit, orderMode);
+        return articleDao.queryArticles(null, ARTICLE_STATUS_ACTIVE ,offset,limit, orderMode);
     }
 
     public int deleteArticle(Long id) {

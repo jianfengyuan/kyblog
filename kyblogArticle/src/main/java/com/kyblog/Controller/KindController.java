@@ -31,8 +31,8 @@ public class KindController implements kyblogConstant {
     @RequestMapping(value = "/kindList",method = RequestMethod.GET)
     public String getKinds(Integer orderMode, Page page, Model model) {
         page.setPath("/");
-        page.setRows(kindService.selectRows(null));
-        List<Kind> kindList = kindService.selectKinds(null, orderMode, page.getOffset(), page.getLimit());
+        page.setRows(kindService.selectRows(KIND_STATUS_ACTIVE));
+        List<Kind> kindList = kindService.selectKinds(KIND_STATUS_ACTIVE, orderMode, page.getOffset(), page.getLimit());
         System.out.println(kindList);
         model.addAttribute("kinds", kindList);
         return "/admin/kinds";

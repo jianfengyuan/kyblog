@@ -21,8 +21,8 @@
     <packaging>pom</packaging>
 
     <properties>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
         <junit.version>4.1.2</junit.version>
         <lombok.version>1.18.18</lombok.version>
         <log4j.version>2.13.3</log4j.version>

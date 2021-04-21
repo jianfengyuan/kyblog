@@ -3,6 +3,7 @@ package com.kyblog.Dao;
 import com.kyblog.entity.ArticleKind;
 import com.kyblog.entity.Kind;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -14,9 +15,11 @@ public interface ArticleKindDao {
 
     ArticleKind queryArticleKindByArticleId(Long articleId);
 
+    ArticleKind queryArticleKindByArticleIdAndKindID(@Param("articleId") Long articleId, @Param("kindId")Integer kindId, @Param("status")Integer status);
+
     List<ArticleKind> queryArticleKindByKindId(Integer kindId);
 
-    int updateArticleKind(Kind kind);
+    int updateArticleKind(ArticleKind articleKind);
 
     int insertArticleKind(ArticleKind articleKind);
 }

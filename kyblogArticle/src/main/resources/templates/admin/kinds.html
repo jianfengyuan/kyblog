@@ -28,7 +28,9 @@
         }
     </style>
 </head>
-<body>
+<body class="adminbody">
+<div id="main">
+    <div th:replace="common/bar::#top"></div>
     <div th:replace="common/bar::#sidebar(currUri='kinds',unRead=0)"></div>
     <div class="content-page">
 
@@ -87,7 +89,7 @@
                                         <tr>
                                             <th style="width: 10%">ID</th>
                                             <th style="width: 15%">名称</th>
-<!--                                            <th style="width: 10%">封面图片</th>-->
+                                            <!--                                            <th style="width: 10%">封面图片</th>-->
                                             <th style="width: 35%">简介</th>
                                             <th style="width: 15%">总数</th>
                                             <th style="width: 15%">操作</th>
@@ -97,9 +99,9 @@
                                         <tr th:each="kind:${kinds}">
                                             <td th:text="${kind.id}"></td>
                                             <td th:text="${kind.name}"></td>
-<!--                                            <td>-->
-<!--                                                <img style="width: 100px;height: 50px" th:src="${kind.img}" th:if="${kind.img != null}" alt="">-->
-<!--                                            </td>-->
+                                            <!--                                            <td>-->
+                                            <!--                                                <img style="width: 100px;height: 50px" th:src="${kind.img}" th:if="${kind.img != null}" alt="">-->
+                                            <!--                                            </td>-->
                                             <td th:text="${kind.introduce}"></td>
                                             <td>
                                                 <span th:if="${kind.articleCount == null}">0</span>
@@ -128,8 +130,10 @@
         <!-- END content -->
 
     </div>
-    <script type="text/javascript" th:src="@{/background/js/jquery-3.6.0.min.js}"></script>
-    <script type="text/javascript" th:src="@{/common/js/kind.js}"></script>
-    <script type="text/javascript" th:src="@{/common/js/sweetalert.min.js}"></script>
+</div>
+
+<script type="text/javascript" th:src="@{/background/js/jquery-3.6.0.min.js}"></script>
+<script type="text/javascript" th:src="@{/common/js/kind.js}"></script>
+<script type="text/javascript" th:src="@{/common/js/sweetalert.min.js}"></script>
 </body>
 </html>

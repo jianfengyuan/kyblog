@@ -15,7 +15,7 @@ public interface ArticleDao {
 
     int deleteById(Long id);
 
-    Article queryById(Long id);
+    Article queryById(@Param("id") Long id, @Param("status") Integer status);
 
     int updateArticle(Article article);
 

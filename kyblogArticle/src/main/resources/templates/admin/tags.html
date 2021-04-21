@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>类别-[[KimYuan]]的博客</title>
+  <meta name="description" content="Free Bootstrap 4 Admin Theme | Pike Admin">
+  <!-- Favicon -->
+  <!--    <link rel="shortcut icon" href="background/images/favicon.ico">-->
+  <!-- Switchery css -->
+  <!-- Bootstrap CSS -->
+  <link th:href="@{/background/css/bootstrap.min.css}" rel="stylesheet" type="text/css" />
+  <link th:href="@{/background/plugins/switchery/switchery.min.css}" rel="stylesheet" />
+  <!-- Font Awesome CSS -->
+  <link th:href="@{/background/font-awesome/css/font-awesome.min.css}" rel="stylesheet" type="text/css" />
+  <!-- Custom CSS -->
+  <link th:href="@{/background/css/style.css}" rel="stylesheet" type="text/css" />
+  <!-- BEGIN CSS for this page -->
+  <link rel="stylesheet" type="text/css" th:href="@{/common/css/dataTables.bootstrap4.min.css}"/>
+  <style>
+    td.details-control {
+      background: url('kyblogArticle/background/plugins/datatables/img/details_open.png') no-repeat center center;
+      cursor: pointer;
+    }
+    tr.shown td.details-control {
+      background: url('kyblogArticle/background/plugins/datatables/img/details_close.png') no-repeat center center;
+    }
+  </style>
+</head>
+<body class="adminbody">
+<div id="main">
+  <div th:replace="common/bar::#top"></div>
+  <div th:replace="common/bar::#sidebar(currUri='tags',unRead=0)"></div>
+  <div class="content-page">
+
+    <!-- Start content -->
+    <div class="content">
+
+      <div class="container-fluid">
+
+<!--新建标签弹出框-->
+        <div class="modal fade" id="publishModal" tabindex="-1" role="dialog" aria-labelledby="publishModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="publishModalLabel">新建标签</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <form>
+                  <div class="form-group">
+                    <label for="recipient-name" class="col-form-label">标签名：</label>
+                    <input type="text" class="form-control" id="recipient-name" name="title">
+                  </div>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" id="publishBtn">创建</button>
+              </div>
+            </div>
+          </div>
+        </div>
+<!--编辑标签弹出框-->
+        <div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="updateModalLabel">编辑标签</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <form>
+                  <div class="form-group">
+                    <label for="tag-name" class="col-form-label">标签名：</label>
+                    <input type="text" class="form-control" id="tag-name" name="title">
+                    <input type="hidden" id="tag-id">
+                  </div>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" id="updateBtn">创建</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+<!--标签内容-->
+        <div class="row">
+          <div class="col-xl-12">
+            <div class="breadcrumb-holder">
+              <h1 class="main-title float-left">
+                <i class="fa fa-tags bigfonts"></i> 标签 &ensp;
+              </h1>
+              <div class="float-left">
+                <button type="button" class="btn btn-sm btn-outline-success" data-toggle="modal" data-target="#publishModal">新建标签</button>
+              </div>
+              <ol class="breadcrumb float-right">
+                <li class="breadcrumb-item">标签</li>
+                <li class="breadcrumb-item active">全部([[${tags.size()}]])</li>
+              </ol>
+              <div class="clearfix"></div>
+            </div>
+          </div>
+        </div>
+        <!-- end row -->
+<!--        <div class="row">-->
+<!--          <div class="col-xl-12">-->
+<!--            <div class="breadcrumb-holder">-->
+<!--              -->
+<!--              <div class="clearfix"></div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+
+        <div class="row">
+          <div class="col-xs-12 col-sm-12 col-md-12">
+            <div class="card mb-3">
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table id="example1" class="table table-bordered table-hover display" style="text-align: center">
+                    <thead>
+                    <tr>
+                      <th style="width: 10%">ID</th>
+                      <th style="width: 15%">名称</th>
+                      <th style="width: 15%">总数</th>
+                      <th style="width: 15%">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody style="font-size: 13px">
+                    <tr th:each="tag:${tags}">
+                      <td th:text="${tag.id}"></td>
+                      <td th:text="${tag.name}"></td>
+                      <td>
+                        <span th:if="${tag.articleCount == null}">0</span>
+                        <span th:text="${tag.articleCount}"></span>
+                      </td>
+                      <td>
+<!--                        <a th:href="@{tag(id=${tag.id})}" class="btn btn-sm btn-success" title="编辑"><i class="fa fa-pencil"></i></a>-->
+                        <button th:onclick="updateBtn([[${tag.id}]],[[${tag.name}]])" class="btn btn-sm btn-success" title="编辑" data-toggle="modal" data-target="#updateModal"><i class="fa fa-pencil"></i></button>
+                        <button th:onclick="deleteTag([[${tag.id}]])" class="btn btn-sm btn-danger" title="删除"><i class="fa fa-trash"></i></button>
+                      </td>
+                    </tr>
+                    </tbody>
+                    <thead>
+                    </thead>
+                  </table>
+                </div>
+
+              </div>
+            </div><!-- end card-->
+          </div>
+        </div>
+
+      </div>
+      <!-- END container-fluid -->
+
+    </div>
+    <!-- END content -->
+
+  </div>
+</div>
+
+<script type="text/javascript" th:src="@{/background/js/jquery-3.6.0.min.js}"></script>
+<script type="text/javascript" th:src="@{/common/js/tags.js}"></script>
+<script type="text/javascript" th:src="@{/common/js/sweetalert.min.js}"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" crossorigin="anonymous"></script>
+</body>
+</html>

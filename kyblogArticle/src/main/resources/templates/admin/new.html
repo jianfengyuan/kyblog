@@ -45,17 +45,14 @@
                 <div class="row">
                     <div class="col-xs-12 col-sm-12 col-md-12">
                         <div class="form-group row" style="padding: 0px 10px">
-                            <input th:value="${article.title}" type="text" class="form-control col-sm-12" id="title" autocomplete="off" placeholder="请输入文章标题">
-                            <input th:value="${article.id}" type="hidden" id="id">
-
+                            <input  type="text" class="form-control col-sm-12" id="title" autocomplete="off" placeholder="请输入文章标题">
                         </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-xs-12 col-sm-12 col-md-12">
                         <div class="form-group row" style="padding: 0px 10px">
-                            <textarea th:if="${article.introduce != null}" th:text="${article.introduce}" class="form-control col-sm-12" id="info" maxlength="100" placeholder="选填，摘要会在文章外进行显示，帮助读者快速了解内容，如不填写则默认抓取正文前54字"></textarea>
-                            <textarea th:if="${article.introduce == null}" class="form-control col-sm-12" id="info" maxlength="100" placeholder="选填，摘要会在文章外进行显示，帮助读者快速了解内容，如不填写则默认抓取正文前100字"></textarea>
+                            <textarea  class="form-control col-sm-12" id="info" maxlength="100" placeholder="选填，摘要会在文章外进行显示，帮助读者快速了解内容，如不填写则默认抓取正文前100字"></textarea>
                         </div>
                     </div>
                 </div>
@@ -63,8 +60,7 @@
                 <div class="row">
                     <div class="col-xs-12 col-sm-12 col-md-12" style="height: 100vh">
                         <div id="editormd">
-                            <textarea th:if="${article.content != null}" id="content" style="display:none;" th:text="${article.content}"></textarea>
-                            <textarea th:if="${article.content == null}" id="content" style="display:none;"></textarea>
+                            <textarea  id="content" style="display:none;"></textarea>
                         </div>
                     </div>
                 </div>
@@ -79,30 +75,26 @@
                                     <label class="col-form-label"><span style="font-weight: bold">文章标签</span>
                                         <small class="form-text text-muted text-danger">你可以使用回车生成标签</small>
                                     </label>
-                                    <input data-role='tags-input' th:if="${tag != null}" th:value="${tag}" id="tags" style="padding: 0px 10px">
-                                    <input data-role='tags-input' th:if="${tag == null}" id="tags" style="padding: 0px 10px">
+                                    <input data-role='tags-input' id="tags" style="padding: 0px 10px">
                                 </div>
                                 <div class="form-group">
                                     <label class="col-form-label"><span style="font-weight: bold">添加到文集</span>
                                         <small class="form-text text-muted text-danger">你可以将此文章添加到已有的文集中</small>
                                     </label>
                                     <select class="form-control" id="kind">
-                                        <option th:if="${article.kind == null}" value=""></option>
-                                        <option th:if="${article.kind != null}" th:value="${article.kind.name}" th:text="${article.kind.name}"></option>
-<!--                                        <option th:if="${article.kind != null}" value=""></option>-->
+                                        <option value="-"></option>
+                                        <!--                                        <option th:if="${article.kind != null}" value=""></option>-->
                                         <option th:each="kind:${kinds}" th:value="${kind.name}" th:text="${kind.name}"></option>
                                     </select>
                                 </div>
                                 <div class="form-group">
                                     当前文章状态：
-                                    <span th:if="${article.status == 2}">草稿</span>
-                                    <span th:if="${article.status == 1}">已发表</span>
-                                    <span th:if="${article.status == 0}">回收站</span>
+                                    <span>未发表</span>
                                 </div>
                             </div>
                             <div class="card-footer">
-                                <button class="btn btn-success btn-sm" onclick="updatePublish()"><i class="fa fa-recycle"></i> 更新并发表</button>
-                                <button class="btn btn-primary btn-sm" onclick="updateDraft()"><i class="fa fa-save"></i> 保存到草稿</button>
+                                <button class="btn btn-success btn-sm" onclick="publish()"><i class="fa fa-recycle"></i>发表</button>
+                                <button class="btn btn-primary btn-sm" onclick="draftPublish()"><i class="fa fa-save"></i> 保存到草稿</button>
                             </div>
                         </div><!-- end card-->
                     </div>
@@ -119,7 +111,6 @@
 <script type="text/javascript" th:src="@{/common/tagsinput/jquery-tagsinput.min.js}"></script>
 <script type="text/javascript" th:src="@{/background/editormd/js/editormd.min.js}"></script>
 <script type="text/javascript" th:src="@{/background/js/detect.js}"></script>
-<script th:src="@{/common/js/sweetalert.min.js}"></script>
 <script type="text/javascript" th:src="@{/background/js/fastclick.js}"></script>
 <script>
     var editor;
@@ -196,11 +187,10 @@
     });
 </script>
 <script type="text/javascript" th:src="@{/common/js/article.js}"></script>
+<script th:src="@{/common/js/sweetalert.min.js}"></script>
 <script>
-    $(document).ready(function () {
-        $('[data-role="tags-input"]').tagsInput({
-            allowDuplicates: false,
-            trimValue: true});
+    $(function () {
+        $('[data-role="tags-input"]').tagsInput();
     });
 </script>
 </body>

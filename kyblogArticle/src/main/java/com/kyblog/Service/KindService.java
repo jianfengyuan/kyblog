@@ -49,4 +49,8 @@ public class KindService {
     public int selectRows(Integer status) {
         return kindDao.queryRows(status);
     }
+
+    public Kind selectKind(Integer kindId) {
+        return kindDao.queryKindById(kindId);
+    }
 }

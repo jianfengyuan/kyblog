@@ -32,7 +32,7 @@
         </if>
     </sql>
 
-    <sql id="commonsValue">
+    <sql id="articleTagCommonsValue">
         <if test="articleId != null ">
             article_id = #{articleId},
         </if>
@@ -78,12 +78,22 @@
         from article_tag
         where tag_id = #{tagId}
         and article_id = #{articleId}
-        and status = 1
+        <if test="status!=null">
+            and status = #{status}
+        </if>
     </select>
 
     <update id="updateStatus">
         update article_tag
         set status = #{status}
+        where id=#{id}
+    </update>
+
+    <update id="updateArticleTag">
+        update article_tag
+        <set>
+            <include refid="articleTagCommonsValue"></include>
+        </set>
         where id=#{id}
     </update>
 </mapper>

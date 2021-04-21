@@ -7,18 +7,16 @@
     <sql id="selectField">
         id, object_id, title, status, read_count, introduce, publish_time, edict_time
     </sql>
+
     <sql id="insertField">
         title, object_id, status, read_count, introduce, publish_time, edict_time
     </sql>
 
 
     <!--通用对Article各个属性的值的非空判断-->
-    <sql id="commonsValue">
+    <sql id="articleCommonsValue">
         <if test="title != null and title != ''">
             title = #{title},
-        </if>
-        <if test="content != null">
-            content = #{content},
         </if>
         <if test="publishTime != null">
             publish_time = #{publishTime},
@@ -40,9 +38,10 @@
     <select id="queryById" resultType="Article">
         select <include refid="selectField"></include>
         from article
-        where status=1
-        and id=#{id}
-
+        where id=#{id}
+        <if test="status!=null">
+            and status=#{status}
+        </if>
     </select>
 
     <insert id="insertArticle" parameterType="Article" keyProperty="id">
@@ -82,7 +81,7 @@
     <update id="updateArticle">
         update article
         <set>
-            <include refid="commonsValue"></include>
+            <include refid="articleCommonsValue"></include>
         </set>
         where id=#{id}
     </update>

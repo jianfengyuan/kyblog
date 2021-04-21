@@ -1,8 +1,10 @@
 package com.kyblog.entity;
 
 public class ArticleKind {
+    private Long id;
     private Long articleId;
     private Integer kindId;
+    private Integer status;
 
     @Override
     public String toString() {
@@ -10,6 +12,14 @@ public class ArticleKind {
                 "articleId=" + articleId +
                 ", kindId=" + kindId +
                 '}';
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Long getArticleId() {
@@ -26,5 +36,13 @@ public class ArticleKind {
 
     public void setKindId(Integer kindId) {
         this.kindId = kindId;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 }

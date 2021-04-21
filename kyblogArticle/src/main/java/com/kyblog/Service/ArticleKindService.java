@@ -16,4 +16,11 @@ public class ArticleKindService {
         return articleKindDao.queryArticleKinds(kindId, status);
     }
 
+    public ArticleKind selectArticleKindByArticleId(Long articleId) {
+        ArticleKind articleKind = articleKindDao.queryArticleKindByArticleId(articleId);
+        return articleKind;
+    }
+
+
+
 }

@@ -86,9 +86,11 @@
         <if test="orderMode==2">
             order by article_count
         </if>
-        limit #{offset}, #{limit}
+        <if test="offset!=null">
+            limit #{offset}, #{limit}
+        </if>
     </select>
-    
+
     <insert id="insertKind" keyProperty="id">
         insert into kind
         <trim prefix="(" suffix=")" suffixOverrides=",">
