@@ -25,7 +25,7 @@ public interface TagDao {
 
     int updateStatusByName(String name, Integer status);
 
-    Tag queryByName(String name);
+    Tag queryByName(@Param("name") String name, @Param("status") Integer status);
 
     List<Tag> queryByArticleId(Long articleId);
 

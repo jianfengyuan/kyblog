@@ -39,9 +39,10 @@ public class TagController implements kyblogConstant {
         return "/admin/tags";
     }
 
-    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    @RequestMapping(value = "/deleteTag", method = RequestMethod.POST)
     @ResponseBody
     public String deleteTag(Tag tag) {
+        tagService.deleteTag(tag.getId());
         return getJsonString(200);
     }
 
@@ -49,7 +50,7 @@ public class TagController implements kyblogConstant {
     @ResponseBody
     public String updateTag(Tag tag) {
         Tag tempTag;
-        tempTag = tagService.selectTagByName(tag.getName());
+        tempTag = tagService.selectTagByName(tag.getName(),TAG_STATUS_ACTIVE);
         if (tempTag != null) {
             return getJsonString(503);
         }

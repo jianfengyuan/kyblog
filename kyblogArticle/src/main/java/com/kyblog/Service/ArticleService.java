@@ -69,13 +69,14 @@ public class ArticleService implements kyblogConstant {
         List<Tag> tagsList = processTags(tags);
         for (Tag tag:
                 tagsList) {
-            Tag temp = tagDao.queryByName(tag.getName());
+            Tag temp = tagDao.queryByName(tag.getName(),null);
             if (temp == null) {
                 tag.setArticleCount(1);
+                tag.setStatus(TAG_STATUS_ACTIVE);
                 tagDao.insertTag(tag);
-                System.out.println(tag.getId());
             }else{
                 tag = temp;
+                tag.setStatus(TAG_STATUS_ACTIVE);
                 tag.setArticleCount(tag.getArticleCount()+1);
                 tagDao.updateTag(tag);
 //                tagDao.updateReadCount(tag.getId());
@@ -149,7 +150,7 @@ public class ArticleService implements kyblogConstant {
 
         for (Tag tag:
                 newTagList) {
-            Tag tempTag = tagDao.queryByName(tag.getName());
+            Tag tempTag = tagDao.queryByName(tag.getName(),null);
             if (tempTag == null) {
                 tag.setArticleCount(tag.getArticleCount()+1);
                 tagDao.insertTag(tag);
@@ -166,10 +167,14 @@ public class ArticleService implements kyblogConstant {
                     articleTag.setArticleId(articleId);
                     articleTag.setTagId(tempTag.getId());
                     articleTagDao.insertArticleTag(articleTag);
-                } else if (articleTag.getStatus() == ARTICLE_TAG_STATUS_DELETED) {
+                    tempTag.setStatus(TAG_STATUS_ACTIVE);
+                    tempTag.setArticleCount(tempTag.getArticleCount()+1);
+                    tagDao.updateTag(tempTag);
+                } else if (articleTag.getStatus().equals(ARTICLE_TAG_STATUS_DELETED)) {
                     articleTag.setStatus(ARTICLE_TAG_STATUS_ACTIVE);
                     tempTag.setArticleCount(tempTag.getArticleCount() + 1);
                     articleTagDao.updateArticleTag(articleTag);
+                    tempTag.setStatus(TAG_STATUS_ACTIVE);
                     tagDao.updateTag(tempTag);
                 }
             }

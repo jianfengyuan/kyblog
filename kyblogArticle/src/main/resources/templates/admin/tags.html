@@ -166,10 +166,42 @@
 
   </div>
 </div>
-
 <script type="text/javascript" th:src="@{/background/js/jquery-3.6.0.min.js}"></script>
 <script type="text/javascript" th:src="@{/common/js/tags.js}"></script>
 <script type="text/javascript" th:src="@{/common/js/sweetalert.min.js}"></script>
+<script type="text/javascript" th:src="@{/background/plugins/datatables/jquery.dataTables.min.js}"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" crossorigin="anonymous"></script>
+<script>
+  $(document).ready(function() {
+    $('#example1').DataTable({
+      language: {
+        "sProcessing": "处理中...",
+        "sLengthMenu": "显示 _MENU_ 项结果",
+        "sZeroRecords": "没有匹配结果",
+        "sInfo": "显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项",
+        "sInfoEmpty": "显示第 0 至 0 项结果，共 0 项",
+        "sInfoFiltered": "(由 _MAX_ 项结果过滤)",
+        "sInfoPostFix": "",
+        "sSearch": "搜索:",
+        "sUrl": "",
+        "sEmptyTable": "表中数据为空",
+        "sLoadingRecords": "载入中...",
+        "sInfoThousands": ",",
+        "oPaginate": {
+          "sFirst": "首页",
+          "sPrevious": "上页",
+          "sNext": "下页",
+          "sLast": "末页"
+        },
+        "oAria": {
+          "sSortAscending": ": 以升序排列此列",
+          "sSortDescending": ": 以降序排列此列"
+        }
+      },
+      "aoColumnDefs": [ { "bSortable": false, "aTargets": [3] }],
+      "order": [ 0, "desc" ]
+    });
+  });
+</script>
 </body>
 </html>

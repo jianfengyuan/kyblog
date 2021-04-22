@@ -21,14 +21,19 @@ import static com.kyblog.utils.BlogUtils.getJsonString;
 public class KindController implements kyblogConstant {
     @Autowired
     private KindService kindService;
-    @RequestMapping(value = "/add", method = RequestMethod.POST)
+    @RequestMapping(value = "/addKind", method = RequestMethod.POST)
     @ResponseBody
-    public String add(String name, String introduce) {
-        kindService.insertKind(name, introduce);
-        return getJsonString(200);
+    public String add(Kind kind) {
+
+        return kindService.insertKind(kind)==1?getJsonString(200):getJsonString(501);
     }
 
-    @RequestMapping(value = "/kindList",method = RequestMethod.GET)
+//    @RequestMapping(value = "/kindList", method = RequestMethod.GET)
+//    public String getKindPage() {
+//        return "/admin/kinds";
+//    }
+
+    @RequestMapping(value = "/kindList", method = RequestMethod.GET)
     public String getKinds(Integer orderMode, Page page, Model model) {
         page.setPath("/");
         page.setRows(kindService.selectRows(KIND_STATUS_ACTIVE));
@@ -38,17 +43,23 @@ public class KindController implements kyblogConstant {
         return "/admin/kinds";
     }
 
-    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    @RequestMapping(value = "/deleteKind", method = RequestMethod.POST)
     @ResponseBody
     public String deleteKind(Kind kind) {
-        kindService.updateKind(kind.getId(), null, null, null, KIND_STATUS_DELETED);
+        if (kind.getName().equals("-")) {
+            return getJsonString(501 );
+        }
+        kindService.deleteKind(kind);
         return getJsonString(200);
     }
 
-    @RequestMapping(value = "/update", method = RequestMethod.POST)
+    @RequestMapping(value = "/updateKind", method = RequestMethod.POST)
     @ResponseBody
     public String updateKind(Kind kind) {
-        kindService.updateKind(kind.getId(), kind.getName(), kind.getIntroduce(),null, kind.getStatus());
+        if (kind.getName().equals("-")) {
+            return getJsonString(501 );
+        }
+        kindService.updateKind(kind);
         return getJsonString(200);
     }
 }

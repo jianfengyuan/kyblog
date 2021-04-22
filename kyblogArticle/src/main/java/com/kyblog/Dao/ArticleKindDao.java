@@ -15,9 +15,10 @@ public interface ArticleKindDao {
 
     ArticleKind queryArticleKindByArticleId(Long articleId);
 
-    ArticleKind queryArticleKindByArticleIdAndKindID(@Param("articleId") Long articleId, @Param("kindId")Integer kindId, @Param("status")Integer status);
+    ArticleKind queryArticleKindByArticleIdAndKindID(@Param("articleId") Long articleId,
+                                                     @Param("kindId")Integer kindId, @Param("status")Integer status);
 
-    List<ArticleKind> queryArticleKindByKindId(Integer kindId);
+    List<ArticleKind> queryArticleKindByKindId(@Param("kindId")Integer kindId, @Param("status")Integer status);
 
     int updateArticleKind(ArticleKind articleKind);
 

@@ -4,33 +4,6 @@ $(function(){
     $("#updateBtn").click(updateTag);
 });
 
-// function publish() {
-//     $("#publishModal").modal("hide");
-//     $("#hintModal").modal("show");
-//     // 獲取title 和 content
-//     var title = $("#recipient-name").val();
-//     var content = $("#message-text").val();
-//     $.post(CONTEXT_PATH + "/discuss/add",
-//         {"title": title, "content": content},
-//         function (data) {
-//             data = $.parseJSON(data);
-//             // 在提示框中顯示返回信息
-//             $("#hintBody").text(data.msg);
-//             // 顯示提示框
-//             $("#hintBody").modal("show");
-//             // 2秒後, 自動隱藏提示框
-//             setTimeout(function(){
-//                 $("#hintModal").modal("hide");
-//                 // 刷新頁面
-//                 if (data.code === 200) {
-//                     window.location.reload();
-//                 }
-//             }, 2000);
-//         }
-//
-//     );
-// }
-
 /**
  * 添加新标签
  */
@@ -109,12 +82,24 @@ function deleteTag(id) {
         icon: "warning",
         buttons: true,
         dangerMode: true,
-    })
-        .then((willDelete) => {
+    }).then((willDelete) => {
             if (willDelete) {
-                var location = window.location.href;
-                let strings = location.split("moti-blog");
-                window.location.href = strings[0]+"moti-blog/deleteTag?id="+id;
+                // var location = window.location.href;
+                // let strings = location.split("moti-blog");
+                $.ajax({
+                    type: "POST",
+                    url: CONTEXT_PATH +"/tags/deleteTag",
+                    data: {id:id},
+                    dataType: "json",
+                    success: function(data){
+                        if (data['code']== 200){
+                            swal("删除成功", "你已经成功删除了这个标签", "success");
+                            setInterval(reload, 2000);
+                        }else{
+                            swal("出错啦", "服务器发生了一个错误", "error");
+                        }
+                    }
+                });
             }
         });
 }

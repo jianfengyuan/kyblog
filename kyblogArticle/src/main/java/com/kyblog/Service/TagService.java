@@ -21,10 +21,16 @@ public class TagService implements kyblogConstant {
     ArticleTagDao articleTagDao;
 
     public int insertTag(String name) {
-        Tag tag = new Tag();
-        tag.setName(name);
-        tag.setStatus(TAG_STATUS_ACTIVE);
-        return tagDao.insertTag(tag);
+        Tag tag = tagDao.queryByName(name,null);
+        if (tag != null) {
+            tag.setStatus(TAG_STATUS_ACTIVE);
+            return tagDao.updateTag(tag);
+        } else {
+            tag = new Tag();
+            tag.setName(name);
+            tag.setStatus(TAG_STATUS_ACTIVE);
+            return tagDao.insertTag(tag);
+        }
     }
 
     public int getRows(Integer status) {
@@ -40,8 +46,8 @@ public class TagService implements kyblogConstant {
         return articleTagDao.insertArticleTag(articleTag);
     }
 
-    public Tag selectTagByName(String name) {
-        return tagDao.queryByName(name);
+    public Tag selectTagByName(String name, Integer status) {
+        return tagDao.queryByName(name, status);
     }
 
     public Tag selectTagById(Long id) {
@@ -62,6 +68,7 @@ public class TagService implements kyblogConstant {
     public int deleteTag(Long tagId) {
         Tag tag = tagDao.queryById(tagId);
         tag.setStatus(TAG_STATUS_DELETED);
+        tag.setArticleCount(0);
         List<ArticleTag> articleTagList = articleTagDao.queryByTagId(tag.getId());
         for (ArticleTag at:
              articleTagList) {

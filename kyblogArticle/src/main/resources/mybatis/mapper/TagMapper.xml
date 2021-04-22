@@ -90,7 +90,11 @@
     <select id="queryByName" resultType="Tag">
         select <include refid="selectField"></include>
         from tag
-        where name=#{name} and status=1
+        where name=#{name}
+          <if test="status!=null">
+              and status=#{status}
+          </if>
+
     </select>
 
     <select id="queryByArticleId" resultType="Tag">
