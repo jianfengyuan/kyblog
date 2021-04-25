@@ -1,6 +1,8 @@
 package com.kyblog.Dao;
 
 import com.kyblog.entity.Kind;
+import com.kyblog.entity.OrderMode;
+import com.kyblog.entity.Page;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -11,7 +13,7 @@ import java.util.List;
 @Repository
 public interface KindDao {
 
-    List<Kind> queryKinds(@Param("status")Integer status, @Param("orderMode") Integer orderMode, @Param("offset")Integer offset, @Param("limit")Integer limit);
+    List<Kind> queryKinds(@Param("status")Integer status, @Param("orderMode")OrderMode orderMode, @Param("page") Page page);
 
     int updateKind(Kind kind);
 

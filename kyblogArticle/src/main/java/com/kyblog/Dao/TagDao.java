@@ -1,6 +1,8 @@
 package com.kyblog.Dao;
 
 import com.kyblog.entity.Article;
+import com.kyblog.entity.OrderMode;
+import com.kyblog.entity.Page;
 import com.kyblog.entity.Tag;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -11,9 +13,8 @@ import java.util.List;
 @Mapper
 @Repository
 public interface TagDao {
-    List<Tag> queryTags(@Param("mode") Integer mode, @Param("status") Integer status,
-                        @Param("offset") Integer offset, @Param("limit") Integer limit,
-                        @Param("desc") Integer desc);
+    List<Tag> queryTags(@Param("status") Integer status, @Param("orderMode")OrderMode orderMode,
+                        @Param("page") Page page);
 
     int insertTag(Tag tag);
 

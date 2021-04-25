@@ -65,6 +65,7 @@
         from article_tag
         where article_id = #{articleId}
         and status = 1
+        order by tag_id
     </select>
 
     <select id="queryByTagId" resultType="ArticleTag">

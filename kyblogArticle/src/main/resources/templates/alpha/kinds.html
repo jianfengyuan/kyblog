@@ -30,8 +30,37 @@
 </head>
 <body class="adminbody">
 <div id="main">
-  <div th:replace="common/bar::#top"></div>
-  <div th:replace="common/bar::#sidebar(currUri='tags',unRead=0)"></div>
+
+  <!--编辑标签弹出框-->
+  <div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="updateModalLabel">编辑标签</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="form-group">
+              <label for="kind-name" class="col-form-label">类别名：</label>
+              <input type="text" class="form-control" id="kind-name" name="title">
+              <input type="hidden" id="kind-id">
+            </div>
+            <div class="form-group">
+              <label for="kind-introduction" class="col-form-label">描述：</label>
+              <textarea class="form-control" id="kind-introduction" rows="5" name="kind-introduction"></textarea>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+          <button type="button" class="btn btn-primary" id="updateBtn">修改</button>
+        </div>
+      </div>
+    </div>
+  </div>
   <div class="content-page">
 
     <!-- Start content -->
@@ -39,95 +68,61 @@
 
       <div class="container-fluid">
 
-<!--新建标签弹出框-->
-        <div class="modal fade" id="publishModal" tabindex="-1" role="dialog" aria-labelledby="publishModalLabel" aria-hidden="true">
-          <div class="modal-dialog modal-sm" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="publishModalLabel">新建标签</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">
-                <form>
-                  <div class="form-group">
-                    <label for="recipient-name" class="col-form-label">标签名：</label>
-                    <input type="text" class="form-control" id="recipient-name" name="title">
-                  </div>
-                </form>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-                <button type="button" class="btn btn-primary" id="publishBtn">创建</button>
-              </div>
-            </div>
-          </div>
-        </div>
-<!--编辑标签弹出框-->
-        <div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel" aria-hidden="true">
-          <div class="modal-dialog modal-sm" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="updateModalLabel">编辑标签</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">
-                <form>
-                  <div class="form-group">
-                    <label for="tag-name" class="col-form-label">标签名：</label>
-                    <input type="text" class="form-control" id="tag-name" name="title">
-                    <input type="hidden" id="tag-id">
-                  </div>
-                </form>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-                <button type="button" class="btn btn-primary" id="updateBtn">创建</button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-<!--标签内容-->
-        <div class="row">
-          <div class="col-xl-12">
-            <div class="breadcrumb-holder">
-              <h1 class="main-title float-left">
-                <i class="fa fa-tags bigfonts"></i> 标签 &ensp;
-              </h1>
-              <div class="float-left">
-                <button type="button" class="btn btn-sm btn-outline-success" data-toggle="modal" data-target="#publishModal">新建标签</button>
-              </div>
-              <ol class="breadcrumb float-right">
-                <li class="breadcrumb-item">标签</li>
-                <li class="breadcrumb-item active">全部([[${rows}]])</li>
-              </ol>
-              <div class="clearfix"></div>
-            </div>
-          </div>
-        </div>
         <!-- end row -->
 
-
         <div class="row">
-          <div class="col-xs-12 col-sm-12 col-md-12">
+          <div class="col-xs-12 col-sm-4 col-md-4">
+            <div class="card mb-3">
+              <div class="card-header">
+                <h3> 添加新文集</h3>
+              </div>
+
+              <div class="card-body">
+                <div class="form-group">
+                  <label for="name">名称</label>
+                  <input type="text" class="form-control" id="name" autocomplete="off">
+                  <small class="text-danger">注意：名称为必填项</small>
+                </div>
+                <div class="form-group">
+                  <label for="name">描述信息</label>
+                  <textarea id="info" class="form-control" style="height: 120px"></textarea>
+                </div>
+                <div class="form-group">
+                  <button type="submit" onclick="addKind()" class="btn btn-primary"><i class="fa fa-plus"></i> 添加新的文集</button>
+                </div>
+                <small class="text-danger">添加完成之后，你可以为此文集上传封面</small>
+              </div>
+            </div><!-- end card-->
+          </div>
+
+          <div class="col-xs-12 col-sm-8 col-md-8">
             <div class="card mb-3">
               <div class="card-body">
-                <div class="table-responsive">
+                <div class="table-responsive" th:fragment="data-table">
                   <table id="example1" class="table table-bordered table-hover display" style="text-align: center">
                     <thead>
                     <tr>
                       <th style="width: 10%">ID</th>
                       <th style="width: 15%">名称</th>
+                      <th style="width: 35%">简介</th>
                       <th style="width: 15%">总数</th>
                       <th style="width: 15%">操作</th>
                     </tr>
                     </thead>
                     <tbody style="font-size: 13px">
-
+                    <tr th:each="kind:${kinds}">
+                      <td th:text="${kind.id}"></td>
+                      <td th:text="${kind.name}"></td>
+                      <td th:text="${kind.introduce}"></td>
+                      <td>
+                        <span th:if="${kind.articleCount == null}">0</span>
+                        <span th:text="${kind.articleCount}"></span>
+                      </td>
+                      <td>
+                        <button th:onclick="updateBtn([[${kind.id}]],[[${kind.name}]],[[${kind.introduce}]])" class="btn btn-sm btn-success" title="编辑" data-toggle="modal" data-target="#updateModal"><i class="fa fa-pencil"></i></button>
+                        <button th:onclick="deleteKind([[${kind.id}]],[[${kind.name}]])" class="btn btn-sm btn-danger" title="删除"><i class="fa fa-trash"></i></button>
+                      </td>
+                    </tr>
                     </tbody>
                     <thead>
                     </thead>
@@ -147,10 +142,11 @@
 
   </div>
 </div>
+
 <script type="text/javascript" th:src="@{/background/js/jquery-3.6.0.min.js}"></script>
-<script type="text/javascript" th:src="@{/common/js/tags.js}"></script>
-<script type="text/javascript" th:src="@{/common/js/sweetalert.min.js}"></script>
+<script type="text/javascript" th:src="@{/common/js/kind.js}"></script>
 <script type="text/javascript" th:src="@{/background/plugins/datatables/jquery.dataTables.min.js}"></script>
+<script type="text/javascript" th:src="@{/common/js/sweetalert.min.js}"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" crossorigin="anonymous"></script>
 <script>
   $(document).ready(function() {
@@ -205,7 +201,7 @@
         }
         $.ajax({
           type: "POST",
-          url: CONTEXT_PATH + "/tags/tagData",
+          url: CONTEXT_PATH + "/kind/alphaKindData",
           cache : false,  //禁用缓存
           data: data,   //传入已封装的参数
           dataType: "json",//返回数据格式为json
@@ -217,13 +213,13 @@
               arr = $.parseJSON(data);//将json字符串转化为了一个Object对象
             }
             console.log("============数据==========")
-            console.log(arr)
-            // console.log(arr['tags'][0])
+            // console.log(data)
+            console.log(arr['kinds'][0])
             var returnData = {};
-            //returnData.draw = arr.data.pagination.pageCount;//这里直接自行返回了draw计数器,应该由后台返回，没什么卵用！
+          //returnData.draw = arr.data.pagination.pageCount;//这里直接自行返回了draw计数器,应该由后台返回，没什么卵用！
             returnData.recordsTotal = arr['rows'];//totalCount指的是总记录数
             returnData.recordsFiltered = arr['rows'];//后台不实现过滤功能,全部的记录数都需输出到前端，记录数为总数
-            returnData.data = arr['tags'];//返回汽车列表
+            returnData.data = arr['kinds'];//返回汽车列表
             // console.log("======returnData.data=======")
             // console.log(returnData.recordsTotal)
             // console.log(returnData.recordsFiltered)
@@ -237,6 +233,7 @@
       columns: [
         {"data": "id", "width": "50px", "defaultContent": ""},
         {"data": "name", "width": "120px", "defaultContent": ""},
+        {"data": "introduce", "width": "120px", "defaultContent": ""},
         {"data": "articleCount", "width": "120px", "defaultContent": ""},
         {"data": "operations", "width": "120px",
           "render": function (data, type, full) {
@@ -258,10 +255,12 @@
           }
         }
       ],
-      "aoColumnDefs": [ { "bSortable": false, "aTargets": [3] }],
+      "aoColumnDefs": [ { "bSortable": false, "aTargets": [2,4] }],
       "order": [ 0, "desc" ]
     });
   });
 </script>
 </body>
 </html>
+
+

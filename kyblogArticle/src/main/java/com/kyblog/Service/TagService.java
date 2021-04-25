@@ -4,6 +4,8 @@ import com.kyblog.Dao.ArticleDao;
 import com.kyblog.Dao.ArticleTagDao;
 import com.kyblog.Dao.TagDao;
 import com.kyblog.entity.ArticleTag;
+import com.kyblog.entity.OrderMode;
+import com.kyblog.entity.Page;
 import com.kyblog.entity.Tag;
 import com.kyblog.utils.kyblogConstant;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,9 +39,8 @@ public class TagService implements kyblogConstant {
         return tagDao.queryRows(status);
     }
 
-    public List<Tag> selectTags(Integer mode, Integer status,
-                                Integer offset, Integer limit, Integer desc) {
-        return tagDao.queryTags(mode, status, offset, limit, desc);
+    public List<Tag> selectTags(Integer status, OrderMode orderMode, Page page) {
+        return tagDao.queryTags(status,orderMode,page);
     }
 
     public int insertArticleTag(ArticleTag articleTag) {

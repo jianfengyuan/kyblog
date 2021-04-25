@@ -16,6 +16,7 @@ public interface ArticleTagDao {
 
     int updateArticleTag(ArticleTag articleTag);
 
+    @Deprecated
     List<ArticleTag> queryAll();
 
     List<ArticleTag> queryByArticleId(Long articleId);

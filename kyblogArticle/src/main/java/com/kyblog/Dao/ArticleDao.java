@@ -2,6 +2,8 @@ package com.kyblog.Dao;
 
 import com.kyblog.entity.Article;
 import com.kyblog.entity.ArticleTag;
+import com.kyblog.entity.OrderMode;
+import com.kyblog.entity.Page;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -21,7 +23,7 @@ public interface ArticleDao {
 
     List<Article> queryByTagId(Long tagId);
 
-    List<Article> queryArticles(List<Long> ids, @Param("status") int status, @Param("offset")int offset,@Param("limit") int limit, @Param("orderMode") int orderMode);
+    List<Article> queryArticles(List<Long> ids, @Param("status") int status, @Param("page") Page page, @Param("orderMode") OrderMode orderMode);
 
 
 }

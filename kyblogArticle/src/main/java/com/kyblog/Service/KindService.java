@@ -4,6 +4,8 @@ import com.kyblog.Dao.ArticleKindDao;
 import com.kyblog.Dao.KindDao;
 import com.kyblog.entity.ArticleKind;
 import com.kyblog.entity.Kind;
+import com.kyblog.entity.OrderMode;
+import com.kyblog.entity.Page;
 import com.kyblog.utils.kyblogConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,8 +19,8 @@ public class KindService implements kyblogConstant {
     @Autowired
     private ArticleKindDao articleKindDao;
 
-    public List<Kind> selectKinds(Integer status, Integer orderMode, Integer offset, Integer limit) {
-        return kindDao.queryKinds(status, orderMode, offset, limit);
+    public List<Kind> selectKinds(Integer status, OrderMode orderMode, Page page) {
+        return kindDao.queryKinds(status, orderMode, page);
     }
 
     public int updateKind(Kind kind) {
@@ -74,7 +76,7 @@ public class KindService implements kyblogConstant {
         }
     }
 
-    public int selectRows(Integer status) {
+    public int getRows(Integer status) {
         return kindDao.queryRows(status);
     }
 

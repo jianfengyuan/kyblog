@@ -80,14 +80,11 @@
         <if test="status!=null">
             and status = #{status}
         </if>
-        <if test="orderMode==1">
-            order by name
+        <if test="orderMode!=null">
+            order by ${orderMode.column} ${orderMode.dir}
         </if>
-        <if test="orderMode==2">
-            order by article_count
-        </if>
-        <if test="offset!=null">
-            limit #{offset}, #{limit}
+        <if test="page!=null">
+            limit #{page.offset}, #{page.limit}
         </if>
     </select>
 

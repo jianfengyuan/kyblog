@@ -77,7 +77,7 @@
                             </h1>
                             <ol class="breadcrumb float-right">
                                 <li class="breadcrumb-item">文集</li>
-                                <li class="breadcrumb-item active">全部([[${kinds.size()}]])</li>
+                                <li class="breadcrumb-item active">全部([[${rows}]])</li>
                             </ol>
                             <div class="clearfix"></div>
                         </div>
@@ -125,25 +125,12 @@
                                         </tr>
                                         </thead>
                                         <tbody style="font-size: 13px">
-                                        <tr th:each="kind:${kinds}">
-                                            <td th:text="${kind.id}"></td>
-                                            <td th:text="${kind.name}"></td>
-                                            <td th:text="${kind.introduce}"></td>
-                                            <td>
-                                                <span th:if="${kind.articleCount == null}">0</span>
-                                                <span th:text="${kind.articleCount}"></span>
-                                            </td>
-                                            <td>
-                                                <button th:onclick="updateBtn([[${kind.id}]],[[${kind.name}]],[[${kind.introduce}]])" class="btn btn-sm btn-success" title="编辑" data-toggle="modal" data-target="#updateModal"><i class="fa fa-pencil"></i></button>
-                                                <button th:onclick="deleteKind([[${kind.id}]],[[${kind.name}]])" class="btn btn-sm btn-danger" title="删除"><i class="fa fa-trash"></i></button>
-                                            </td>
-                                        </tr>
+
                                         </tbody>
                                         <thead>
                                         </thead>
                                     </table>
                                 </div>
-
                             </div>
                         </div><!-- end card-->
                     </div>
@@ -190,6 +177,86 @@
                     "sSortDescending": ": 以降序排列此列"
                 }
             },
+            retrieve: true,
+            paging: true,
+            ordering: true,
+            info: true,
+            autoWidth: false,
+            pageLength: 10,//每页显示10条数据
+            pagingType: "full_numbers", //分页样式：simple,simple_numbers,full,full_numbers，
+            bFilter: false, //去掉搜索框方法
+            bLengthChange: true,//也就是页面上确认是否可以进行选择一页展示多少条
+            serverSide: true, //启用服务器端分页，要进行后端分页必须的环节
+            ajax: function (data, callback, settings) {
+                //封装相应的请求参数，这里获取页大小和当前页码
+                console.log(data)
+                var pagesize = data.length;//页面显示记录条数，在页面显示每页显示多少项的时候,页大小
+                var start = data.start;//开始的记录序号
+                var page = (data.start) / data.length + 1;//当前页码
+                var order_column = data.columns[data.order[0].column].data
+                var order_dir = data.order[0].dir
+                var data = {
+                    current: page,
+                    limit: pagesize,//这里只传了当前页和页大小，如果有其他参数，可继续封装
+                    column: order_column,
+                    dir: order_dir
+                }
+                $.ajax({
+                    type: "POST",
+                    url: CONTEXT_PATH + "/kind/kindData",
+                    cache : false,  //禁用缓存
+                    data: data,   //传入已封装的参数
+                    dataType: "json",//返回数据格式为json
+                    success: function(data) {
+                        var arr = "";
+                        if ('object' == typeof data) {
+                            arr = data;
+                        } else {
+                            arr = $.parseJSON(data);//将json字符串转化为了一个Object对象
+                        }
+                        console.log("============数据==========")
+                        // console.log(data)
+                        console.log(arr['kinds'][0])
+                        var returnData = {};
+                        //returnData.draw = arr.data.pagination.pageCount;//这里直接自行返回了draw计数器,应该由后台返回，没什么卵用！
+                        returnData.recordsTotal = arr['rows'];//totalCount指的是总记录数
+                        returnData.recordsFiltered = arr['rows'];//后台不实现过滤功能,全部的记录数都需输出到前端，记录数为总数
+                        returnData.data = arr['kinds'];//返回汽车列表
+                        // console.log("======returnData.data=======")
+                        // console.log(returnData.recordsTotal)
+                        // console.log(returnData.recordsFiltered)
+                        callback(returnData);//这个别忘了！！！
+                    },
+                    error: function(XMLHttpRequest, textStatus, errorThrown) {
+                        console.log("失败")
+                    }
+                });
+            },
+            columns: [
+                {"data": "id", "width": "50px", "defaultContent": ""},
+                {"data": "name", "width": "120px", "defaultContent": ""},
+                {"data": "introduce", "width": "120px", "defaultContent": ""},
+                {"data": "articleCount", "width": "120px", "defaultContent": ""},
+                {"data": "operations", "width": "120px",
+                    "render": function (data, type, full) {
+                        var editBtn = "edit" + full.id;
+                        var deleteBtn = "delete" + full.id;
+                        $('#example1 ').undelegate('tbody #'+editBtn, 'click');
+
+                        $('#example1').on('click', 'tbody #'+editBtn, function () {
+                            console.log(full)
+                            updateBtn(full.id, full.name, full.introduce)
+                        })
+                        $('#example1 ').undelegate('tbody #'+deleteBtn, 'click');
+                        $('#example1').on('click', 'tbody #'+deleteBtn, function (full) {
+                            deleteKind(full.id, full.name)
+                        })
+
+                        return "<button type=\"button\" class=\"btn btn-sm btn-success\"" + " id=" + editBtn + " data-toggle=\"modal\" data-target=\"#updateModal\""+" >编辑</button>   " +
+                            "<button type=\"button\" class=\"btn btn-sm btn-danger\"" + " id=" + deleteBtn + " >删除</button>";
+                    }
+                }
+            ],
             "aoColumnDefs": [ { "bSortable": false, "aTargets": [2,4] }],
             "order": [ 0, "desc" ]
         });

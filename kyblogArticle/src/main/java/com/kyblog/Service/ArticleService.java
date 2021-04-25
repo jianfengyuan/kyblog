@@ -216,11 +216,12 @@ public class ArticleService implements kyblogConstant {
         return article;
     }
 
-    public List<Article> findArticles(int offset, int limit, int orderMode) {
-        return articleDao.queryArticles(null, ARTICLE_STATUS_ACTIVE ,offset,limit, orderMode);
+    public List<Article> findArticles(Page page, OrderMode orderMode) {
+        return articleDao.queryArticles(null, ARTICLE_STATUS_ACTIVE ,page, orderMode);
     }
 
-    public int deleteArticle(Long id) {
-        return articleDao.deleteById(id);
+    public int deleteArticle(Article article) {
+        article.setStatus(ARTICLE_STATUS_DELETED);
+        return articleDao.updateArticle(article);
     }
 }

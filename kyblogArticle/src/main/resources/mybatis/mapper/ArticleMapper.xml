@@ -52,15 +52,15 @@
     <update id="deleteById">
         update article set status=0 where id=#{id}
     </update>
-    
+
     <select id="queryByTagId" resultType="Article">
         select <include refid="selectField"></include>
         from article
-        where id in 
+        where id in
         ( select article_id  from article_tag where tag_id=#{tagId})
         and status=1
     </select>
-    
+
     <select id="queryArticles" resultType="Article">
         select <include refid="selectField"></include>
         from article
@@ -68,14 +68,12 @@
         <if test="status != null">
             and status=#{status}
         </if>
-        <if test="orderMode == 1">
-            order by read_count
+        <if test="orderMode!=null">
+            order by ${orderMode.column} ${orderMode.dir}
         </if>
-
-        <if test="orderMode == 2">
-            order by publish_time desc
+        <if test="page!=null">
+        limit #{page.offset}, #{page.limit}
         </if>
-        limit #{offset}, #{limit}
     </select>
 
     <update id="updateArticle">

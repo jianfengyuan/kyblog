@@ -33,7 +33,7 @@ public class ArticleController implements kyblogConstant {
 
     @RequestMapping(path = "/articles/new", method = RequestMethod.GET)
     public String newPage(Model model) {
-        List<Kind> kinds = kindService.selectKinds(KIND_STATUS_ACTIVE, 0,null,null);
+        List<Kind> kinds = kindService.selectKinds(KIND_STATUS_ACTIVE, null, null);
         model.addAttribute("kinds", kinds);
         return "/admin/new";
     }
@@ -52,7 +52,7 @@ public class ArticleController implements kyblogConstant {
     public String getArticle(@RequestParam(value = "articleId", required = false) Long id, Model model) {
         Article article = new Article();
         List<String> tagNameList = new ArrayList<>();
-        List<Kind> kinds = kindService.selectKinds(KIND_STATUS_ACTIVE, 0,null,null);
+        List<Kind> kinds = kindService.selectKinds(KIND_STATUS_ACTIVE, null,null);
         model.addAttribute("article", null);
         System.out.println(id);
         if (id != null) {
@@ -82,11 +82,11 @@ public class ArticleController implements kyblogConstant {
 
     @RequestMapping(path = "/articles", method = RequestMethod.GET)
 //    @ResponseBody
-    public String getArticles(Model model, Page page) {
+    public String getArticles(Model model, Page page, OrderMode orderMode) {
         ArticleKind articleKind;
         page.setPath("/articles");
         Map<String, Object> map = new HashMap<>();
-        List<Article> articleList = articleService.findArticles(page.getOffset(), page.getLimit(), 2);
+        List<Article> articleList = articleService.findArticles(page, null);
         for (Article article: articleList) {
             articleKind = articleKindService.selectArticleKindByArticleId(article.getId());
             if (articleKind != null) {
