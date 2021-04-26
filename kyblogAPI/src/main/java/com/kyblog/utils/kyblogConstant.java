@@ -29,4 +29,8 @@ public interface kyblogConstant {
     // COMMENT STATUS
     Integer COMMENT_DELETED = 0;
     Integer COMMENT_ACTIVE = 1;
+
+    // COMMENT READ STATUS
+    Integer COMMENT_UNREAD = 0;
+    Integer COMMENT_READ = 1;
 }

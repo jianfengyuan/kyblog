@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>已发布的文章-[[KimYuan]]的博客</title>
+    <meta name="description" content="Free Bootstrap 4 Admin Theme | Pike Admin">
+    <!-- Favicon -->
+    <!--    <link rel="shortcut icon" href="background/images/favicon.ico">-->
+    <!-- Switchery css -->
+    <!-- Bootstrap CSS -->
+    <link th:href="@{/background/css/bootstrap.min.css}" rel="stylesheet" type="text/css" />
+    <link th:href="@{/background/plugins/switchery/switchery.min.css}" rel="stylesheet" />
+    <!-- Font Awesome CSS -->
+    <link th:href="@{/background/font-awesome/css/font-awesome.min.css}" rel="stylesheet" type="text/css" />
+    <!-- Custom CSS -->
+    <link th:href="@{/background/css/style.css}" rel="stylesheet" type="text/css" />
+    <!-- BEGIN CSS for this page -->
+    <link rel="stylesheet" type="text/css" th:href="@{/common/css/dataTables.bootstrap4.min.css}"/>
+    <style>
+        td.details-control {
+            background: url('kyblogArticle/background/plugins/datatables/img/details_open.png') no-repeat center center;
+            cursor: pointer;
+        }
+        tr.shown td.details-control {
+            background: url('kyblogArticle/background/plugins/datatables/img/details_close.png') no-repeat center center;
+        }
+    </style>
+</head>
+<body class="adminbody">
+<div id="main">
+    <div th:replace="common/bar::#top"></div>
+    <div th:replace="common/bar::#sidebar(currUri='comments',unRead=0)"></div>
+    <div class="content-page">
+        <!-- Start content -->
+        <div class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="breadcrumb-holder">
+                            <h1 class="main-title float-left">
+                                <i class="fa fa-comment bigfonts"></i> 评论 &ensp;
+                            </h1>
+
+                            <ol class="breadcrumb float-right">
+                                <li class="breadcrumb-item">评论</li>
+                                <li class="breadcrumb-item active">所有评论</li>
+                            </ol>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end row -->
+                <div class="row">
+
+                    <div class="col-xs-12 col-sm-12 col-md-12">
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table id="example1" class="table table-bordered table-hover display" style="text-align: center">
+                                        <thead>
+                                        <tr>
+                                            <th>文章</th>
+                                            <th>留言</th>
+                                            <th style="width: 5%">姓名</th>
+                                            <th style="width: 10%">邮箱</th>
+                                            <th style="width: 10%">ip</th>
+                                            <th style="width: 10%">时间</th>
+                                            <th style="width: 5%">状态</th>
+                                            <th style="width: 10%">操作</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody style="font-size: 13px">
+                                        <tr th:each="comment:${comments}">
+                                            <td style="font-weight: bold" >
+                                                <a th:href="@{article(id=${comment.articleId})}" th:text="${ '《 '+ comment.title + ' 》'}"></a>
+                                            </td>
+                                            <td th:text="${comment.content}"></td>
+                                            <td th:text="${comment.name}"></td>
+                                            <td th:text="${comment.email}"></td>
+                                            <td th:text="${comment.ip}"></td>
+                                            <td th:text="${#dates.format(comment.time,'yyyy-MM-dd HH:mm:ss')}"></td>
+                                            <td>
+                                                <span th:if="${comment.status == 0}" class="text-danger" style="font-weight: bold">未读</span>
+                                                <span th:if="${comment.status == 1}">已读</span>
+                                            </td>
+                                            <td>
+                                                <a th:href="@{comment(id=${comment.id})}" class="btn btn-sm btn-success" title="查看"><i class="fa fa-eye"></i></a>
+                                                <button th:onclick="deleteComment([[${comment.id}]])" class="btn btn-sm btn-danger" title="删除"><i class="fa fa-trash"></i></button>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                        <thead>
+                                        <tr>
+                                            <th style="width: 20%">文章</th>
+                                            <th style="width: 20%">留言</th>
+                                            <th style="width: 10%">姓名</th>
+                                            <th style="width: 10%">邮箱</th>
+                                            <th style="width: 10%">ip</th>
+                                            <th style="width: 10%">时间</th>
+                                            <th style="width: 10%">状态</th>
+                                            <th style="width: 10%">操作</th>
+                                        </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+
+                            </div>
+                        </div><!-- end card-->
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" th:src="@{/background/js/jquery-3.6.0.min.js}"></script>
+<script type="text/javascript" th:src="@{/common/js/comment.js}"></script>
+<script type="text/javascript" th:src="@{/background/plugins/datatables/jquery.dataTables.min.js}"></script>
+<script type="text/javascript" th:src="@{/common/js/sweetalert.min.js}"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" crossorigin="anonymous"></script>
+<script>
+    $(document).ready(function() {
+        $('#example1').DataTable({
+            language: {
+                "sProcessing": "处理中...",
+                "sLengthMenu": "显示 _MENU_ 项结果",
+                "sZeroRecords": "没有匹配结果",
+                "sInfo": "显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项",
+                "sInfoEmpty": "显示第 0 至 0 项结果，共 0 项",
+                "sInfoFiltered": "(由 _MAX_ 项结果过滤)",
+                "sInfoPostFix": "",
+                "sSearch": "搜索:",
+                "sUrl": "",
+                "sEmptyTable": "表中数据为空",
+                "sLoadingRecords": "载入中...",
+                "sInfoThousands": ",",
+                "oPaginate": {
+                    "sFirst": "首页",
+                    "sPrevious": "上页",
+                    "sNext": "下页",
+                    "sLast": "末页"
+                },
+                "oAria": {
+                    "sSortAscending": ": 以升序排列此列",
+                    "sSortDescending": ": 以降序排列此列"
+                }
+            },
+            retrieve: true,
+            paging: true,
+            ordering: true,
+            info: true,
+            autoWidth: false,
+            pageLength: 10,//每页显示10条数据
+            pagingType: "full_numbers", //分页样式：simple,simple_numbers,full,full_numbers，
+            bFilter: false, //去掉搜索框方法
+            bLengthChange: true,//也就是页面上确认是否可以进行选择一页展示多少条
+            serverSide: true, //启用服务器端分页，要进行后端分页必须的环节
+            ajax: function (data, callback, settings) {
+                //封装相应的请求参数，这里获取页大小和当前页码
+                console.log(data)
+                var pagesize = data.length;//页面显示记录条数，在页面显示每页显示多少项的时候,页大小
+                var start = data.start;//开始的记录序号
+                var page = (data.start) / data.length + 1;//当前页码
+                var order_column = data.columns[data.order[0].column].data
+                var order_dir = data.order[0].dir
+                var data = {
+                    current: page,
+                    limit: pagesize,//这里只传了当前页和页大小，如果有其他参数，可继续封装
+                    column: order_column,
+                    dir: order_dir
+                }
+                $.ajax({
+                    type: "POST",
+                    url: CONTEXT_PATH + "/comments/commentData",
+                    cache : false,  //禁用缓存
+                    data: data,   //传入已封装的参数
+                    dataType: "json",//返回数据格式为json
+                    success: function(data) {
+                        var arr = "";
+                        if ('object' == typeof data) {
+                            arr = data;
+                        } else {
+                            arr = $.parseJSON(data);//将json字符串转化为了一个Object对象
+                        }
+                        console.log("============数据==========")
+                        // console.log(data)
+                        console.log(arr['kinds'][0])
+                        var returnData = {};
+                        //returnData.draw = arr.data.pagination.pageCount;//这里直接自行返回了draw计数器,应该由后台返回，没什么卵用！
+                        returnData.recordsTotal = arr['rows'];//totalCount指的是总记录数
+                        returnData.recordsFiltered = arr['rows'];//后台不实现过滤功能,全部的记录数都需输出到前端，记录数为总数
+                        returnData.data = arr['comments'];
+                        // console.log("======returnData.data=======")
+                        // console.log(returnData.recordsTotal)
+                        // console.log(returnData.recordsFiltered)
+                        callback(returnData);//这个别忘了！！！
+                    },
+                    error: function(XMLHttpRequest, textStatus, errorThrown) {
+                        console.log("失败")
+                    }
+                });
+            },
+
+            columns: [
+                {"data": "article", "width": "50px", 
+                    "render": function (data, type, full) {
+                        return "<a href='articles/edit?articleId="+ full.articleId + "' text='"+full.articleTitle+"'" + "></a>"
+                    }},
+                {"data": "content", "width": "120px", "defaultContent": ""},
+                {"data": "name", "width": "120px", "defaultContent": ""},
+                {"data": "email", "width": "120px", "defaultContent": ""},
+                {"data": "ip", "width": "120px", "defaultContent": ""},
+                {"data": "time", "width": "120px", "defaultContent": ""},
+                {"data": "status", "width": "120px",
+                    "render": function (data, type, full) {
+                        let status = full.status
+                        if (status.eq(1)) {
+                            return "<span class=\"text-danger\" style=\"font-weight: bold\">未读</span>";
+                        } else {
+                            return "<span>已读</span>";
+                        }
+                    }},
+                {"data": "operations", "width": "120px",
+                    "render": function (data, type, full) {
+                        var replyBtn = "reply" + full.id;
+                        var deleteBtn = "delete" + full.id;
+                        $('#example1 ').undelegate('tbody #'+replyBtn, 'click');
+
+                        $('#example1').on('click', 'tbody #'+replyBtn, function () {
+                            console.log(full)
+                            replyBtn(full.id, full.name, full.introduce)
+                        })
+                        $('#example1 ').undelegate('tbody #'+deleteBtn, 'click');
+                        $('#example1').on('click', 'tbody #'+deleteBtn, function (full) {
+                            deleteKind(full.id, full.name)
+                        })
+
+                        return "<button type=\"button\" class=\"btn btn-sm btn-success\"" + " id=" + replyBtn + " data-toggle=\"modal\" data-target=\"#updateModal\""+" >编辑</button>   " +
+                            "<button type=\"button\" class=\"btn btn-sm btn-danger\"" + " id=" + deleteBtn + " >删除</button>";
+                    }
+                }
+            ],
+            "aoColumnDefs": [ { "bSortable": false, "aTargets": [7] }],
+            "order": [ 0, "desc" ]
+        });
+    });
+</script>
+</body>
+</html>

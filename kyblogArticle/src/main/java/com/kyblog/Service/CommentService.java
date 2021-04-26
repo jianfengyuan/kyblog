@@ -22,6 +22,7 @@ public class CommentService implements kyblogConstant {
     private CommentDao commentDao;
 
     public List<Comment> selectComment(Comment comment, OrderMode orderMode, Page page) {
+        comment.setStatus(COMMENT_ACTIVE);
         return commentDao.queryAll(comment, orderMode, page);
     }
 
@@ -47,6 +48,7 @@ public class CommentService implements kyblogConstant {
     }
 
     public int selectRows(Comment comment) {
+        comment.setStatus(COMMENT_ACTIVE);
         return commentDao.queryRows(comment);
     }
 }

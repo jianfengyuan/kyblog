@@ -9,12 +9,14 @@ public class Comment {
     private String objectId;
     private Long id;
     private Long articleId;
+    private String articleTitle;
     private String name;
     private Date time;
     private Long replyId;
     private Integer type;
     private Integer status;
     private String email;
+    private Integer readStatus;
 
     @Override
     public String toString() {
@@ -22,12 +24,14 @@ public class Comment {
                 "objectId='" + objectId + '\'' +
                 ", id=" + id +
                 ", articleId=" + articleId +
+                ", articleTitle='" + articleTitle + '\'' +
                 ", name='" + name + '\'' +
                 ", time=" + time +
                 ", replyId=" + replyId +
                 ", type=" + type +
                 ", status=" + status +
                 ", email='" + email + '\'' +
+                ", readStatus=" + readStatus +
                 '}';
     }
 
@@ -101,5 +105,22 @@ public class Comment {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getArticleTitle() {
+        return articleTitle;
+    }
+
+    public Integer getReadStatus() {
+        return readStatus;
+    }
+
+    public void setReadStatus(Integer readStatus) {
+        this.readStatus = readStatus;
+    }
+
+    public void setArticleTitle(String articleTitle) {
+        this.articleTitle = articleTitle;
+
     }
 }

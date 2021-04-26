@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kyblog.Dao.CommentDao">
+    <sql id="commentCommonsValue">
+        <if test="id != null">
+            id = #{id},
+        </if>
+        <if test="name != null">
+            name = #{name},
+        </if>
+        <if test="articleCount != null ">
+            article_count = #{articleCount},
+        </if>
+        <if test="email != null">
+            email = #{email},
+        </if>
+        <if test="reply_id">
+            reply_id = #{reply_id},
+        </if>
+        <if test="ip != null">
+            ip = #{ip},
+        </if>
+        <if test="type != null">
+            type = #{type},
+        </if>
+        <if test="status != null ">
+            status = #{status},
+        </if>
+    </sql>
+
+    <sql id="insertCommentColumn">
+        <if test="objectId != null">
+            object_id,
+        </if>
+        <if test="name != null">
+            name,
+        </if>
+        <if test="email != null">
+            email,
+        </if>
+        <if test="replyId != null">
+            reply_id,
+        </if>
+        <if test="time != null">
+            time,
+        </if>
+        <if test="ip != null">
+            ip,
+        </if>
+        <if test="type!=null">
+            type,
+        </if>
+        <if test="status != null">
+            status,
+        </if>
+    </sql>
+    <sql id="insertCommentValue">
+        <if test="objectId != null">
+            #{object_id},
+        </if>
+        <if test="name != null">
+            #{name},
+        </if>
+        <if test="email != null">
+            #{email},
+        </if>
+        <if test="replyId != null">
+            #{reply_id},
+        </if>
+        <if test="time != null">
+            #{time},
+        </if>
+        <if test="ip != null">
+            #{ip},
+        </if>
+        <if test="type!=null">
+            #{type},
+        </if>
+        <if test="status != null">
+            #{status},
+        </if>
+    </sql>
+    <sql id="selectCommentField">
+        id, article_id, name, email, object_id, reply_id, time, ip, type, status
+    </sql>
+    <insert id="insertComment">
+        insert into comment
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <include refid="insertCommentColumn"/>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <include refid="insertCommentValue"/>
+        </trim>
+    </insert>
+
+    <update id="updateComment">
+        update comment
+        <set>
+            <include refid="commentCommonsValue"></include>
+        </set>
+        where id = #{id}
+    </update>
+
+    <select id="queryRows" resultType="int">
+        select count(*)
+        from comment
+        <trim prefix="where" prefixOverrides="and" suffixOverrides=",">
+            <include refid="commonsValue"></include>
+        </trim>
+    </select>
+</mapper>

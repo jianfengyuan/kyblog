@@ -16,6 +16,7 @@
         <module>kyblogComment</module>
         <module>kyblogAPI</module>
         <module>kyblogAdmin</module>
+        <module>testNginx</module>
     </modules>
 
     <packaging>pom</packaging>
