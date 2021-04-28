@@ -1,4 +1,3 @@
-var CONTEXT_PATH = "/kyblogArticle"
 function publish() {
     let title = $("#title").val().trim();
     let content = $("#content").val().trim();

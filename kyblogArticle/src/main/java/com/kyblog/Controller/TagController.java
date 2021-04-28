@@ -21,9 +21,8 @@ import static com.kyblog.utils.BlogUtils.camel4underline;
 import static com.kyblog.utils.BlogUtils.getJsonString;
 @Controller
 @RequestMapping("/tags")
-public class TagController implements kyblogConstant {
-    @Autowired
-    TagService tagService;
+public class TagController extends BaseController implements kyblogConstant {
+
 
     @RequestMapping(value = "/tagList", method = RequestMethod.GET)
     public String getTagPage(Model model) {

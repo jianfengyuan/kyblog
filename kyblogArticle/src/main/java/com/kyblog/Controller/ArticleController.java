@@ -21,15 +21,7 @@ import static com.kyblog.utils.BlogUtils.getJsonString;
 
 @Controller
 //@RequestMapping(path = "/articles")
-public class ArticleController implements kyblogConstant {
-    @Autowired
-    private ArticleService articleService;
-    @Autowired
-    private TagService tagService;
-    @Autowired
-    private ArticleKindService articleKindService;
-    @Autowired
-    private KindService kindService;
+public class ArticleController extends BaseController implements kyblogConstant {
 
     @RequestMapping(path = "/articles/new", method = RequestMethod.GET)
     public String newPage(Model model) {

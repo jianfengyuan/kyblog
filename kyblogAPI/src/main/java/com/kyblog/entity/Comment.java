@@ -3,16 +3,20 @@ package com.kyblog.entity;
 import java.util.Date;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-@Document("comment")
+@Document(collection = "comment")
 public class Comment {
     @Id
+
     private String objectId;
+
     private Long id;
     private Long articleId;
     private String articleTitle;
     private String name;
+    private String content;
     private Date time;
     private Long replyId;
+    private String ip;
     private Integer type;
     private Integer status;
     private String email;
@@ -26,8 +30,10 @@ public class Comment {
                 ", articleId=" + articleId +
                 ", articleTitle='" + articleTitle + '\'' +
                 ", name='" + name + '\'' +
+                ", content='" + content + '\'' +
                 ", time=" + time +
                 ", replyId=" + replyId +
+                ", ip='" + ip + '\'' +
                 ", type=" + type +
                 ", status=" + status +
                 ", email='" + email + '\'' +
@@ -122,5 +128,21 @@ public class Comment {
     public void setArticleTitle(String articleTitle) {
         this.articleTitle = articleTitle;
 
+    }
+
+    public String getIp() {
+        return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 }

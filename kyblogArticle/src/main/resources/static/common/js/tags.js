@@ -1,4 +1,3 @@
-var CONTEXT_PATH = "/kyblogArticle"
 $(function(){
     $("#publishBtn").click(addTag);
     $("#updateBtn").click(updateTag);

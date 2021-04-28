@@ -11,14 +11,11 @@
         <if test="name != null">
             name = #{name},
         </if>
-        <if test="articleCount != null ">
-            article_count = #{articleCount},
-        </if>
         <if test="email != null">
             email = #{email},
         </if>
-        <if test="reply_id">
-            reply_id = #{reply_id},
+        <if test="replyId != null">
+            reply_id = #{replyId},
         </if>
         <if test="ip != null">
             ip = #{ip},
@@ -32,11 +29,47 @@
         <if test="readStatus != null ">
             read_status = #{readStatus},
         </if>
+        <if test="time != null ">
+            time = #{time},
+        </if>
+    </sql>
+
+    <sql id="commentQueryValue">
+        <if test="comment.id != null">
+            and id = #{comment.id}
+        </if>
+        <if test="comment.name != null">
+            and name = #{comment.name}
+        </if>
+        <if test="comment.email != null">
+            and email = #{comment.email}
+        </if>
+        <if test="comment.replyId != null">
+            and reply_id = #{comment.replyId}
+        </if>
+        <if test="comment.ip != null">
+            and ip = #{comment.ip}
+        </if>
+        <if test="comment.type != null">
+            and type = #{comment.type}
+        </if>
+        <if test="comment.status != null ">
+            and status = #{comment.status}
+        </if>
+        <if test="comment.readStatus != null ">
+            and read_status = #{comment.readStatus}
+        </if>
+        <if test="comment.time != null ">
+            and time = #{comment.time}
+        </if>
     </sql>
 
     <sql id="insertCommentColumn">
         <if test="objectId != null">
             object_id,
+        </if>
+        <if test="articleId != null">
+            article_id,
         </if>
         <if test="name != null">
             name,
@@ -60,12 +93,15 @@
             status,
         </if>
         <if test="readStatus != null">
-        read_status,
+            read_status,
         </if>
     </sql>
     <sql id="insertCommentValue">
         <if test="objectId != null">
-            #{object_id},
+            #{objectId},
+        </if>
+        <if test="articleId != null">
+            #{articleId},
         </if>
         <if test="name != null">
             #{name},
@@ -74,7 +110,7 @@
             #{email},
         </if>
         <if test="replyId != null">
-            #{reply_id},
+            #{replyId},
         </if>
         <if test="time != null">
             #{time},
@@ -92,9 +128,11 @@
             #{readStatus},
         </if>
     </sql>
+
     <sql id="selectCommentField">
         id, article_id, name, email, object_id, reply_id, time, ip, type, status, read_status
     </sql>
+
     <insert id="insertComment">
         insert into comment
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -117,7 +155,21 @@
         select count(*)
         from comment
         <trim prefix="where" prefixOverrides="and" suffixOverrides=",">
-            <include refid="commonsValue"></include>
+            <include refid="commentQueryValue"></include>
         </trim>
+    </select>
+
+    <select id="queryAll" parameterType="Comment" resultType="Comment">
+        select <include refid="selectCommentField"></include>
+        from comment
+        <trim prefix="where" prefixOverrides="and" suffixOverrides=",">
+            <include refid="commentQueryValue"></include>
+        </trim>
+        <if test="orderMode!=null">
+            order by ${orderMode.column} ${orderMode.dir}
+        </if>
+        <if test="page!=null">
+            limit #{page.offset}, #{page.limit}
+        </if>
     </select>
 </mapper>

@@ -1,4 +1,3 @@
-var CONTEXT_PATH = "/kyblogArticle"
 function addKind() {
     let name = $('#name').val().trim();
     let introduce = $('#info').val().trim();

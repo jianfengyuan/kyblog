@@ -32,6 +32,41 @@
 <div id="main">
     <div th:replace="common/bar::#top"></div>
     <div th:replace="common/bar::#sidebar(currUri='comments',unRead=0)"></div>
+    <!--编辑回复弹出框-->
+    <div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="updateModalLabel">回复留言</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="reply-to" class="col-form-label">回复:</label>
+                            <span id="reply-to"></span>
+                            <input type="hidden" id="reply-id">
+                            <input type="hidden" id="type" value="1">
+                            <input type="hidden" id="article-id">
+                            <input type="hidden" id="name" value="admin">
+                            <input type="hidden" id="email" value="admin@qq.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="content" class="col-form-label">回复内容：</label>
+                            <textarea class="form-control" id="content" rows="5" name="content"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" id="replyBtn">回复</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="content-page">
         <!-- Start content -->
         <div class="content">
@@ -115,6 +150,7 @@
         </div>
     </div>
 </div>
+<script type="text/javascript" th:src="@{/common/js/global.js}"></script>
 <script type="text/javascript" th:src="@{/background/js/jquery-3.6.0.min.js}"></script>
 <script type="text/javascript" th:src="@{/common/js/comment.js}"></script>
 <script type="text/javascript" th:src="@{/background/plugins/datatables/jquery.dataTables.min.js}"></script>
@@ -186,7 +222,7 @@
                         }
                         console.log("============数据==========")
                         // console.log(data)
-                        console.log(arr['kinds'][0])
+                        console.log(arr['comments'])
                         var returnData = {};
                         //returnData.draw = arr.data.pagination.pageCount;//这里直接自行返回了draw计数器,应该由后台返回，没什么卵用！
                         returnData.recordsTotal = arr['rows'];//totalCount指的是总记录数
@@ -204,19 +240,25 @@
             },
 
             columns: [
-                {"data": "article", "width": "50px", 
+                {"data": "articleId", "width": "50px",
                     "render": function (data, type, full) {
-                        return "<a href='articles/edit?articleId="+ full.articleId + "' text='"+full.articleTitle+"'" + "></a>"
+                        return "<a href='/kyblogArticle/articles/edit?articleId="+ full.articleId +"'>" + full.articleTitle +"</a>"
                     }},
                 {"data": "content", "width": "120px", "defaultContent": ""},
                 {"data": "name", "width": "120px", "defaultContent": ""},
                 {"data": "email", "width": "120px", "defaultContent": ""},
                 {"data": "ip", "width": "120px", "defaultContent": ""},
-                {"data": "time", "width": "120px", "defaultContent": ""},
-                {"data": "status", "width": "120px",
+                {"data": "time", "width": "120px",
                     "render": function (data, type, full) {
-                        let status = full.status
-                        if (status.eq(1)) {
+                        console.log(full.time)
+                        var date = new Date(full.time + 8 * 3600 * 1000); // 增加8小时
+                        console.log(date)
+                        return date.toJSON().substr(0, 19).replace('T', ' ');
+                    }},
+                {"data": "readStatus", "width": "120px",
+                    "render": function (data, type, full) {
+                        let status = full.readStatus
+                        if (status == 0) {
                             return "<span class=\"text-danger\" style=\"font-weight: bold\">未读</span>";
                         } else {
                             return "<span>已读</span>";
@@ -224,28 +266,57 @@
                     }},
                 {"data": "operations", "width": "120px",
                     "render": function (data, type, full) {
-                        var replyBtn = "reply" + full.id;
+                        var reply = "reply" + full.id;
                         var deleteBtn = "delete" + full.id;
-                        $('#example1 ').undelegate('tbody #'+replyBtn, 'click');
+                        $('#example1 ').undelegate('tbody #'+reply, 'click');
 
-                        $('#example1').on('click', 'tbody #'+replyBtn, function () {
+                        $('#example1').on('click', 'tbody #'+reply, function () {
                             console.log(full)
-                            replyBtn(full.id, full.name, full.introduce)
+                            replyBtnEvent(full.id, full.articleId, full.name)
                         })
                         $('#example1 ').undelegate('tbody #'+deleteBtn, 'click');
-                        $('#example1').on('click', 'tbody #'+deleteBtn, function (full) {
-                            deleteKind(full.id, full.name)
+                        $('#example1').on('click', 'tbody #'+deleteBtn, function () {
+                            deleteComment(full.id, full.type, full.content)
                         })
 
-                        return "<button type=\"button\" class=\"btn btn-sm btn-success\"" + " id=" + replyBtn + " data-toggle=\"modal\" data-target=\"#updateModal\""+" >编辑</button>   " +
+                        return "<button type=\"button\" class=\"btn btn-sm btn-success\"" + " id=" + reply + " data-toggle=\"modal\" data-target=\"#updateModal\""+" >回复</button>   " +
                             "<button type=\"button\" class=\"btn btn-sm btn-danger\"" + " id=" + deleteBtn + " >删除</button>";
                     }
                 }
             ],
-            "aoColumnDefs": [ { "bSortable": false, "aTargets": [7] }],
+            "aoColumnDefs": [ { "bSortable": false, "aTargets": [1, 7] }],
             "order": [ 0, "desc" ]
         });
     });
 </script>
+<script>
+    $(function(){
+        // $("#deleteBtn").click(deleteComment);
+        $("#replyBtn").on('click', function () {
+            addComment(true);
+            let replyId = $('#reply-id').val().trim();
+            $.ajax({
+                type: "POST",
+                url: CONTEXT_PATH + "/comments/updateComment",
+                data: {id:replyId, readStatus: COMMENT_READ},
+                dataType: "json",
+                success: function(data){
+                    // data = $.parseJSON(data);
+                    console.log(data)
+                    if (data["code"] == 200){
+                        setInterval(reload, 2000);
+                    }else{
+                        swal("出错啦", "服务器发生了一个错误", "error");
+                    }
+                }
+            });
+        });
+
+
+    });
+</script>
+<!--<script>-->
+
+<!--</script>-->
 </body>
 </html>

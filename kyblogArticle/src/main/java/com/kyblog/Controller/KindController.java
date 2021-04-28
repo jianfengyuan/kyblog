@@ -23,9 +23,8 @@ import static com.kyblog.utils.BlogUtils.getJsonString;
 
 @Controller
 @RequestMapping(path = "/kind")
-public class KindController implements kyblogConstant {
-    @Autowired
-    private KindService kindService;
+public class KindController extends BaseController implements kyblogConstant {
+
     @RequestMapping(value = "/addKind", method = RequestMethod.POST)
     @ResponseBody
     public String add(Kind kind) {

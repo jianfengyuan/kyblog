@@ -35,6 +35,7 @@
         </if>
     </sql>
 
+
     <select id="queryById" resultType="Article">
         select <include refid="selectField"></include>
         from article
