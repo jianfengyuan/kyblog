@@ -17,6 +17,8 @@
         <module>kyblogAPI</module>
         <module>kyblogAdmin</module>
         <module>testNginx</module>
+        <module>kyblogFront</module>
+        <module>kyblogAccountManagement</module>
     </modules>
 
     <packaging>pom</packaging>
@@ -140,6 +142,35 @@
                 <artifactId>bson</artifactId>
                 <version>4.2.2</version>
             </dependency>
+
+
+            <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-aop -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-aop</artifactId>
+                <version>2.3.5.RELEASE</version>
+            </dependency>
+
+            <!--引入Hutools工具-->
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-all</artifactId>
+                <version>5.4.1</version>
+            </dependency>
+
+            <!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient -->
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpclient</artifactId>
+                <version>4.5.12</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/redis.clients/jedis -->
+            <dependency>
+                <groupId>redis.clients</groupId>
+                <artifactId>jedis</artifactId>
+                <version>3.3.0</version>
+            </dependency>
+
         </dependencies>
 
     </dependencyManagement>

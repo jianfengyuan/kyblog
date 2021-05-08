@@ -8,6 +8,7 @@ import java.util.List;
 
 @Document(collection = "article")
 public class Article {
+
     @Id
     private String objectId;
     private Long id;
@@ -21,6 +22,8 @@ public class Article {
     private String introduce;
     private Date publishTime;
     private Date edictTime;
+    private Comment comment;
+    private String background;
 
     @Override
     public String toString() {
@@ -132,5 +135,21 @@ public class Article {
 
     public void setEdictTime(Date edictTime) {
         this.edictTime = edictTime;
+    }
+
+    public Comment getComment() {
+        return comment;
+    }
+
+    public void setComment(Comment comment) {
+        this.comment = comment;
+    }
+
+    public String getBackground() {
+        return background;
+    }
+
+    public void setBackground(String background) {
+        this.background = background;
     }
 }

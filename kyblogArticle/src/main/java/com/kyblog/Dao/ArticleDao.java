@@ -25,5 +25,5 @@ public interface ArticleDao {
 
     List<Article> queryArticles(List<Long> ids, @Param("status") int status, @Param("page") Page page, @Param("orderMode") OrderMode orderMode);
 
-
+    int queryRows(@Param("status")int Status);
 }

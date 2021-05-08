@@ -92,8 +92,12 @@ public class ArticleService implements kyblogConstant {
         return 1;
     }
 
+    public int updateArticle(Article article) {
+        return articleDao.updateArticle(article);
+    }
+
     public int updateArticle(Long articleId, String title, String content, String tags, String kind, String introduce,
-                             Integer status) {
+                             Integer status, String background) {
         Article article = articleDao.queryById(articleId,null);
         List<Tag> newTagList = processTags(tags);
         List<Tag> oldTagList = tagDao.queryByArticleId(articleId);
@@ -132,6 +136,9 @@ public class ArticleService implements kyblogConstant {
                 articleKindDao.insertArticleKind(articleKind);
             }
 
+        }
+        if (background != null) {
+            article.setBackground(background);
         }
         article.setTitle(title);
         article.setContent(content);
@@ -223,5 +230,9 @@ public class ArticleService implements kyblogConstant {
     public int deleteArticle(Article article) {
         article.setStatus(ARTICLE_STATUS_DELETED);
         return articleDao.updateArticle(article);
+    }
+
+    public int findArticleRows(Integer status) {
+        return articleDao.queryRows(status);
     }
 }

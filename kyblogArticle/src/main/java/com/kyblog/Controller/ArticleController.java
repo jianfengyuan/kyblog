@@ -48,7 +48,6 @@ public class ArticleController extends BaseController implements kyblogConstant 
         model.addAttribute("article", null);
         System.out.println(id);
         if (id != null) {
-
             Map<String, Object> map = new HashMap<>();
             article = articleService.findArticleById(id);
             List<Tag> tagList = tagService.selectTagByArticleId(id);
@@ -75,10 +74,12 @@ public class ArticleController extends BaseController implements kyblogConstant 
     @RequestMapping(path = "/articles", method = RequestMethod.GET)
 //    @ResponseBody
     public String getArticles(Model model, Page page, OrderMode orderMode) {
+        Comment commentTemplate = new Comment();
         ArticleKind articleKind;
         page.setPath("/articles");
         Map<String, Object> map = new HashMap<>();
         List<Article> articleList = articleService.findArticles(page, null);
+        commentTemplate.setStatus(COMMENT_ACTIVE);
         for (Article article: articleList) {
             articleKind = articleKindService.selectArticleKindByArticleId(article.getId());
             if (articleKind != null) {
@@ -87,8 +88,9 @@ public class ArticleController extends BaseController implements kyblogConstant 
 //            List<Tag> tags = tagService.selectTagByArticleId(article.getId());
 
             article.setTags(tagService.selectTagByArticleId(article.getId()));
+            commentTemplate.setArticleId(article.getId());
 
-            article.setCommentCount(0);
+            article.setCommentCount(commentService.selectRows(commentTemplate));
         }
         model.addAttribute("articles", articleList);
 //        return "200";
@@ -97,9 +99,10 @@ public class ArticleController extends BaseController implements kyblogConstant 
 
     @RequestMapping(path = "/articles/update", method = RequestMethod.POST)
     @ResponseBody
-    public String updateArticle(Long id, String title, String content, String tags, String kind, String introduce, Integer status) {
+    public String updateArticle(Long id, String title, String content, String tags,
+                                String kind, String introduce, Integer status, String background) {
 //        System.out.println(id +" " +title+" " + content+" " + tags+" " + kind+" " + introduce+" " + status);
-        articleService.updateArticle(id, title, content, tags, kind, introduce, status);
+        articleService.updateArticle(id, title, content, tags, kind, introduce, status, background);
         return getJsonString(200);
     }
 }

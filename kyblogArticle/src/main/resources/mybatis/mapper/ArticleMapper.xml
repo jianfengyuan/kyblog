@@ -5,11 +5,11 @@
 
 <mapper namespace="com.kyblog.Dao.ArticleDao">
     <sql id="selectField">
-        id, object_id, title, status, read_count, introduce, publish_time, edict_time
+        id, object_id, title, status, read_count, introduce, publish_time, edict_time,background
     </sql>
 
     <sql id="insertField">
-        title, object_id, status, read_count, introduce, publish_time, edict_time
+        title, object_id, status, read_count, introduce, publish_time, edict_time,background
     </sql>
 
 
@@ -33,6 +33,9 @@
         <if test="introduce != null and introduce != ''">
             introduce = #{introduce},
         </if>
+        <if test="background != null">
+            background = #{background},
+        </if>
     </sql>
 
 
@@ -47,7 +50,7 @@
 
     <insert id="insertArticle" parameterType="Article" keyProperty="id">
         insert into article (<include refid="insertField"></include>)
-        values (#{title},#{objectId},#{status},#{readCount},#{introduce},#{publishTime},#{edictTime})
+        values (#{title},#{objectId},#{status},#{readCount},#{introduce},#{publishTime},#{edictTime},#{background})
     </insert>
 
     <update id="deleteById">
@@ -84,4 +87,13 @@
         </set>
         where id=#{id}
     </update>
+
+    <select id="queryRows" resultType="int">
+        select count(*)
+        from article
+        where 1=1
+        <if test="status!=null">
+            and status=#{status}
+        </if>
+    </select>
 </mapper>

@@ -38,6 +38,9 @@
         <if test="comment.id != null">
             and id = #{comment.id}
         </if>
+        <if test="comment.articleId != null">
+            and article_id = #{comment.articleId}
+        </if>
         <if test="comment.name != null">
             and name = #{comment.name}
         </if>

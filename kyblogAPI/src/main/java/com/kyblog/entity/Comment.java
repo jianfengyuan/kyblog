@@ -1,6 +1,8 @@
 package com.kyblog.entity;
 
 import java.util.Date;
+import java.util.List;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "comment")
@@ -21,6 +23,7 @@ public class Comment {
     private Integer status;
     private String email;
     private Integer readStatus;
+    private List<Comment> replies;
 
     @Override
     public String toString() {
@@ -144,5 +147,13 @@ public class Comment {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public List<Comment> getReplies() {
+        return replies;
+    }
+
+    public void setReplies(List<Comment> replies) {
+        this.replies = replies;
     }
 }
