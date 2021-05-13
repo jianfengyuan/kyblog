@@ -1,0 +1,17 @@
+spring:
+  profiles: eureka-server2
+  application:
+    name: eureka-server2
+server:
+  port: 9002
+eureka:
+  instance:
+    prefer-ip-address: true
+    instance-id: 192.168.50.218:9002
+#    hostname: eureka8002.com
+#    instance-id: eureka8002.com:8002
+  client:
+    fetch-registry: true
+    register-with-eureka: false
+    serviceUrl:
+      defaultZone: http://192.168.50.218:9001/eureka/,http://192.168.50.218:9003/eureka/

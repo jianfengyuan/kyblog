@@ -7,7 +7,7 @@ import java.util.Date;
 public interface GitHubConstant {
     String OWNER = "jianfengyuan";
     String REPO_NAME = "figurebed";
-    String ACCESS_TOKEN = "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";
+    String ACCESS_TOKEN = "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";
     String CREATE_REPOS_MESSAGE = "(ง ˙o˙)ว";
 
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");

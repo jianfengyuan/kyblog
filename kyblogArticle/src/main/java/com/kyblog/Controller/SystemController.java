@@ -18,6 +18,7 @@ import java.util.List;
  **/
 
 @Controller
+@Deprecated
 public class SystemController extends BaseController implements kyblogConstant {
     @RequestMapping(value = {"/","/index"},method = RequestMethod.GET)
     public String index(Model model, Page page) {
@@ -36,9 +37,9 @@ public class SystemController extends BaseController implements kyblogConstant {
                 articles) {
             article.setTags(tagService.selectTagByArticleId(article.getId()));
             commentTemplate.setArticleId(article.getId());
-            if (commentService.selectRows(commentTemplate) > 0) {
-                article.setComment(commentService.selectComment(commentTemplate,
-                        orderModeTemplate,pageTemplate).get(0));
+            if (1 > 0) {
+                article.setComment(
+                        null);
             }
         }
         pageTemplate.setCurrent(1);
@@ -83,14 +84,16 @@ public class SystemController extends BaseController implements kyblogConstant {
         orderModeTemplate.setColumn("time");
         replyTemplate.setArticleId(id);
         replyTemplate.setType(REPLY);
-        List<Comment> commentList = commentService.selectComment(commentTemplate, orderModeTemplate, null);
+        List<Comment> commentList = null;
+//                commentService.selectComment(commentTemplate, orderModeTemplate, null);
         orderModeTemplate.setColumn("article_count");
         List<Tag> tagCloud = tagService.selectTags(TAG_STATUS_ACTIVE, orderModeTemplate, null);
         orderModeTemplate.setColumn("time");
         for (Comment comment :
                 commentList) {
             replyTemplate.setReplyId(comment.getId());
-            List<Comment> replies = commentService.selectComment(replyTemplate, orderModeTemplate, null);
+            List<Comment> replies = null;
+//                    commentService.selectComment(replyTemplate, orderModeTemplate, null);
             comment.setReplies(replies);
         }
         model.addAttribute("famousArticles",famousArticleList);

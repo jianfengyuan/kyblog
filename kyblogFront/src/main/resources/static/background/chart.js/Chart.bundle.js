@@ -9342,7 +9342,7 @@ helpers$1.extend(Chart.prototype, /** @lends Chart */ {
 		me._layers = [];
 
 		/**
-		 * Provided for backward compatibility, Chart and Chart.Controller have been merged,
+		 * Provided for backward compatibility, Chart and Chart.com.kyblog.Controller have been merged,
 		 * the "instance" still need to be defined since it might be called from plugins.
 		 * @prop Chart#chart
 		 * @deprecated since version 2.6.0

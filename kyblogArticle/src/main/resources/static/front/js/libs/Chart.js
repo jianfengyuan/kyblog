@@ -1857,7 +1857,7 @@
 				xAxes: [{
 					type: 'category',
 
-					// Specific to Bar Controller
+					// Specific to Bar com.kyblog.Controller
 					categoryPercentage: 0.8,
 					barPercentage: 0.9,
 
@@ -2147,7 +2147,7 @@
 					position: 'left',
 					type: 'category',
 
-					// Specific to Horizontal Bar Controller
+					// Specific to Horizontal Bar com.kyblog.Controller
 					categoryPercentage: 0.8,
 					barPercentage: 0.9,
 

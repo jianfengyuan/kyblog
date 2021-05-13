@@ -3098,7 +3098,7 @@
 
 
 		/*=========================
-          Controller
+          com.kyblog.Controller
           ===========================*/
 		s.controller = {
 			LinearSpline: function (x, y) {

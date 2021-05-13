@@ -58,8 +58,7 @@ function updatePublish() {
                 swal("更新成功", "", "success")
                     .then(() => {
                         var location = window.location.href;
-                        let strings = location.split("kyblogArticle");
-                        window.location.href = strings[0]+"kyblogArticle/articles/edit?articleId="+id;
+                        window.location.href = "/articles/edit?articleId="+id;
                     });
             }else{
             }
@@ -91,7 +90,7 @@ function draftPublish() {
                     .then(() => {
                         var location = window.location.href;
                         let strings = location.split("kyblogArticle");
-                        window.location.href = strings[0]+"kyblogArticle/articles";
+                        window.location.href = strings[0]+"articles";
                     });
             }else{
                 swal("出错啦", "服务器发生了一个错误", "error");
@@ -125,7 +124,7 @@ function updateDraft() {
                     .then(() => {
                         var location = window.location.href;
                         let strings = location.split("kyblogArticle");
-                        window.location.href = strings[0]+"kyblogArticle/articles/edit?articleId="+id;
+                        window.location.href = strings[0]+"articles/edit?articleId="+id;
                     });
             }else{
                 swal("出错啦", "服务器发生了一个错误", "error");

@@ -1,8 +1,11 @@
 package com.kyblog.entity;
+
+import java.io.Serializable;
+
 /**
  * 封裝分頁信息
  * */
-public class Page {
+public class Page implements Serializable {
     private int current = 1;
     private int limit = 10;
     private int rows;

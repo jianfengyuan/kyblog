@@ -19,7 +19,7 @@
       instructionOnlyLine = new RegExp(instructionRegex + "\\s*$", "i"),
       instructionWithArguments = new RegExp(instructionRegex + "(\\s+)", "i");
 
-  CodeMirror.defineSimpleMode("dockerfile", {
+  CodeMirror.defineSimpleMode("Dockerfile", {
     start: [
       // Block comment: This is a line starting with a comment
       {
@@ -72,5 +72,5 @@
     ]
   });
 
-  CodeMirror.defineMIME("text/x-dockerfile", "dockerfile");
+  CodeMirror.defineMIME("text/x-Dockerfile", "Dockerfile");
 });

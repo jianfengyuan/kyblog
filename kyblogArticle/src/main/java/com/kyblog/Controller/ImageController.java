@@ -35,7 +35,7 @@ public class ImageController extends BaseController {
         if (!ImageUtils.checkFileSize(file.getSize(),1,"M")) {
             return getJsonString(502);
         }
-        String imgPath = ImageUtils.upload(file,"o");
+        String imgPath = imageUtils.upload(file,"o");
         Article article = new Article();
         article.setId(id);
         article.setBackground(imgPath);
@@ -48,7 +48,7 @@ public class ImageController extends BaseController {
     @RequestMapping(value = "/article", method = RequestMethod.POST)
     @ResponseBody
     public String markdownImg(@RequestParam("editormd-image-file") MultipartFile file) throws IOException {
-        String url = ImageUtils.upload(file, "o");
+        String url = imageUtils.upload(file, "o");
         Map<String, Object> map = new HashMap<>();
         map.put("img", url);
         if (url != null) {

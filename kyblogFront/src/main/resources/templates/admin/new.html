@@ -118,7 +118,7 @@
     $(function () {
         editor = editormd("editormd", {
             placeholder: "此处开始编写文章的内容...",
-            path: '/kyblogArticle/background/editormd/lib/',
+            path: '/background/editormd/lib/',
             saveHTMLToTextarea: true,//注意3：这个配置，方便post提交表单
             /**上传图片相关配置如下*/
             imageUpload: true,
@@ -168,7 +168,7 @@
             };
             var formData = new FormData();
             formData.append("editormd-image-file", file);
-            xhr.open('POST',CONTEXT_PATH +'/image/article', true);
+            xhr.open('POST','/image/article', true);
             xhr.send(formData);
             xhr.onreadystatechange = function () {
                 if(xhr.readyState === 4){

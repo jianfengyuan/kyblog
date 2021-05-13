@@ -19,6 +19,8 @@
         <module>testNginx</module>
         <module>kyblogFront</module>
         <module>kyblogAccountManagement</module>
+        <module>kyblogImage</module>
+        <module>eurekaCluster</module>
     </modules>
 
     <packaging>pom</packaging>

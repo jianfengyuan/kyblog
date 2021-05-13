@@ -5,6 +5,7 @@ import com.kyblog.entity.Ticket;
 import com.kyblog.entity.User;
 import com.kyblog.utils.BlogUtils;
 import com.kyblog.utils.RedisKeyUtils;
+import kyblog.Dao.UserDao;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;

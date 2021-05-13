@@ -1,5 +1,7 @@
 package com.kyblog.entity;
 
+import java.io.Serializable;
+
 /**
  * @program: kyblog
  * @description: 排序模式类型
@@ -7,7 +9,7 @@ package com.kyblog.entity;
  * @create: 2021-04-23 12:31
  **/
 
-public class OrderMode {
+public class OrderMode implements Serializable {
     private String column;
     private String dir="desc";
 

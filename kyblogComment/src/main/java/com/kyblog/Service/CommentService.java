@@ -5,9 +5,14 @@ import com.kyblog.entity.Comment;
 import com.kyblog.entity.OrderMode;
 import com.kyblog.entity.Page;
 import com.kyblog.utils.kyblogConstant;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -21,11 +26,28 @@ public class CommentService implements kyblogConstant {
     @Autowired
     private CommentDao commentDao;
 
+    @Autowired
+    MongoTemplate mongoTemplate;
+
     public List<Comment> selectComment(Comment comment, OrderMode orderMode, Page page) {
-        return commentDao.queryAll(comment, orderMode, page);
+        comment.setStatus(COMMENT_ACTIVE);
+        List<Comment> commentList = commentDao.queryAll(comment, orderMode, page);
+        for (Comment item:
+                commentList) {
+            Query query = new Query(Criteria.where("_id").is(new ObjectId(item.getObjectId())));
+            Comment res = mongoTemplate.findOne(query,Comment.class);
+            if (res != null) {
+                item.setContent(res.getContent());
+            }
+        }
+        return commentList;
     }
 
     public int insertComment(Comment comment) {
+        comment.setTime(new Date());
+        comment.setStatus(COMMENT_ACTIVE);
+//        comment.setReadStatus(COMMENT_UNREAD);
+        comment = mongoTemplate.insert(comment);
         return commentDao.insertComment(comment);
     }
 
@@ -37,7 +59,7 @@ public class CommentService implements kyblogConstant {
             replyTemplate.setArticleId(comment.getArticleId());
             List<Comment> replyList = commentDao.queryAll(replyTemplate, null, null);
             for (Comment reply:
-                 replyList) {
+                    replyList) {
                 reply.setStatus(COMMENT_DELETED);
                 commentDao.updateComment(reply);
             }
@@ -47,6 +69,11 @@ public class CommentService implements kyblogConstant {
     }
 
     public int selectRows(Comment comment) {
+        comment.setStatus(COMMENT_ACTIVE);
         return commentDao.queryRows(comment);
+    }
+
+    public int updateComment(Comment comment) {
+        return commentDao.updateComment(comment);
     }
 }

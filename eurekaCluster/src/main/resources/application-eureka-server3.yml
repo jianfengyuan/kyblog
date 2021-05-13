@@ -1,0 +1,16 @@
+spring:
+  profiles: eureka-server3
+  application:
+    name: eureka-server3
+server:
+  port: 9003
+eureka:
+  instance:
+#    hostname: eureka8003.com
+    prefer-ip-address: true
+    instance-id: 192.168.50.218:9003
+  client:
+    register-with-eureka: true
+    fetch-registry: false
+    serviceUrl:
+      defaultZone: http://192.168.50.218:9002/eureka/,http://192.168.50.218:9001/eureka/

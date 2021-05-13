@@ -4,13 +4,17 @@ import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.http.Header;
-import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.*;
+import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import cn.hutool.core.codec.Base64;
 import java.io.IOException;
@@ -26,8 +30,13 @@ import static com.kyblog.utils.BlogUtils.*;
  * @create: 2021-05-06 13:36
  **/
 
+@Component
 public class ImageUtils implements GitHubConstant {
-    public static String upload(MultipartFile file, String flag)throws IOException {
+    @Autowired
+    @Qualifier("restTemplateNoRibbon")
+    private RestTemplate restTemplate;
+
+    public String upload(MultipartFile file, String flag)throws IOException {
         String trueFileName = file.getOriginalFilename();
         assert trueFileName != null;
         String encode = "utf-8";
@@ -51,37 +60,45 @@ public class ImageUtils implements GitHubConstant {
         String requestUrl = String.format(CREATE_REPOS_URL, OWNER,
                 REPO_NAME, targetDir);
         System.out.println(requestUrl);
-        HttpPut httpPut = new HttpPut(requestUrl);
-        /** header中通用属性 */
-        httpPut.setHeader("Accept", "application/vnd.github.v3+json");
-        httpPut.setHeader("Authorization", "token "+ACCESS_TOKEN);
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
+        httpHeaders.set(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
+        httpHeaders.set(HttpHeaders.AUTHORIZATION, "token " + ACCESS_TOKEN);
 
-        httpPut.setEntity(stringEntity);
-        String content = null;// 回复的内容
-        CloseableHttpResponse httpResponse = null;// 回复对象
-        try {
-            // 响应信息
-            httpResponse = closeableHttpClient.execute(httpPut);// 执行请求
-            HttpEntity entity = httpResponse.getEntity();// 接收响应
-            content = EntityUtils.toString(entity, encode);// 将响应转为String类型
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {// 关闭资源
-            try {
-                httpResponse.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        try {
-            closeableHttpClient.close(); // 关闭连接、释放资源
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        System.out.println(content);
-        System.out.println(stringEntity);
-
-        if (JSONUtil.parseObj(content).getObj("commit") != null) {
+        ResponseEntity<JSONObject> responseEntity = this.restTemplate.exchange(requestUrl, HttpMethod.PUT,
+                new HttpEntity<>(json, httpHeaders), JSONObject.class);
+        System.out.println(responseEntity);
+//        HttpPut httpPut = new HttpPut(requestUrl);
+//        /** header中通用属性 */
+//        httpPut.setHeader("Accept", "application/vnd.github.v3+json");
+//        httpPut.setHeader("Authorization", "token "+ACCESS_TOKEN);
+//
+//        httpPut.setEntity(stringEntity);
+//        String content = null;// 回复的内容
+//        CloseableHttpResponse httpResponse = null;// 回复对象
+//        try {
+//            // 响应信息
+//            httpResponse = closeableHttpClient.execute(httpPut);// 执行请求
+//            HttpEntity entity = httpResponse.getEntity();// 接收响应
+//            content = EntityUtils.toString(entity, encode);// 将响应转为String类型
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        } finally {// 关闭资源
+//            try {
+//                httpResponse.close();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//        try {
+//            closeableHttpClient.close(); // 关闭连接、释放资源
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        System.out.println(content);
+//        System.out.println(stringEntity);
+//
+        if (JSONUtil.parseObj(responseEntity.getBody()).getObj("commit") != null) {
             System.out.println(GITPAGE_REQUEST_URL + targetDir);
             return GITPAGE_REQUEST_URL + targetDir;
         }
