@@ -7,6 +7,7 @@ import com.kyblog.entity.Page;
 import com.kyblog.utils.kyblogConstant;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -21,9 +22,10 @@ import java.util.List;
  * @author: Kim_yuan
  * @create: 2021-04-25 15:28
  **/
-@Service
+@Service("commentService")
 public class CommentService implements kyblogConstant {
     @Autowired
+    @Qualifier("commentDao")
     private CommentDao commentDao;
 
     @Autowired

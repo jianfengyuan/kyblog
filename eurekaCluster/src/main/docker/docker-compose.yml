@@ -1,38 +1,38 @@
-version: '2'
+version: '3'
 services:
   eureka-server1:
     image: eurekaserver
     container_name: eureka-server1
-#    hostname: eureka8001.com
+    hostname: eureka8001
     networks:
       - eureka-net
     ports:
       - 9001:9001
     environment:
       - spring.profiles.active=eureka-server1
-    expose:
-      - 9001
+#    expose:
+#      - 9001
 
 
   eureka-server2:
     image: eurekaserver
     container_name: eureka-server2
-#    hostname: eureka8002.com
+    hostname: eureka8002
     networks:
       - eureka-net
     ports:
       - 9002:9002
     environment:
       - spring.profiles.active=eureka-server2
-    expose:
-      - 9002
+#    expose:
+#      - 9002
 
   eureka-server3:
     image: eurekaserver
     container_name: eureka-server3
 #    hostname: eureka8003.com
-    networks:
-      - eureka-net
+#    networks:
+#      - eureka-net
     ports:
       - 9003:9003
     environment:

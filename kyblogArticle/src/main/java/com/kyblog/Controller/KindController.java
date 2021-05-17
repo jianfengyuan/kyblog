@@ -1,5 +1,6 @@
 package com.kyblog.Controller;
 
+import com.alibaba.fastjson.JSON;
 import com.kyblog.Service.KindService;
 import com.kyblog.entity.*;
 import com.kyblog.utils.kyblogConstant;
@@ -84,9 +85,10 @@ public class KindController extends BaseController implements kyblogConstant {
     @RequestMapping(value = "/list", method = RequestMethod.POST)
     @ResponseBody
     public List<Kind> getKindList(Map<String, Object> params) {
-        return kindService.selectKinds((Integer) params.get("status"),
-                (OrderMode) params.get("orderMode"),
-                (Page) params.get("page"));
+        Integer status = JSON.parseObject(JSON.toJSONString(params.get("status")), Integer.class);
+        OrderMode orderMode = JSON.parseObject(JSON.toJSONString(params.get("orderMode")), OrderMode.class);
+        Page page = JSON.parseObject(JSON.toJSONString(params.get("page")), Page.class);
+        return kindService.selectKinds(status, orderMode, page);
     }
 
     @RequestMapping(value = "/rows?status={status}", method = RequestMethod.GET)

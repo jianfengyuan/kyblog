@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.kyblog.Dao.UserDao">
+<mapper namespace="com.com.kyblog.Dao.UserDao">
     <sql id="selectField">
         uid, account, password, salt, header_url, qr_code_url, status
     </sql>

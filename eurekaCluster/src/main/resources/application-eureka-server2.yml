@@ -6,12 +6,12 @@ server:
   port: 9002
 eureka:
   instance:
-    prefer-ip-address: true
-    instance-id: 192.168.50.218:9002
-#    hostname: eureka8002.com
-#    instance-id: eureka8002.com:8002
+#    prefer-ip-address: true
+#    instance-id: 192.168.50.218:9002
+    hostname: eureka8002
+    instance-id: eureka8002:9002
   client:
-    fetch-registry: true
-    register-with-eureka: false
+    fetch-registry: false
+    register-with-eureka: true
     serviceUrl:
-      defaultZone: http://192.168.50.218:9001/eureka/,http://192.168.50.218:9003/eureka/
+      defaultZone: http://eureka8001:9001/eureka/, http://eureka8003:9003/eureka/

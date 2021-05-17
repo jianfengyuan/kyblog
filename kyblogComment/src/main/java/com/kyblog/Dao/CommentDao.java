@@ -4,6 +4,7 @@ import com.kyblog.entity.Comment;
 import com.kyblog.entity.OrderMode;
 import com.kyblog.entity.Page;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -15,9 +16,9 @@ public interface CommentDao {
 
     int updateComment(Comment comment);
 
-    List<Comment> queryAll(Comment comment, OrderMode orderMode, Page page);
+    List<Comment> queryAll(@Param("comment") Comment comment, @Param("orderMode") OrderMode orderMode, @Param("page") Page page);
 
-    int queryRows(Comment comment);
+    int queryRows(@Param("comment") Comment comment);
 
 
 }

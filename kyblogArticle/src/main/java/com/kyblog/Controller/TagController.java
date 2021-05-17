@@ -1,5 +1,6 @@
 package com.kyblog.Controller;
 
+import com.alibaba.fastjson.JSON;
 import com.kyblog.Service.TagService;
 import com.kyblog.entity.Kind;
 import com.kyblog.entity.OrderMode;
@@ -22,8 +23,6 @@ import static com.kyblog.utils.BlogUtils.getJsonString;
 @Controller
 @RequestMapping("/tags")
 public class TagController extends BaseController implements kyblogConstant {
-
-
     @Deprecated
     @RequestMapping(value = "/tagList", method = RequestMethod.GET)
     public String getTagPage(Model model) {
@@ -81,8 +80,9 @@ public class TagController extends BaseController implements kyblogConstant {
     @RequestMapping(value = "/list", method = RequestMethod.POST)
     @ResponseBody
     public List<Tag> getTags(Map<String,Object> params) {
-        return tagService.selectTags((Integer) params.get("status"),
-                (OrderMode) params.get("orderMode"),
-                (Page) params.get("page"));
+        Integer status = JSON.parseObject(JSON.toJSONString(params.get("status")), Integer.class);
+        OrderMode orderMode = JSON.parseObject(JSON.toJSONString(params.get("orderMode")), OrderMode.class);
+        Page page = JSON.parseObject(JSON.toJSONString(params.get("page")), Page.class);
+        return tagService.selectTags(status, orderMode, page);
     }
 }

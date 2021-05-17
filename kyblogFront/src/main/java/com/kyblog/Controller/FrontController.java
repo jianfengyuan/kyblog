@@ -131,9 +131,10 @@ public class FrontController extends BaseController implements kyblogConstant {
         );
         List<Tag> tagList = tagsResponseEntity.getBody();
         System.out.println(tagList);
+        map.put("articleId", articleId);
         Kind kind = restTemplate.getForObject(
-                ARTICLE_SERVICE_PREFIX + "/kinds/kind", Kind.class,
-                new HashMap<>().put("articleId", articleId)
+                ARTICLE_SERVICE_PREFIX + "/kinds/kind?articleId={articleId}", Kind.class,
+                map
         );
         assert article != null;
         article.setKind(kind);
@@ -178,6 +179,7 @@ public class FrontController extends BaseController implements kyblogConstant {
         commentTemplate.setStatus(COMMENT_ACTIVE);
         orderModeTemplate.setColumn("time");
         map.put("comment", commentTemplate);
+        map.put("orderMode", orderModeTemplate);
         ResponseEntity<List<Comment>> commentResponseEntity = restTemplate.exchange(
                 COMMENT_SERVICE_PREFIX+"/comments/list", HttpMethod.POST,
                 new HttpEntity<>(map), COMMENT_REF

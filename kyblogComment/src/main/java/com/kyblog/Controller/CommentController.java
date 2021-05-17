@@ -1,13 +1,17 @@
 package com.kyblog.Controller;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.kyblog.Service.CommentService;
 import com.kyblog.entity.Comment;
 import com.kyblog.entity.OrderMode;
 import com.kyblog.entity.Page;
 import com.kyblog.utils.kyblogConstant;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -93,11 +97,12 @@ public class CommentController implements kyblogConstant {
      **/
     @RequestMapping(value = "/list", method = RequestMethod.POST)
     @ResponseBody
-    public List<Comment> getComments(Map<String, Object> params) {
+//    Comment comment, OrderMode orderMode,Page page
+    public List<Comment> getComments(@RequestBody Map<String, Object> params) {
         return commentService.selectComment(
-                (Comment) params.get("comment"),
-                (OrderMode) params.get("orderMode"),
-                (Page) params.get("page"));
+                JSON.parseObject(JSON.toJSONString(params.get("comment")), Comment.class),
+                JSON.parseObject(JSON.toJSONString(params.get("orderMode")), OrderMode.class),
+                JSON.parseObject(JSON.toJSONString(params.get("page")), Page.class));
     }
 
     /**
@@ -110,7 +115,7 @@ public class CommentController implements kyblogConstant {
      **/
     @RequestMapping(value = "/rows", method = RequestMethod.POST)
     @ResponseBody
-    public int getRows(Map<String, Object> params) {
-        return commentService.selectRows((Comment) params.get("comment"));
+    public int getRows(@RequestBody Map<String, Object> params) {
+        return commentService.selectRows(JSON.parseObject(JSON.toJSONString(params.get("comment")), Comment.class));
     }
 }
