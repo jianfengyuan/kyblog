@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kyblog.Dao.StatisticsDao">
+    <sql id="statisticsCommonsValue">
+        <if test="id != null">
+            id = #{id},
+        </if>
+        <if test="ip != null">
+            ip = #{ip},
+        </if>
+        <if test="requestCount != null">
+            request_count = #{requestCount},
+        </if>
+        <if test="requestDate != null ">
+            request_date = #{requestDate},
+        </if>
+        <if test="articleId != null ">
+            article_id = #{articleId},
+        </if>
+    </sql>
+
+    <sql id="statisticsQueryValue">
+        <if test="statistics.id != null">
+            and id = #{statistics.id}
+        </if>
+        <if test="statistics.ip != null">
+            and ip = #{statistics.ip}
+        </if>
+        <if test="statistics.requestCount != null">
+            and request_count = #{statistics.requestCount}
+        </if>
+        <if test="statistics.articleId != null">
+            and article_id = #{statistics.articleId}
+        </if>
+        <if test="statistics.requestDate != null">
+            and request_date = #{statistics.requestDate}
+        </if>
+    </sql>
+
+    <sql id="insertStatisticsColumn">
+        <if test="articleId != null">
+            article_id,
+        </if>
+        <if test="ip != null">
+            ip,
+        </if>
+        <if test="requestCount != null">
+            request_count,
+        </if>
+        <if test="requestDate != null">
+            request_date,
+        </if>
+    </sql>
+
+    <sql id="insertStatisticsValue">
+        <if test="articleId != null">
+            #{articleId},
+        </if>
+        <if test="ip != null">
+            #{ip},
+        </if>
+        <if test="requestCount != null">
+            #{requestCount},
+        </if>
+        <if test="requestDate != null">
+            #{requestDate},
+        </if>
+    </sql>
+
+    <sql id="selectStatisticsField">
+        id, article_id, ip, request_count, request_date
+    </sql>
+
+    <select id="queryAll" parameterType="Statistics" resultType="Statistics">
+        select <include refid="selectStatisticsField"></include>
+        from statistics
+        <trim prefix="where" prefixOverrides="and" suffixOverrides=",">
+            <include refid="statisticsQueryValue"></include>
+        </trim>
+    </select>
+
+    <insert id="insertStatistics">
+        insert into statistics
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <include refid="insertStatisticsColumn"/>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <include refid="insertStatisticsValue"/>
+        </trim>
+    </insert>
+
+    <!--获取从昨天开始近10天的日期-->
+    <select id="getRecentDates" resultType="java.util.Date">
+        SELECT DISTINCT request_date FROM statistics ORDER BY request_date DESC LIMIT 0,10
+    </select>
+
+    <!--获取从昨天开始近10天每天的访问量-->
+    <select id="getRecentRequests" resultType="java.lang.Integer">
+        SELECT SUM(request_count),request_date FROM statistics GROUP BY request_date ORDER BY request_date DESC LIMIT 0,10
+    </select>
+
+    <!--获取从昨天开始近10天每天的访客数-->
+    <select id="getRecentVisitors" resultType="java.lang.Integer">
+        SELECT COUNT(DISTINCT ip),request_date FROM statistics GROUP BY request_date ORDER BY request_date DESC LIMIT 0,10
+    </select>
+
+    <!--获取不同时间段的访问数量-->
+    <select id="getRequestCount" resultType="java.lang.Integer">
+        select SUM(request_count),request_date FROM statistics
+        <where>
+            /*昨天*/
+            <if test="type == 1">
+                request_date = ADDDATE(CURDATE(),-1)
+            </if>
+            /*最近7天*/
+            <if test="type == 7">
+                request_date BETWEEN ADDDATE(CURDATE(),-8) AND ADDDATE(CURDATE(),-1)
+            </if>
+            /*最近10天*/
+            <if test="type == 10">
+                request_date BETWEEN ADDDATE(CURDATE(),-11) AND ADDDATE(CURDATE(),-1)
+            </if>
+            /*最近30天*/
+            <if test="type == 30">
+                request_date BETWEEN ADDDATE(CURDATE(),-31) AND ADDDATE(CURDATE(),-1)
+            </if>
+            /*最近1年*/
+            <if test="type == 365">
+                request_date BETWEEN ADDDATE(CURDATE(),-366) AND ADDDATE(CURDATE(),-1)
+            </if>
+            /*总共*/
+            <if test="type == -1">
+                1=1
+            </if>
+        </where>
+    </select>
+
+    <!--获取不同时间段的访客数量-->
+    <select id="getVisitorCount" resultType="java.lang.Integer">
+        select COUNT(DISTINCT ip) FROM statistics
+        <where>
+            /*昨天*/
+            <if test="type == 1">
+                request_date = ADDDATE(CURDATE(),-1)
+            </if>
+            /*最近7天*/
+            <if test="type == 7">
+                request_date BETWEEN ADDDATE(CURDATE(),-8) AND ADDDATE(CURDATE(),-1)
+            </if>
+            /*最近10天*/
+            <if test="type == 10">
+                request_date BETWEEN ADDDATE(CURDATE(),-11) AND ADDDATE(CURDATE(),-1)
+            </if>
+            /*最近30天*/
+            <if test="type == 30">
+                request_date BETWEEN ADDDATE(CURDATE(),-31) AND ADDDATE(CURDATE(),-1)
+            </if>
+            /*最近1年*/
+            <if test="type == 365">
+                request_date BETWEEN ADDDATE(CURDATE(),-366) AND ADDDATE(CURDATE(),-1)
+            </if>
+            /*总共*/
+            <if test="type == -1">
+                1=1
+            </if>
+        </where>
+    </select>
+</mapper>

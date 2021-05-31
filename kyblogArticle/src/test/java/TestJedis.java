@@ -1,4 +1,4 @@
-import com.kyblog.ArticleApplication;
+import com.kyblog.article.ArticleApplication;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

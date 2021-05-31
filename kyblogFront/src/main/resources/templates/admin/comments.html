@@ -31,7 +31,7 @@
 <body class="adminbody">
 <div id="main">
     <div th:replace="common/bar::#top"></div>
-    <div th:replace="common/bar::#sidebar(currUri='comments',unRead=0)"></div>
+    <div th:replace="common/bar::#sidebar(currUri='comments',,unRead=${unRead})"></div>
     <!--编辑回复弹出框-->
     <div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-sm" role="document">
@@ -152,6 +152,10 @@
 </div>
 <script type="text/javascript" th:src="@{/common/js/global.js}"></script>
 <script type="text/javascript" th:src="@{/background/js/jquery-3.6.0.min.js}"></script>
+<script type="text/javascript" th:src="@{/background/js/bootstrap.bundle.js}"></script>
+<script type="text/javascript" th:src="@{/background/js/bootstrap.js}"></script>
+<script type="text/javascript" th:src="@{/background/js/modernizr.min.js}"></script>
+<script type="text/javascript" th:src="@{/background/js/moment.min.js}"></script>
 <script type="text/javascript" th:src="@{/common/js/comment.js}"></script>
 <script type="text/javascript" th:src="@{/background/plugins/datatables/jquery.dataTables.min.js}"></script>
 <script type="text/javascript" th:src="@{/common/js/sweetalert.min.js}"></script>
@@ -209,7 +213,7 @@
                 }
                 $.ajax({
                     type: "POST",
-                    url: CONTEXT_PATH + "/comments/commentData",
+                    url: "comments",
                     cache : false,  //禁用缓存
                     data: data,   //传入已封装的参数
                     dataType: "json",//返回数据格式为json

@@ -6,8 +6,8 @@ function addKind() {
         return;
     }
     $.ajax({
-        type: "POST",
-        url: CONTEXT_PATH + "/kind/addKind",
+        type: "PUT",
+        url: "/admin/kinds",
         data: {name:name,introduce:introduce},
         dataType: "json",
         success: function(data){
@@ -35,7 +35,7 @@ function reload() {
 /**
  * 删除文集
  */
-function deleteKind(id, name) {
+function deleteKind(id) {
     swal({
         title: "确定删除此文集?",
         text: "删除此文集之后，关联的文章不会一起删除！",
@@ -46,9 +46,9 @@ function deleteKind(id, name) {
         .then((willDelete) => {
             if (willDelete) {
                 $.ajax({
-                    type: "POST",
-                    url: CONTEXT_PATH +"/kind/deleteKind",
-                    data: {id:id,name:name},
+                    type: "DELETE",
+                    url: "/admin/kinds/"+id,
+                    // data: {id:id,name:name},
                     dataType: "json",
                     success: function(data){
                         if (data['code']== 200){
@@ -75,8 +75,8 @@ function updateKind() {
         return;
     }
     $.ajax({
-        type: "POST",
-        url: CONTEXT_PATH + "/kind/updateKind",
+        type: "PUT",
+        url:"/admin/kinds",
         data: {name:name,introduce:introduce,id:id},
         dataType: "json",
         success: function(data){

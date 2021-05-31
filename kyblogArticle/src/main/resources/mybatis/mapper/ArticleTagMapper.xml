@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.kyblog.Dao.ArticleTagDao">
+<mapper namespace="com.kyblog.article.Dao.ArticleTagDao">
     <sql id="selectField">
         id, article_id, tag_id, status
     </sql>
@@ -54,13 +54,13 @@
         </trim>
     </insert>
     
-    <select id="queryAll" resultType="ArticleTag">
+    <select id="queryAll" resultType="com.kyblog.api.entity.ArticleTag">
         select <include refid="selectField"></include>
         from article_tag
         where status = 1
     </select>
 
-    <select id="queryByArticleId" resultType="ArticleTag">
+    <select id="queryByArticleId" resultType="com.kyblog.api.entity.ArticleTag">
         select <include refid="selectField"></include>
         from article_tag
         where article_id = #{articleId}
@@ -68,13 +68,13 @@
         order by tag_id
     </select>
 
-    <select id="queryByTagId" resultType="ArticleTag">
+    <select id="queryByTagId" resultType="com.kyblog.api.entity.ArticleTag">
         select <include refid="selectField"></include>
         from article_tag
         where tag_id = #{tagId}
         and status = 1
     </select>
-    <select id="queryByTagIdAndArticleId" resultType="ArticleTag">
+    <select id="queryByTagIdAndArticleId" resultType="com.kyblog.api.entity.ArticleTag">
         select <include refid="selectField"></include>
         from article_tag
         where tag_id = #{tagId}

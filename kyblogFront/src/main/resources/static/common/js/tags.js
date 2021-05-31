@@ -16,8 +16,8 @@ function addTag() {
     //     return;
     // }
     $.ajax({
-        type: "POST",
-        url: CONTEXT_PATH + "/tags/addTag",
+        type: "PUT",
+        url: "/admin/tags",
         data: {name:name},
         dataType: "json",
         success: function(data){
@@ -55,8 +55,8 @@ function updateTag() {
         return;
     }
     $.ajax({
-        type: "POST",
-        url: CONTEXT_PATH +"/tags/updateTag",
+        type: "PUT",
+        url: "/admin/tags",
         data: {name:name,id:id},
         dataType: "json",
         success: function(data){
@@ -83,12 +83,10 @@ function deleteTag(id) {
         dangerMode: true,
     }).then((willDelete) => {
             if (willDelete) {
-                // var location = window.location.href;
-                // let strings = location.split("moti-blog");
                 $.ajax({
-                    type: "POST",
-                    url: CONTEXT_PATH +"/tags/deleteTag",
-                    data: {id:id},
+                    type: "DELETE",
+                    url: "/admin/tags/"+id,
+                    // data: {id:id},
                     dataType: "json",
                     success: function(data){
                         if (data['code']== 200){

@@ -1,7 +1,6 @@
 import com.alibaba.fastjson.JSON;
-import com.kyblog.ArticleApplication;
-import com.kyblog.entity.AlphaArticle;
-import com.kyblog.entity.Article;
+import com.kyblog.article.ArticleApplication;
+import com.kyblog.api.entity.AlphaArticle;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +12,6 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import java.util.Date;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest

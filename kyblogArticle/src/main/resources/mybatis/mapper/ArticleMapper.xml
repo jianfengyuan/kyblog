@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.kyblog.Dao.ArticleDao">
+<mapper namespace="com.kyblog.article.Dao.ArticleDao">
     <sql id="selectField">
         id, object_id, title, status, read_count, introduce, publish_time, edict_time,background
     </sql>
@@ -39,7 +39,7 @@
     </sql>
 
 
-    <select id="queryById" resultType="Article">
+    <select id="queryById" resultType="com.kyblog.api.entity.Article">
         select <include refid="selectField"></include>
         from article
         where id=#{id}
@@ -48,7 +48,7 @@
         </if>
     </select>
 
-    <insert id="insertArticle" parameterType="Article" keyProperty="id">
+    <insert id="insertArticle" parameterType="com.kyblog.api.entity.Article" keyProperty="id">
         insert into article (<include refid="insertField"></include>)
         values (#{title},#{objectId},#{status},#{readCount},#{introduce},#{publishTime},#{edictTime},#{background})
     </insert>
@@ -57,7 +57,7 @@
         update article set status=0 where id=#{id}
     </update>
 
-    <select id="queryByTagId" resultType="Article">
+    <select id="queryByTagId" resultType="com.kyblog.api.entity.Article">
         select <include refid="selectField"></include>
         from article
         where id in
@@ -65,7 +65,7 @@
         and status=1
     </select>
 
-    <select id="queryArticles" resultType="Article">
+    <select id="queryArticles" resultType="com.kyblog.api.entity.Article">
         select <include refid="selectField"></include>
         from article
         where 1=1

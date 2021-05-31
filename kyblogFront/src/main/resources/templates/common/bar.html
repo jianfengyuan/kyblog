@@ -8,7 +8,7 @@
 <div class="headerbar" id="top" >
     <!-- LOGO -->
     <div class="headerbar-left" style="text-align: left;padding-left: 30px">
-        <a href="index" class="logo" target="_blank">
+        <a href="/" class="logo" target="_blank">
             <i class="fa fa-hand-peace-o"></i>
             <span>前台首页</span>
         </a>
@@ -88,19 +88,19 @@
                 </li>
 
                 <li class="submenu">
-                    <a th:href="@{/articles}" th:class="${currUri == 'articles' or currUri == 'new' ? 'active':''}"><i class="fa fa-book bigfonts" ></i><span> 文章 </span></a>
+                    <a th:href="@{/admin/articles}" th:class="${currUri == 'articles' or currUri == 'new' ? 'active':''}"><i class="fa fa-book bigfonts" ></i><span> 文章 </span></a>
                 </li>
 
                 <li class="submenu">
-                    <a th:href="@{/kind/kindList}" th:class="${currUri == 'kinds' ? 'active':''}"><i class="fa fa-tasks bigfonts"></i><span> 文集 </span> </a>
+                    <a th:href="@{/admin/kinds}" th:class="${currUri == 'kinds' ? 'active':''}"><i class="fa fa-tasks bigfonts"></i><span> 文集 </span> </a>
                 </li>
 
                 <li class="submenu">
-                    <a th:href="@{/tags/tagList}" th:class="${currUri == 'tags' ? 'active':''}"><i class="fa fa-tags bigfonts"></i><span> 标签 </span> </a>
+                    <a th:href="@{/admin/tags}" th:class="${currUri == 'tags' ? 'active':''}"><i class="fa fa-tags bigfonts"></i><span> 标签 </span> </a>
                 </li>
 
                 <li class="submenu">
-                    <a th:href="@{/comments/commentsList}" th:class="${currUri == 'comments' ? 'active':''}"><i class="fa fa-comment bigfonts"></i><span> 评论 </span> <span th:if="${unRead > 0}" class="label radius-circle bg-danger float-right">[[${unRead}]]</span> </a>
+                    <a th:href="@{/admin/comments}" th:class="${currUri == 'comments' ? 'active':''}"><i class="fa fa-comment bigfonts"></i><span> 评论 </span> <span th:if="${unRead > 0}" class="label radius-circle bg-danger float-right">[[${unRead}]]</span> </a>
                 </li>
 
                 <li class="submenu">
@@ -180,5 +180,9 @@
         </ul>
     </div>
 </div>
+<script type="text/javascript" th:src="@{/background/js/jquery-3.6.0.min.js}"></script>
+<script type="text/javascript" th:src="@{/background/js/bootstrap.bundle.js}"></script>
+<script type="text/javascript" th:src="@{/background/js/bootstrap.js}"></script>
+<script type="text/javascript" th:src="@{/background/js/modernizr.min.js}"></script>
 </body>
 </html>

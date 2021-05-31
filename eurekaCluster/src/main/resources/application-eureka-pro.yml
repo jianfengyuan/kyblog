@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: eureka-server1
+server:
+  port: 9001
+eureka:
+  instance:
+    hostname: eureka8001
+    prefer-ip-address: true
+#    instance-id: 192.168.50.218:9001
+#    instance-id: eureka8001:9001
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+    serviceUrl:
+      defaultZone: ${SPRING-CLOUD-EUREKA-ZONE}

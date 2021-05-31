@@ -13,7 +13,7 @@ function publish() {
     }
     $.ajax({
         type: "POST",
-        url: CONTEXT_PATH+"/articles/publish",
+        url: "/admin/articles/publish",
         data: {title:title,content:content,tags:tags, introduce:introduce, kind:kind, status:1},
         dataType: "json",
         success: function(data){
@@ -21,8 +21,7 @@ function publish() {
                 swal("发表成功", "你现在可以给文章添加一个封面啦！", "success")
                     .then(() => {
                         var location = window.location.href;
-                        let strings = location.split("kyblogArticle");
-                        window.location.href = strings[0]+"kyblogArticle/articles";
+                        window.location.href ="/admin/articles";
                     });
             }else{
                 swal("出错啦", "服务器发生了一个错误", "error");
@@ -49,7 +48,7 @@ function updatePublish() {
     }
     $.ajax({
         type: "POST",
-        url: CONTEXT_PATH+"/articles/update",
+        url: "/admin/articles/update",
         data: {id:id,title:title,content:content,tags:tags,kind:kind,
             introduce:introduce,status:1, background:img_head},
         dataType: "json",
@@ -58,7 +57,7 @@ function updatePublish() {
                 swal("更新成功", "", "success")
                     .then(() => {
                         var location = window.location.href;
-                        window.location.href = "/articles/edit?articleId="+id;
+                        window.location.href = "/admin/articles/edit?articleId="+id;
                     });
             }else{
             }
@@ -81,7 +80,7 @@ function draftPublish() {
     }
     $.ajax({
         type: "POST",
-        url: CONTEXT_PATH+"/articles/publish",
+        url: "/admin/articles/publish",
         data: {title:title,content:content,tags:tags,kind:kind,introduce:introduce,status:2},
         dataType: "json",
         success: function(data){
@@ -90,7 +89,7 @@ function draftPublish() {
                     .then(() => {
                         var location = window.location.href;
                         let strings = location.split("kyblogArticle");
-                        window.location.href = strings[0]+"articles";
+                        window.location.href = "/admin/articles";
                     });
             }else{
                 swal("出错啦", "服务器发生了一个错误", "error");
@@ -123,8 +122,7 @@ function updateDraft() {
                 swal("保存草稿成功！", "", "success")
                     .then(() => {
                         var location = window.location.href;
-                        let strings = location.split("kyblogArticle");
-                        window.location.href = strings[0]+"articles/edit?articleId="+id;
+                        window.location.href = "/admin/articles/edit?articleId="+id;
                     });
             }else{
                 swal("出错啦", "服务器发生了一个错误", "error");

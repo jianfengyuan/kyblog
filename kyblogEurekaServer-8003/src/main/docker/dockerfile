@@ -1,4 +1,0 @@
-FROM java:8
-VOLUME /tmp
-ADD kyblogEurekaServer-8003-1.0-SNAPSHOT.jar /eureka-server-8003.jar
-ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/eureka-server-8003.jar"]

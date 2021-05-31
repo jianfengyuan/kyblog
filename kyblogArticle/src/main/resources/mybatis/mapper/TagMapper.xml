@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.kyblog.Dao.TagDao">
+<mapper namespace="com.kyblog.article.Dao.TagDao">
     <sql id="tagCommonsValue">
         <if test="name != null and name != ''">
             name = #{name},
@@ -44,7 +44,7 @@
         id, name, article_count, status
     </sql>
 
-    <select id="queryTags" resultType="Tag">
+    <select id="queryTags" resultType="com.kyblog.api.entity.Tag">
         select <include refid="selectField"></include>
         from tag
         where 1=1
@@ -77,7 +77,7 @@
         update tag set status=#{status} where name=#{name}
     </update>
 
-    <select id="queryByName" resultType="Tag">
+    <select id="queryByName" resultType="com.kyblog.api.entity.Tag">
         select <include refid="selectField"></include>
         from tag
         where name=#{name}
@@ -87,7 +87,7 @@
 
     </select>
 
-    <select id="queryByArticleId" resultType="Tag">
+    <select id="queryByArticleId" resultType="com.kyblog.api.entity.Tag">
         select <include refid="selectField"></include>
         from tag
         where id in
@@ -95,10 +95,13 @@
               article_id=#{articleId} and status=1)
     </select>
 
-    <select id="queryById" resultType="Tag">
+    <select id="queryById" resultType="com.kyblog.api.entity.Tag">
         select <include refid="selectField"></include>
         from tag
-        where id=#{id} and status=1
+        where id=#{id}
+        <if test="status!=null">
+            and status= #{status}
+        </if>
     </select>
 
     <update id="updateReadCount">

@@ -150,6 +150,25 @@
                             <div class="col col-lg-5 col-md-5 col-sm-12 col-12">
 
                             </div>
+                            <div class="col col-lg-5 ml-auto col-md-5 col-sm-12 col-12">
+                                <ul class="profile-menu">
+<!--                                    <li th:each="menu:${rightMenus}">-->
+<!--                                        <a th:href="@{${menu.url}}" th:text="${menu.name}" target="_blank"></a>-->
+<!--                                    </li>-->
+                                    <li >
+                                        <a th:href="@{/admin/articles}" target="_blank">后台管理</a>
+                                    </li>
+                                    <li >
+                                        <a th:href= "@{/admin/articles/new}" target="_blank">写文章</a>
+                                    </li>
+                                    <li >
+                                        <a href="comments" target="_blank">评论</a>
+                                    </li>
+                                    <li >
+                                        <a href="admin-login" target="_blank">登录后台</a>
+                                    </li>
+                                </ul>
+                            </div>
 
                         </div>
 

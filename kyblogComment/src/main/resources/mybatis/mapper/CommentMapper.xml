@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.kyblog.Dao.CommentDao">
+<mapper namespace="com.kyblog.comment.Dao.CommentDao">
     <sql id="commentCommonsValue">
         <if test="id != null">
             id = #{id},

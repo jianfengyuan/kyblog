@@ -146,6 +146,9 @@
 </div>
 
 <script type="text/javascript" th:src="@{/background/js/jquery-3.6.0.min.js}"></script>
+<script type="text/javascript" th:src="@{/background/js/bootstrap.bundle.js}"></script>
+<script type="text/javascript" th:src="@{/background/js/bootstrap.js}"></script>
+<script type="text/javascript" th:src="@{/background/js/modernizr.min.js}"></script>
 <script type="text/javascript" th:src="@{/common/js/kind.js}"></script>
 <script type="text/javascript" th:src="@{/common/js/global.js}"></script>
 <script type="text/javascript" th:src="@{/background/plugins/datatables/jquery.dataTables.min.js}"></script>
@@ -204,7 +207,7 @@
                 }
                 $.ajax({
                     type: "POST",
-                    url: CONTEXT_PATH + "/kind/kindData",
+                    url: "kinds",
                     cache : false,  //禁用缓存
                     data: data,   //传入已封装的参数
                     dataType: "json",//返回数据格式为json
@@ -242,6 +245,7 @@
                     "render": function (data, type, full) {
                         var editBtn = "edit" + full.id;
                         var deleteBtn = "delete" + full.id;
+                        let id = full.id
                         $('#example1 ').undelegate('tbody #'+editBtn, 'click');
 
                         $('#example1').on('click', 'tbody #'+editBtn, function () {
@@ -249,8 +253,8 @@
                             updateBtn(full.id, full.name, full.introduce)
                         })
                         $('#example1 ').undelegate('tbody #'+deleteBtn, 'click');
-                        $('#example1').on('click', 'tbody #'+deleteBtn, function (full) {
-                            deleteKind(full.id, full.name)
+                        $('#example1').on('click', 'tbody #'+deleteBtn, function () {
+                            deleteKind(id)
                         })
 
                         return "<button type=\"button\" class=\"btn btn-sm btn-success\"" + " id=" + editBtn + " data-toggle=\"modal\" data-target=\"#updateModal\""+" >编辑</button>   " +

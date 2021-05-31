@@ -8,19 +8,15 @@
     <artifactId>kyblog</artifactId>
     <version>1.0-SNAPSHOT</version>
     <modules>
-        <module>Alpha-springcloud-api</module>
-        <module>kyblogEurekaServer-8001</module>
-        <module>kyblogEurekaServer-8002</module>
-        <module>kyblogEurekaServer-8003</module>
         <module>kyblogArticle</module>
         <module>kyblogComment</module>
         <module>kyblogAPI</module>
         <module>kyblogAdmin</module>
-        <module>testNginx</module>
         <module>kyblogFront</module>
         <module>kyblogAccountManagement</module>
         <module>kyblogImage</module>
         <module>eurekaCluster</module>
+        <module>kyblogStatistic</module>
     </modules>
 
     <packaging>pom</packaging>
@@ -107,7 +103,12 @@
                 <artifactId>spring-boot-starter-data-mongodb</artifactId>
                 <version>2.3.6.RELEASE</version>
             </dependency>
-
+            <!-- https://mvnrepository.com/artifact/org.springframework.security/spring-security-core -->
+<!--            <dependency>-->
+<!--                <groupId>org.springframework.security</groupId>-->
+<!--                <artifactId>spring-security-core</artifactId>-->
+<!--                <version>5.4.5</version>-->
+<!--            </dependency>-->
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
