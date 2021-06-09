@@ -6,12 +6,14 @@ function replyBtnEvent(commentId, articleId, name) {
 
 function addComment(admin) {
     let readStatus = COMMENT_UNREAD;
+    let context = "";
     if (admin) {
         readStatus = COMMENT_READ;
+        context = "/admin";
     }
     let name = $('#name').val().trim();
     let type = $('#type').val().trim();
-    let replyId = $('#reply-id').val().trim();
+    let replyId = $('#reply-id').val();
     let email = $('#email').val().trim();
     let articleId = $('#article-id').val().trim();
     let content = $('#content').val().trim();
@@ -25,7 +27,7 @@ function addComment(admin) {
     }
     $.ajax({
         type: "POST",
-        url: CONTEXT_PATH + "/comments/addComment",
+        url: context+"/comments",
         data: {name:name,replyId:replyId,type:type,
             replyId:replyId, email: email, articleId:articleId,
             content:content, readStatus: readStatus},
@@ -34,7 +36,11 @@ function addComment(admin) {
             // data = $.parseJSON(data);
             console.log(data)
             if (data["code"] == 200){
-                swal("回复成功","已回复: "+name,"success");
+                if (admin) {
+                    swal("回复成功", "已回复: " + name, "success");
+                } else {
+                    swal("评论成功");
+                }
                 setInterval(reload, 2000);
             }else{
                 swal("出错啦", "服务器发生了一个错误", "error");

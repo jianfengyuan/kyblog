@@ -1,3 +1,4 @@
+import com.kyblog.api.elasticsearch.ArticleRepository;
 import com.kyblog.api.entity.Comment;
 import com.kyblog.api.entity.Kind;
 import com.kyblog.api.entity.OrderMode;
@@ -8,17 +9,23 @@ import com.kyblog.api.redisKey.StatisticsKey;
 import com.kyblog.api.utils.RedisOpsUtils;
 import com.kyblog.api.utils.kyblogConstant;
 import com.kyblog.api.vo.StatisticsCount;
+import com.kyblog.article.Service.ArticleService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.data.elasticsearch.repository.config.EnableElasticsearchRepositories;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.client.RestTemplate;
 
@@ -31,7 +38,10 @@ import java.util.*;
  * @create: 2021-04-20 15:45
  **/
 @RunWith(SpringRunner.class)
-@SpringBootTest
+@SpringBootTest()
+//@Configuration("classpath:application.properties")
+@ComponentScan(basePackages = {"com.kyblog.api","com.kyblog.article"})
+//@EnableElasticsearchRepositories(basePackages = "com.kyblog.api.elasticsearch")
 @ContextConfiguration(classes = ArticleApplication.class)
 //@ActiveProfiles(value = "article-service")
 public class TestMapper implements kyblogConstant {
@@ -143,6 +153,19 @@ public class TestMapper implements kyblogConstant {
         Map<String, StatisticsCount> res = (Map<String, StatisticsCount>)restTemplate.getForObject(STATISTICS_SERVICE_PREFIX + "/statistics/statisticsCount", Map.class);
         System.out.println(res.get("yesterday"));
         System.out.println(res.get("total"));
+    }
+
+    @Autowired
+    ArticleRepository articleRepository;
+    @Autowired
+    ArticleService articleService;
+
+    @Test
+    public void testElasticSearch() {
+        Article article = articleService.findArticleById(18L);
+        System.out.println(article);
+//        mongoTemplate.insert(article);
+        articleRepository.save(article);
     }
 
 }

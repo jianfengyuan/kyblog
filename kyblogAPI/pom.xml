@@ -48,18 +48,53 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.springframework.data/spring-data-elasticsearch -->
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-elasticsearch</artifactId>
+            <version>3.2.6.RELEASE</version>
+        </dependency>
+
+        <!--        <dependency>-->
+<!--            <groupId>org.elasticsearch.client</groupId>-->
+<!--            <artifactId>elasticsearch-rest-high-level-client</artifactId>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.elasticsearch</groupId>-->
+<!--            <artifactId>elasticsearch</artifactId>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.elasticsearch.client</groupId>-->
+<!--            <artifactId>elasticsearch-rest-client</artifactId>-->
+<!--        </dependency>-->
+
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.boot</groupId>-->
+<!--            <artifactId>spring-boot-starter-data-jpa</artifactId>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.data</groupId>-->
+<!--            <artifactId>spring-data-elasticsearch</artifactId>-->
+<!--            <version>3.2.5.RELEASE</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.apache.commons</groupId>-->
+<!--            <artifactId>commons-lang3</artifactId>-->
+<!--            <version>3.11</version>-->
+<!--        </dependency>-->
     </dependencies>
 
-<!--    <distributionManagement>-->
-<!--        <repository>-->
-<!--            <id>release</id>-->
-<!--            <name>NexusReleases</name>-->
-<!--            <url>http://localhost:8081/repository/maven-releases/</url>-->
-<!--        </repository>-->
-<!--        <snapshotRepository>-->
-<!--            <id>snapshots</id>-->
-<!--            <name>NexusSnapshot</name>-->
-<!--            <url>http://localhost:8081/repository/maven-snapshots/</url>-->
-<!--        </snapshotRepository>-->
-<!--    </distributionManagement>-->
+
+    <distributionManagement>
+        <repository>
+            <id>release</id>
+            <name>NexusReleases</name>
+            <url>http://localhost:8081/repository/maven-releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>snapshots</id>
+            <name>NexusSnapshot</name>
+            <url>http://localhost:8081/repository/maven-snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
 </project>

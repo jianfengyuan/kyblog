@@ -1,9 +1,7 @@
 package com.kyblog.article.Controller;
 
-import com.kyblog.article.Service.ArticleKindService;
-import com.kyblog.article.Service.ArticleService;
-import com.kyblog.article.Service.KindService;
-import com.kyblog.article.Service.TagService;
+import com.kyblog.api.elasticsearch.ArticleRepository;
+import com.kyblog.article.Service.*;
 import com.kyblog.api.utils.ImageUtils;
 import com.kyblog.api.utils.RedisOpsUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +20,15 @@ import javax.servlet.http.HttpSession;
  **/
 
 public class BaseController {
+    @Autowired
+    protected ArticleTagService articleTagService;
+
+    @Autowired
+    protected ElasticSearchService elasticSearchService;
+
+    @Autowired
+    protected ArticleRepository articleRepository;
+
     @Autowired
     protected RedisOpsUtils redisOpsUtils;
 

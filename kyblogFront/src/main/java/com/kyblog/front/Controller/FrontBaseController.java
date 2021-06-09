@@ -35,7 +35,7 @@ public class FrontBaseController implements kyblogConstant {
     @Autowired
     protected RestTemplate restTemplate;
 
-//    @Qualifier("myRedisTemplate")
+    @Qualifier("redisOpsUtils")
     @Autowired
     protected RedisOpsUtils redisOpsUtils;
 

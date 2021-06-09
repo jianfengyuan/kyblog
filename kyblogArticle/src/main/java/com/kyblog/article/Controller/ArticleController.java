@@ -105,7 +105,7 @@ public class ArticleController extends BaseController implements kyblogConstant 
     @ResponseBody
     public String updateArticle(@RequestBody Map<String, Object> param) {
 //        System.out.println(id +" " +title+" " + content+" " + tags+" " + kind+" " + introduce+" " + status);
-        Long id = (Long) param.get("id");
+        Long id = Long.valueOf(param.get("id").toString());
         String title = (String) param.get("title");
         String content = (String) param.get("content");
         String tags = (String) param.get("tags");
@@ -127,7 +127,10 @@ public class ArticleController extends BaseController implements kyblogConstant 
     @RequestMapping(path = "/articles/article/{id}", method = RequestMethod.GET)
     @ResponseBody
     public Article getArticle(@PathVariable("id") Long id) {
-        return articleService.findArticleById(id);
+        Article article = articleService.findArticleById(id);
+        Long readCount = articleService.findReadCount(id);
+        article.setReadCount(readCount);
+        return article;
     }
 
 
@@ -158,11 +161,16 @@ public class ArticleController extends BaseController implements kyblogConstant 
     public List<Article> getArticleList(@RequestBody Map<String, Object> params) {
         Page page = JSON.parseObject(JSON.toJSONString(params.get("page")), Page.class);
         OrderMode orderMode = JSON.parseObject(JSON.toJSONString(params.get("orderMode")), OrderMode.class);
-        return articleService.findArticles(page, orderMode);
+        List<Article> articles = articleService.findArticles(page, orderMode);
+        for (Article article :
+                articles) {
+            article.setReadCount(articleService.findReadCount(article.getId()));
+        }
+        return articles;
     }
 
     @RequestMapping(path = "/articles/readCount", method = RequestMethod.PUT)
-    public void addArticleReadCount(@RequestBody Map<String,Object> param) {
+    public void addArticleReadCount(@RequestBody Map<String, Object> param) {
         String readCount = (String) param.get("readCount");
         String articleId = (String) param.get("articleId");
         Article article = articleService.findArticleById(Long.valueOf(articleId));
@@ -178,7 +186,8 @@ public class ArticleController extends BaseController implements kyblogConstant 
         Long count;
         Long articleId = Long.valueOf(id);
         if (redisOpsUtils.hasKey(ArticleKey.getByReadCount.getPrefix() + ":" + id)) {
-            count = (Long) redisOpsUtils.get(ArticleKey.getByReadCount.getPrefix() + ":" + id);
+            String temp = redisOpsUtils.get(ArticleKey.getByReadCount.getPrefix() + ":" + articleId).toString();
+            count = Long.valueOf(temp);
         } else {
             Article article = articleService.findArticleById(articleId);
             count = article.getReadCount();

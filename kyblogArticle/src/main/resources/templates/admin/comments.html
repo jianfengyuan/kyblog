@@ -242,7 +242,7 @@
             columns: [
                 {"data": "articleId", "width": "50px",
                     "render": function (data, type, full) {
-                        return "<a href='/kyblogArticle/articles/edit?articleId="+ full.articleId +"'>" + full.articleTitle +"</a>"
+                        return "<a href='/articles/edit?articleId="+ full.articleId +"'>" + full.articleTitle +"</a>"
                     }},
                 {"data": "content", "width": "120px", "defaultContent": ""},
                 {"data": "name", "width": "120px", "defaultContent": ""},
@@ -315,8 +315,6 @@
 
     });
 </script>
-<!--<script>-->
 
-<!--</script>-->
 </body>
 </html>

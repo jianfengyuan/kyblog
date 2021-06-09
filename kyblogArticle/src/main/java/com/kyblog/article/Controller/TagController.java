@@ -33,7 +33,7 @@ public class TagController extends BaseController implements kyblogConstant {
     public String addTag(@RequestBody Tag tag) {
         // 如果新增TagName已经存在且正在用, 则不能修改或新增
         Tag tempTag = tagService.selectTagByName(tag.getName(), TAG_STATUS_ACTIVE);
-        if (tempTag != null ) {
+        if (tempTag != null) {
             return getJsonString(503);
         }
         // 新增Tag
@@ -105,9 +105,15 @@ public class TagController extends BaseController implements kyblogConstant {
         return tagService.selectTags(status, orderMode, page);
     }
 
-    @RequestMapping(value = "rows", method = RequestMethod.GET)
+    @RequestMapping(value = "/rows", method = RequestMethod.GET)
     @ResponseBody
     public Integer getRows(@RequestParam Integer status) {
         return tagService.getRows(status);
+    }
+
+    @RequestMapping(value = "/tag", method = RequestMethod.GET)
+    @ResponseBody
+    public Tag getTag(@RequestParam(value = "tagId",required = false) Long tagId) {
+        return tagService.selectTagById(tagId, TAG_STATUS_ACTIVE);
     }
 }

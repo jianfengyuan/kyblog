@@ -17,16 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class TagService implements kyblogConstant {
-    @Autowired
-    TagDao tagDao;
+public class TagService extends BaseService implements kyblogConstant {
 
-    @Autowired
-    ArticleTagDao articleTagDao;
-
-//    @Qualifier("myRedisTemplate")
-    @Autowired
-    RedisOpsUtils redisOpsUtils;
 
     public int insertTag(String name) {
 //        Tag tag = tagDao.queryByName(name,TAG_STATUS_ACTIVE);

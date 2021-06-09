@@ -88,7 +88,7 @@
         </if>
     </select>
 
-    <insert id="insertKind" keyProperty="id">
+    <insert id="insertKind" useGeneratedKeys="true" keyProperty="id">
         insert into kind
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <include refid="insertColumn"/>

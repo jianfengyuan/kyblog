@@ -44,7 +44,7 @@
         </if>
     </sql>
     
-    <insert id="insertArticleTag" >
+    <insert id="insertArticleTag" useGeneratedKeys="true" keyProperty="id">
         insert into article_tag
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <include refid="insertColumn"/>

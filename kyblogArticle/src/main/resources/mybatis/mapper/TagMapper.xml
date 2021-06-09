@@ -59,7 +59,7 @@
         </if>
     </select>
 
-    <insert id="insertTag"  keyProperty="id">
+    <insert id="insertTag"  useGeneratedKeys="true" keyProperty="id">
         insert into tag
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <include refid="insertColumn"/>

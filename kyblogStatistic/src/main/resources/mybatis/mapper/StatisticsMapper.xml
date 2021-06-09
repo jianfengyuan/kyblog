@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.kyblog.Dao.StatisticsDao">
+<mapper namespace="com.kyblog.statistics.Dao.StatisticsDao">
     <sql id="statisticsCommonsValue">
         <if test="id != null">
             id = #{id},
@@ -81,7 +81,7 @@
         </trim>
     </select>
 
-    <insert id="insertStatistics">
+    <insert id="insertStatistics" useGeneratedKeys="true" keyProperty="id">
         insert into statistics
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <include refid="insertStatisticsColumn"/>

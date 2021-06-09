@@ -38,7 +38,7 @@ public class StatisticsTask implements kyblogConstant {
         Set<String> keys = redisOpsUtils.getKeys(StatisticsKey.todayVisitor.getPrefix()+"*");
 //        System.out.println(keys);
         Calendar calendar=Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY,-24);
+        calendar.add(Calendar.HOUR_OF_DAY,-24);
         for (String key : keys) {
             String[] strings = key.split("visitor:");
             String str = strings[1];
@@ -70,7 +70,7 @@ public class StatisticsTask implements kyblogConstant {
             restTemplate.put(ARTICLE_SERVICE_PREFIX+"/articles/readCount",param);
         }
         redisOpsUtils.deleteCache(ArticleKey.getByReadCount.getPrefix() + "*");
-        redisOpsUtils.deleteCache(ArticleKey.getFamousArticles.getPrefix());
+        redisOpsUtils.deleteCache(ArticleKey.getFamousArticles.getPrefix() + "*");
         redisOpsUtils.deleteCache(ArticleKey.getById.getPrefix()+"*");
     }
 }

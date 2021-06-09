@@ -68,9 +68,6 @@
     </sql>
 
     <sql id="insertCommentColumn">
-        <if test="objectId != null">
-            object_id,
-        </if>
         <if test="articleId != null">
             article_id,
         </if>
@@ -100,9 +97,6 @@
         </if>
     </sql>
     <sql id="insertCommentValue">
-        <if test="objectId != null">
-            #{objectId},
-        </if>
         <if test="articleId != null">
             #{articleId},
         </if>
@@ -133,10 +127,10 @@
     </sql>
 
     <sql id="selectCommentField">
-        id, article_id, name, email, object_id, reply_id, time, ip, type, status, read_status
+        id, article_id, name, email, reply_id, time, ip, type, status, read_status
     </sql>
 
-    <insert id="insertComment">
+    <insert id="insertComment" useGeneratedKeys="true" keyProperty="id">
         insert into comment
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <include refid="insertCommentColumn"/>

@@ -242,7 +242,7 @@
                             </div>
 
                             <div class="post-content">
-                                <a th:href="@{search(tagId=${tag.id})}" style="margin: 0px 4px 2px 0px" class="post-category bg-blue-light" th:each="tag:${article.tags}">[[${tag.name}]]</a>
+                                <a th:href="@{/search(tagId=${tag.id})}" style="margin: 0px 4px 2px 0px" class="post-category bg-blue-light" th:each="tag:${article.tags}">[[${tag.name}]]</a>
 
                                 <a th:href="@{article(articleId=${article.id})}" class="h4 post-title" th:text="${article.title}"></a>
                                 <p th:if="${article.introduce != null}">

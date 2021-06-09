@@ -77,7 +77,7 @@
                                         <tbody style="font-size: 13px">
                                         <tr th:each="article : ${articles}">
                                             <td style="font-size: 15px;font-weight: 700">
-                                                <a th:href="@{/admin/edit(articleId=${article.id})}" th:title="${'编辑 - 《' + article.title + '》'}">[[${article.title}]]</a>
+                                                <a th:href="@{/admin/articles/edit(articleId=${article.id})}" th:title="${'编辑 - 《' + article.title + '》'}">[[${article.title}]]</a>
                                             </td>
                                             <td th:if="${article.kind != null}">
                                                 [[${article.kind.name}]]
@@ -106,7 +106,7 @@
 
                                             </td>
                                             <td>
-                                                <a th:href="@{article(articleId=${article.id})}" class="btn btn-sm btn-success" title="查看"><i class="fa fa-eye"></i></a>
+                                                <a th:href="@{/article(articleId=${article.id})}" class="btn btn-sm btn-success" title="查看"><i class="fa fa-eye"></i></a>
                                                 <button th:onclick="deleteLight([[${article.id}]],'publish')" th:if="${article.status != 2}" class="btn btn-sm btn-danger" title="移入回收站"><i class="fa fa-trash"></i></button>
                                             </td>
                                         </tr>

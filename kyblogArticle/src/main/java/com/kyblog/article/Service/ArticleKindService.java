@@ -12,7 +12,7 @@ public class ArticleKindService {
     @Autowired
     private ArticleKindDao articleKindDao;
 
-    public List<ArticleKind> selectArticleKinds(Integer kindId, Integer status) {
+    public List<ArticleKind> selectArticleKindsByKindId(Integer kindId, Integer status) {
         return articleKindDao.queryArticleKinds(kindId, status);
     }
 

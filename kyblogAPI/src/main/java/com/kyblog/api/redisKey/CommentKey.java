@@ -9,5 +9,6 @@ public class CommentKey extends BasePrefix{
 	public static CommentKey getByTitle = new CommentKey("name");
 	public static CommentKey getIndex = new CommentKey("index");
 	public static CommentKey getByArticleId = new CommentKey("aId");
+	public static CommentKey getByStatus = new CommentKey("status");
 
 }

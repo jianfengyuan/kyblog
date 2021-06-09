@@ -148,8 +148,8 @@
 
                 <article class="hentry blog-post single-post single-post-v3">
 
-                    <a  th:href="@{search(kindId=${article.kind.id})}" style="margin: 0px 4px 2px 0px;font-size: 15px" class="post-category bg-blue-light" th:if="${article.kind != '-'}">选自文集 《》</a>
-                    <a  href="#" style="margin: 0px 4px 2px 0px;font-size: 15px" class="post-category bg-blue-light" th:if="${article.kind.name == '-'}">该文章没有添加到任何文集</a>
+                    <a  th:href="@{search(kindId=${article.kind.id})}" style="margin: 0px 4px 2px 0px;font-size: 15px" class="post-category bg-blue-light" th:if="${article.kind.name != '-'}">选自文集 《[[${article.kind.name}]]》</a>
+                    <a  th:href="@{search(kindId=${article.kind.id})}" style="margin: 0px 4px 2px 0px;font-size: 15px" class="post-category bg-blue-light" th:if="${article.kind.name == '-'}">选自默认文集</a>
 
                     <ul class="filter-icons" style="font-size: 14px">
                         <li>
@@ -158,8 +158,8 @@
                         </li>
                         <li>
                             评论：
-<!--                            <span th:text="${article.comment}"></span>-->
-<!--                            <span th:if="${article.comment == null}">0</span>-->
+                            <span th:text="${comments.size()}"></span>
+<!--                            <span th:if="${comments.size()==0}">0</span>-->
                         </li>
                     </ul>
 
@@ -254,10 +254,12 @@
                         <h3>留言</h3>
                     </div>
                     <div class="card-body">
+                        <input type="hidden" id="type" value="0">
+                        <input type="hidden" id="article-id" th:value="${article.id}">
                         <input type="text" id="name" class="form-control" placeholder="请输入你的昵称" autocomplete="off">
                         <input type="text" id="email" class="form-control" placeholder="请输入你的邮箱地址" autocomplete="off">
                         <textarea id="content" class="form-control" placeholder="在此处输入留言内容"></textarea>
-                        <button th:onclick="addComment([[${article.id}]])" class="btn btn-md-2 btn-primary">提交留言</button>
+                        <button th:onclick="addComment(false)" class="btn btn-md-2 btn-primary">提交留言</button>
 
                     </div>
                 </div>
@@ -271,22 +273,22 @@
             <aside>
 
                 <!--作者信息-->
-<!--                <div class="ui-block">-->
-<!--                    <div class="ui-block-title">-->
-<!--                        <h6 class="title">名片-->
-<!--                        </h6>-->
-<!--                    </div>-->
-<!--                    <article class="hentry blog-post blog-post-v3 featured-post-item">-->
-<!--                        <div class="row">-->
-<!--                            <div class="col-12" style="text-align: center;margin-top: 5px">-->
-<!--                                <div class="author-thumb">-->
-<!--&lt;!&ndash;                                    <a href="/moti-blog"><img style="width: 70px;height: 70px" alt="author" th:src="@{${user.img}" src="img/friend-harmonic7.jpg" class="avatar"></a>&ndash;&gt;-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                        <br>-->
-<!--                    </article>-->
-<!--                </div>-->
+                <div class="ui-block">
+                    <div class="ui-block-title">
+                        <h6 class="title">名片
+                        </h6>
+                    </div>
+                    <article class="hentry blog-post blog-post-v3 featured-post-item">
+                        <div class="row">
+                            <div class="col-12" style="text-align: center;margin-top: 5px">
+                                <div class="author-thumb">
+                                    <a href="/"><img style="width: 70px;height: 70px" alt="author" src="img/friend-harmonic7.jpg" class="avatar"></a>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                    </article>
+                </div>
 
                 <!--公告-->
 <!--                <div class="ui-block">-->
@@ -380,6 +382,8 @@
 <script th:src="@{/front/Bootstrap/dist/js/bootstrap.bundle.js}"></script>
 <script th:src="@{/common/js/sweetalert.min.js}"></script>
 <script th:src="@{/common/js/article.js}"></script>
+<script th:src="@{/common/js/comment.js}"></script>
+<script th:src="@{/common/js/global.js}"></script>
 
 </body>
 </html>

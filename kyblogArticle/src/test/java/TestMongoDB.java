@@ -15,7 +15,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@ActiveProfiles("article-service")
+//@ActiveProfiles("local")
 @ContextConfiguration(classes = ArticleApplication.class)
 public class TestMongoDB {
     @Autowired
@@ -24,15 +24,17 @@ public class TestMongoDB {
     @Test
     public void testInsert() {
         AlphaArticle article = new AlphaArticle();
-
+        article.setId(1);
         article.setTitle("test id 1");
         article.setContent("test test!!");
-        System.out.println(mongoTemplate.insert(article).getId());
+        System.out.println(article);
+        article = mongoTemplate.insert(article);
+        System.out.println(article);
     }
 
     @Test
     public void testQuery() {
-        Query query = new Query(Criteria.where("title").is("test id 1"));
+        Query query = new Query(Criteria.where("id").is(1));
         AlphaArticle res = mongoTemplate.findOne(query, AlphaArticle.class);
         System.out.println(JSON.toJSON(res));
 
@@ -48,5 +50,7 @@ public class TestMongoDB {
         AlphaArticle res = mongoTemplate.findOne(new Query(Criteria.where("title").is("testUpdate")), AlphaArticle.class, "alphaArticle");
         System.out.println(JSON.toJSONString(res));
     }
+
+
 
 }

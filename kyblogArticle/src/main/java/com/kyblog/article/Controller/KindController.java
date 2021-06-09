@@ -23,22 +23,22 @@ public class KindController extends BaseController implements kyblogConstant {
     @ResponseBody
     public String add(@RequestBody Kind kind) {
         if (kind.getId() == null) {
-            Set<String> keys = redisOpsUtils.getKeys("KindKey");
-            for (String key :
-                    keys) {
-                redisOpsUtils.del(key);
-            }
+//            Set<String> keys = redisOpsUtils.getKeys("KindKey");
+//            for (String key :
+//                    keys) {
+//                redisOpsUtils.del(key);
+//            }
             return kindService.insertKind(kind) == 1 ? getJsonString(200) : getJsonString(501);
         } else {
             if (kind.getName().equals("-")) {
                 return getJsonString(501);
             }
             kindService.updateKind(kind);
-            Set<String> keys = redisOpsUtils.getKeys("KindKey");
-            for (String key :
-                    keys) {
-                redisOpsUtils.del(key);
-            }
+//            Set<String> keys = redisOpsUtils.getKeys("KindKey");
+//            for (String key :
+//                    keys) {
+//                redisOpsUtils.del(key);
+//            }
             return getJsonString(200);
         }
     }
@@ -50,11 +50,11 @@ public class KindController extends BaseController implements kyblogConstant {
         if ("-".equals(kind.getName())) {
             return getJsonString(501);
         }
-        Set<String> keys = redisOpsUtils.getKeys("KindKey");
-        for (String key :
-                keys) {
-            redisOpsUtils.del(key);
-        }
+//        Set<String> keys = redisOpsUtils.getKeys("KindKey");
+//        for (String key :
+//                keys) {
+//            redisOpsUtils.del(key);
+//        }
         return kindService.deleteKind(kind) == 1?getJsonString(200):getJsonString(501);
 
     }
@@ -112,6 +112,7 @@ public class KindController extends BaseController implements kyblogConstant {
             return getJsonString(501);
         }
         kindService.updateKind(kind);
+
         return getJsonString(200);
     }
 

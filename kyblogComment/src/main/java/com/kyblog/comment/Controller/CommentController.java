@@ -1,6 +1,8 @@
 package com.kyblog.comment.Controller;
 
 import com.alibaba.fastjson.JSON;
+import com.kyblog.api.redisKey.CommentKey;
+import com.kyblog.api.utils.RedisOpsUtils;
 import com.kyblog.comment.Service.CommentService;
 import com.kyblog.api.entity.Comment;
 import com.kyblog.api.entity.OrderMode;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,12 +37,18 @@ public class CommentController implements kyblogConstant {
 //    @Qualifier("commentService")
     private CommentService commentService;
 
-    @RequestMapping(value = "/addComment", method = RequestMethod.POST)
+    @Autowired
+    RedisOpsUtils redisOpsUtils;
+
+    @RequestMapping(value = "", method = RequestMethod.POST)
     @ResponseBody
-    public String addComment(Comment comment) {
+    public String addComment(@RequestBody Comment comment) {
 //        comment.setIp(getIpAddress(request));
 //        System.out.println(comment);
         commentService.insertComment(comment);
+        if (comment.getArticleId() != null) {
+            redisOpsUtils.deleteCache(CommentKey.getByArticleId.getPrefix()+":"+comment.getArticleId());
+        }
         return getJsonString(200);
     }
 
@@ -77,9 +86,9 @@ public class CommentController implements kyblogConstant {
     }
 
 
-    @RequestMapping(value = "updateComment", method = RequestMethod.POST)
+    @RequestMapping(value = "/updateComment", method = RequestMethod.PUT)
     @ResponseBody
-    public String updateComment(Comment comment) {
+    public String updateComment(@RequestBody Comment comment) {
         System.out.println(comment);
         commentService.updateComment(comment);
         return getJsonString(200);

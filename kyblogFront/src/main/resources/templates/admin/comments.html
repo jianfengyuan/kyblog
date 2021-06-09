@@ -213,7 +213,7 @@
                 }
                 $.ajax({
                     type: "POST",
-                    url: "comments",
+                    url: "/admin/comments/list",
                     cache : false,  //禁用缓存
                     data: data,   //传入已封装的参数
                     dataType: "json",//返回数据格式为json
@@ -246,7 +246,7 @@
             columns: [
                 {"data": "articleId", "width": "50px",
                     "render": function (data, type, full) {
-                        return "<a href='/kyblogArticle/articles/edit?articleId="+ full.articleId +"'>" + full.articleTitle +"</a>"
+                        return "<a href='/admin/articles/edit?articleId="+ full.articleId +"'>" + full.articleTitle +"</a>"
                     }},
                 {"data": "content", "width": "120px", "defaultContent": ""},
                 {"data": "name", "width": "120px", "defaultContent": ""},
@@ -300,8 +300,8 @@
             addComment(true);
             let replyId = $('#reply-id').val().trim();
             $.ajax({
-                type: "POST",
-                url: CONTEXT_PATH + "/comments/updateComment",
+                type: "PUT",
+                url: "/admin/comments",
                 data: {id:replyId, readStatus: COMMENT_READ},
                 dataType: "json",
                 success: function(data){

@@ -1,25 +1,31 @@
 package com.kyblog.api.entity;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
 
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-@Document(collection = "article")
+//@Document(collection = "article")
+//@org.springframework.data.elasticsearch.annotations.Document(indexName = "kyblog")
+@Document(indexName = "kyblog")
 public class Article implements Serializable {
-
-    @Id
-    private String objectId;
+//    @Field(store = false)
+//    private String objectId;
     private Long id;
+    @Field(type = FieldType.Text,analyzer = "ik_max_word", searchAnalyzer = "ik_smart")
     private String title;
+    @Field(type = FieldType.Text,analyzer = "ik_max_word",searchAnalyzer = "ik_smart")
     private String content;
     private List<Tag> tags;
     private Integer status;
     private Long readCount;
     private Kind kind;
     private Integer commentCount;
+    @Field(type = FieldType.Text,analyzer = "ik_max_word",searchAnalyzer = "ik_smart")
     private String introduce;
     private Date publishTime;
     private Date edictTime;
@@ -29,17 +35,19 @@ public class Article implements Serializable {
     @Override
     public String toString() {
         return "Article{" +
-                "objectId='" + objectId + '\'' +
-                ", id=" + id +
+                "id=" + id +
                 ", title='" + title + '\'' +
                 ", content='" + content + '\'' +
                 ", tags=" + tags +
                 ", status=" + status +
                 ", readCount=" + readCount +
-                ", kind='" + kind + '\'' +
+                ", kind=" + kind +
+                ", commentCount=" + commentCount +
                 ", introduce='" + introduce + '\'' +
                 ", publishTime=" + publishTime +
                 ", edictTime=" + edictTime +
+                ", comment=" + comment +
+                ", background='" + background + '\'' +
                 '}';
     }
 
@@ -51,13 +59,13 @@ public class Article implements Serializable {
         this.commentCount = commentCount;
     }
 
-    public String getObjectId() {
-        return objectId;
-    }
-
-    public void setObjectId(String objectId) {
-        this.objectId = objectId;
-    }
+//    public String getObjectId() {
+//        return objectId;
+//    }
+//
+//    public void setObjectId(String objectId) {
+//        this.objectId = objectId;
+//    }
 
     public String getTitle() {
         return title;

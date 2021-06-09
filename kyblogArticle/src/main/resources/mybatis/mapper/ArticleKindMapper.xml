@@ -54,7 +54,7 @@
         where id=${id}
     </update>
 
-    <insert id="insertArticleKind" keyProperty="id">
+    <insert id="insertArticleKind" useGeneratedKeys="true" keyProperty="id">
         insert into article_kind
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <include refid="insertColumn"/>

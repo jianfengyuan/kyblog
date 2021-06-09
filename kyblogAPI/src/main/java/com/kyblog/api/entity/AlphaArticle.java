@@ -2,9 +2,10 @@ package com.kyblog.api.entity;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.io.Serializable;
-@Document(collection = "alphaArticle")
+//@Document(collection = "alphaArticles")
 public class AlphaArticle implements Serializable {
     Integer id;
 
@@ -15,8 +16,6 @@ public class AlphaArticle implements Serializable {
     public void setId(Integer id) {
         this.id = id;
     }
-
-    @Id
     String ObjectId;
     String title;
     String content;
@@ -24,7 +23,8 @@ public class AlphaArticle implements Serializable {
     @Override
     public String toString() {
         return "AlphaArticle{" +
-                "id=" + ObjectId +
+                "id=" + id +
+                ", ObjectId='" + ObjectId + '\'' +
                 ", title='" + title + '\'' +
                 ", content='" + content + '\'' +
                 '}';

@@ -5,12 +5,12 @@ import java.util.List;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-@Document(collection = "comment")
+import org.springframework.data.mongodb.core.mapping.Field;
+
+//@Document(collection = "comment")
 public class Comment {
-    @Id
-
-    private String objectId;
-
+//    @Id
+//    private String objectId;
     private Long id;
     private Long articleId;
     private String articleTitle;
@@ -28,8 +28,7 @@ public class Comment {
     @Override
     public String toString() {
         return "Comment{" +
-                "objectId='" + objectId + '\'' +
-                ", id=" + id +
+                "id=" + id +
                 ", articleId=" + articleId +
                 ", articleTitle='" + articleTitle + '\'' +
                 ", name='" + name + '\'' +
@@ -41,16 +40,17 @@ public class Comment {
                 ", status=" + status +
                 ", email='" + email + '\'' +
                 ", readStatus=" + readStatus +
+                ", replies=" + replies +
                 '}';
     }
 
-    public String getObjectId() {
-        return objectId;
-    }
-
-    public void setObjectId(String objectId) {
-        this.objectId = objectId;
-    }
+//    public String getObjectId() {
+//        return objectId;
+//    }
+//
+//    public void setObjectId(String objectId) {
+//        this.objectId = objectId;
+//    }
 
     public Long getId() {
         return id;

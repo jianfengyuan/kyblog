@@ -1,22 +1,26 @@
 package com.kyblog.article.Service;
 
+import com.kyblog.api.elasticsearch.ArticleRepository;
 import com.kyblog.api.entity.*;
 import com.kyblog.api.redisKey.ArticleKey;
 import com.kyblog.api.utils.RedisOpsUtils;
 import com.kyblog.article.Dao.*;
 import com.kyblog.api.utils.kyblogConstant;
-import org.bson.types.ObjectId;
+import com.mongodb.client.result.UpdateResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.*;
 
 @Service
 public class ArticleService implements kyblogConstant {
+
     @Autowired
     ArticleDao articleDao;
 
@@ -24,7 +28,7 @@ public class ArticleService implements kyblogConstant {
     ArticleTagDao articleTagDao;
 
     @Autowired
-    private ArticleKindDao articleKindDao;
+    ArticleKindDao articleKindDao;
 
     @Autowired
     TagDao tagDao;
@@ -37,6 +41,9 @@ public class ArticleService implements kyblogConstant {
 
     @Autowired
     RedisOpsUtils redisOpsUtils;
+
+    @Autowired
+    ElasticSearchService elasticSearchService;
 
     @Deprecated
     public Article findById(Long id, Integer status) {
@@ -62,9 +69,11 @@ public class ArticleService implements kyblogConstant {
 
         article.setPublishTime(new Date());
         article.setEdictTime(new Date());
-        article = mongoTemplate.insert(article);
-        System.out.println(article);
         insertArticle(article);
+        System.out.println(article);
+        article = mongoTemplate.insert(article);
+
+
         if (kind != null) {
             articleKind = new ArticleKind();
             Kind k = kindDao.queryKindByName(kind);
@@ -93,6 +102,9 @@ public class ArticleService implements kyblogConstant {
             articleTag.setStatus(1);
             articleTagDao.insertArticleTag(articleTag);
         }
+        redisOpsUtils.deleteCache("ArticleKey*");
+        redisOpsUtils.deleteCache("TagKey*");
+        redisOpsUtils.deleteCache("KindKey*");
 
         return 1;
     }
@@ -101,7 +113,8 @@ public class ArticleService implements kyblogConstant {
         return articleDao.updateArticle(article);
     }
 
-    public int updateArticle(Long articleId, String title, String content, String tags, String kind, String introduce,
+    public int updateArticle(Long articleId, String title, String content,
+                             String tags, String kind, String introduce,
                              Integer status, String background) {
         Article article = articleDao.queryById(articleId,null);
         List<Tag> newTagList = processTags(tags);
@@ -150,6 +163,16 @@ public class ArticleService implements kyblogConstant {
         article.setStatus(status);
         article.setIntroduce(introduce);
         article.setEdictTime(new Date());
+        Update update = new Update().set("title", article.getTitle())
+                .set("content", article.getContent())
+                .set("introduce", article.getIntroduce())
+                .set("status", article.getStatus())
+                .set("background", article.getBackground());
+        Query query = new Query(Criteria.where("id").is(article.getId()));
+        UpdateResult res = mongoTemplate.updateFirst(query, update, Article.class);
+        if (res.getModifiedCount() == 0) {
+            throw new RuntimeException("更新文章失败");
+        }
         articleDao.updateArticle(article);
         for (Tag tag:
                 oldTagList) {
@@ -191,7 +214,9 @@ public class ArticleService implements kyblogConstant {
                 }
             }
         }
-
+        redisOpsUtils.deleteCache("ArticleKey*");
+        redisOpsUtils.deleteCache("KindKey*");
+        redisOpsUtils.deleteCache("TagKey*");
         return 1;
     }
 
@@ -222,7 +247,7 @@ public class ArticleService implements kyblogConstant {
             if (article == null) {
                 return null;
             }
-            Query query = new Query(Criteria.where("_id").is(new ObjectId(article.getObjectId())));
+            Query query = new Query(Criteria.where("id").is(article.getId()));
             Article res = mongoTemplate.findOne(query,Article.class);
             if (res == null) {
                 return null;
@@ -235,7 +260,9 @@ public class ArticleService implements kyblogConstant {
     }
 
     public List<Article> findArticles(Page page, OrderMode orderMode) {
-        return articleDao.queryArticles(null, ARTICLE_STATUS_ACTIVE ,page, orderMode);
+
+        List<Article> articles = articleDao.queryArticles(null, ARTICLE_STATUS_ACTIVE, page, orderMode);
+        return articles;
     }
 
     public int deleteArticle(Article article) {
@@ -245,5 +272,35 @@ public class ArticleService implements kyblogConstant {
 
     public int findArticleRows(Integer status) {
         return articleDao.queryRows(status);
+    }
+
+    public List<Article> findArticlesByTagId(Long tagId) {
+        List<ArticleTag> articleTags = articleTagDao.queryByTagId(tagId);
+        List<Article> articles = new ArrayList<>();
+        for (ArticleTag at :
+                articleTags) {
+            Article article = findArticleById(at.getArticleId());
+            articles.add(article);
+        }
+        return articles;
+    }
+
+    public List<Article> findArticlesByKindId(Integer kindId) {
+        List<ArticleKind> articleKinds = articleKindDao.queryArticleKindByKindId(kindId, KIND_STATUS_ACTIVE);
+        List<Article> articles = new ArrayList<>();
+        for (ArticleKind ak :
+                articleKinds) {
+            Article article = findArticleById(ak.getArticleId());
+            articles.add(article);
+        }
+        return articles;
+    }
+
+    public Long findReadCount(Long articleId) {
+        if (redisOpsUtils.hasKey(ArticleKey.getByReadCount.getPrefix() + ":" + articleId)) {
+            return Long.valueOf(redisOpsUtils.get(ArticleKey.getByReadCount.getPrefix() + ":" + articleId).toString());
+        }
+        Article article = articleDao.queryById(articleId, ARTICLE_STATUS_ACTIVE);
+        return article.getReadCount();
     }
 }

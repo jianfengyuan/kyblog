@@ -49,7 +49,7 @@ public class AdminControllerFront extends FrontBaseController {
         param.put("introduce", introduce);
         param.put("status", status);
         param.put("img", img);
-        restTemplate.postForObject(ARTICLE_SERVICE_PREFIX + "/articles/publish",param,String.class);
+        restTemplate.postForObject(ARTICLE_SERVICE_PREFIX + "/articles/publish", param, String.class);
         return getJsonString(200);
     }
 
@@ -66,12 +66,12 @@ public class AdminControllerFront extends FrontBaseController {
         param.put("introduce", introduce);
         param.put("status", status);
         param.put("img", img);
-        restTemplate.postForObject(ARTICLE_SERVICE_PREFIX + "/articles/update",param,String.class);
+        restTemplate.postForObject(ARTICLE_SERVICE_PREFIX + "/articles/update", param, String.class);
         return getJsonString(200);
     }
 
     @RequestMapping(value = "/articles/edit", method = RequestMethod.GET)
-    public String edict(@RequestParam(value = "articleId") Long articleId,Model model) {
+    public String edict(@RequestParam(value = "articleId") Long articleId, Model model) {
         List<String> tagNameList = new ArrayList<>();
         Map<String, Object> param = new HashMap<>();
         param.put("status", KIND_STATUS_ACTIVE);
@@ -89,7 +89,7 @@ public class AdminControllerFront extends FrontBaseController {
         assert article != null;
         article.setKind(kind);
         ResponseEntity<List<Tag>> tagsResponseEntity = restTemplate.exchange(
-                ARTICLE_SERVICE_PREFIX + "/tags/list?articleId=" +articleId ,
+                ARTICLE_SERVICE_PREFIX + "/tags/list?articleId=" + articleId,
                 HttpMethod.GET, new HttpEntity<>(param), TAG_REF
         );
         List<Tag> tagList = tagsResponseEntity.getBody();
@@ -177,13 +177,14 @@ public class AdminControllerFront extends FrontBaseController {
     @RequestMapping(value = "/tags", method = RequestMethod.PUT)
     @ResponseBody
     public String add(Tag tag) {
-        restTemplate.put(ARTICLE_SERVICE_PREFIX+"/tags",tag);
+        restTemplate.put(ARTICLE_SERVICE_PREFIX + "/tags", tag);
         return getJsonString(200);
     }
+
     @RequestMapping(value = "/tags/{tagId}", method = RequestMethod.DELETE)
     @ResponseBody
     public String deleteTag(@PathVariable("tagId") String tagId) {
-        restTemplate.delete(ARTICLE_SERVICE_PREFIX+"/tags/"+ tagId);
+        restTemplate.delete(ARTICLE_SERVICE_PREFIX + "/tags/" + tagId);
         return getJsonString(200);
     }
 
@@ -217,18 +218,18 @@ public class AdminControllerFront extends FrontBaseController {
     @RequestMapping(value = "/kinds", method = RequestMethod.PUT)
     @ResponseBody
     public String add(Kind kind) {
-        restTemplate.put(ARTICLE_SERVICE_PREFIX+"/kinds",kind);
+        restTemplate.put(ARTICLE_SERVICE_PREFIX + "/kinds", kind);
         return getJsonString(200);
     }
 
     @RequestMapping(value = "/kinds/{kindId}", method = RequestMethod.DELETE)
     @ResponseBody
     public String deleteKind(@PathVariable("kindId") String kindId) {
-        restTemplate.delete(ARTICLE_SERVICE_PREFIX+"/kinds/"+kindId);
+        restTemplate.delete(ARTICLE_SERVICE_PREFIX + "/kinds/" + kindId);
         return getJsonString(200);
     }
 
-    @RequestMapping(value = "/comments", method = RequestMethod.GET)
+    @RequestMapping(value = "/comments/list", method = RequestMethod.GET)
     public String getComments(Model model) {
         Comment comment = new Comment();
         Map<String, Object> param = new HashMap<>();
@@ -242,7 +243,7 @@ public class AdminControllerFront extends FrontBaseController {
         return "/admin/comments";
     }
 
-    @RequestMapping(value = "/comments", method = RequestMethod.POST)
+    @RequestMapping(value = "/comments/list", method = RequestMethod.POST)
     @ResponseBody
     public String getComments(Comment comment, OrderMode orderMode, Page page) {
         Map<String, Object> map = new HashMap<>();
@@ -261,8 +262,8 @@ public class AdminControllerFront extends FrontBaseController {
                         COMMENT_REF);
         List<Comment> commentList = commentResponseEntity.getBody();
         Article article;
-        for (Comment c:
-             commentList) {
+        for (Comment c :
+                commentList) {
             article =
                     restTemplate.getForObject(ARTICLE_SERVICE_PREFIX + "/articles/article/" + c.getArticleId(), Article.class);
             c.setArticleTitle(article.getTitle());
@@ -270,6 +271,20 @@ public class AdminControllerFront extends FrontBaseController {
         map.put("comments", commentList);
         map.put("rows", rows);
         return getJsonString(200, null, map);
+    }
+
+    @RequestMapping(value = "/comments", method = RequestMethod.PUT)
+    @ResponseBody
+    public String updateComments(Comment comment) {
+        restTemplate.put(COMMENT_SERVICE_PREFIX + "/comments", comment);
+        return getJsonString(200);
+    }
+
+    @RequestMapping(value = "/comments", method = RequestMethod.POST)
+    @ResponseBody
+    public String add(Comment comment) {
+        restTemplate.postForObject(COMMENT_SERVICE_PREFIX + "/comments", comment, String.class);
+        return getJsonString(200);
     }
 
     @RequestMapping(value = "/dashboard", method = RequestMethod.GET)
@@ -285,11 +300,11 @@ public class AdminControllerFront extends FrontBaseController {
         Integer tagCount = restTemplate.getForObject(ARTICLE_SERVICE_PREFIX + "/tags/rows?status=" + TAG_STATUS_ACTIVE, Integer.class);
         commentTemplate.setReadStatus(COMMENT_UNREAD);
         Integer unreadRows = restTemplate.postForObject(COMMENT_SERVICE_PREFIX + "/comments/rows", param, Integer.class);
-        Map<String, StatisticsCount> statisticsCount = (Map<String, StatisticsCount>)restTemplate.getForObject(STATISTICS_SERVICE_PREFIX + "/statistics/statisticsCount", Map.class);
+        Map<String, StatisticsCount> statisticsCount = (Map<String, StatisticsCount>) restTemplate.getForObject(STATISTICS_SERVICE_PREFIX + "/statistics/statisticsCount", Map.class);
         VisitStatistics visitStatistics = restTemplate.getForObject(STATISTICS_SERVICE_PREFIX + "/statistics/visitStatistics", VisitStatistics.class);
-        model.addAttribute("publishCount",countMap.get("publish"));
-        model.addAttribute("draftCount",countMap.get("draft"));
-        model.addAttribute("trashCount",countMap.get("trash"));
+        model.addAttribute("publishCount", countMap.get("publish"));
+        model.addAttribute("draftCount", countMap.get("draft"));
+        model.addAttribute("trashCount", countMap.get("trash"));
         model.addAttribute("commentCount", commentCount);
         model.addAttribute("kindCount", kindCount);
         model.addAttribute("tagCount", tagCount);
@@ -306,17 +321,17 @@ public class AdminControllerFront extends FrontBaseController {
         return getJsonString(200);
     }
 
-    public Map<String,Integer> statusCount(){
-        Map<String,Integer> map = new HashMap<>();
+    public Map<String, Integer> statusCount() {
+        Map<String, Integer> map = new HashMap<>();
         Integer draft = restTemplate.getForObject(
-                ARTICLE_SERVICE_PREFIX + "/articles/rows?status="+ARTICLE_STATUS_DRAFT, Integer.class);
+                ARTICLE_SERVICE_PREFIX + "/articles/rows?status=" + ARTICLE_STATUS_DRAFT, Integer.class);
         Integer publish = restTemplate.getForObject(
-                ARTICLE_SERVICE_PREFIX + "/articles/rows?status="+ARTICLE_STATUS_ACTIVE, Integer.class);
+                ARTICLE_SERVICE_PREFIX + "/articles/rows?status=" + ARTICLE_STATUS_ACTIVE, Integer.class);
         Integer trash = restTemplate.getForObject(
-                ARTICLE_SERVICE_PREFIX + "/articles/rows?status="+ARTICLE_STATUS_DELETED, Integer.class);
-        map.put("draft",draft);
-        map.put("publish",publish);
-        map.put("trash",trash);
+                ARTICLE_SERVICE_PREFIX + "/articles/rows?status=" + ARTICLE_STATUS_DELETED, Integer.class);
+        map.put("draft", draft);
+        map.put("publish", publish);
+        map.put("trash", trash);
         return map;
     }
 
@@ -328,7 +343,7 @@ public class AdminControllerFront extends FrontBaseController {
         ResponseEntity<List<VisitorStatistics>> responseEntity = restTemplate.exchange(STATISTICS_SERVICE_PREFIX + "/statistics/visitorStatistics",
                 HttpMethod.GET, null, VISITORSTATISTICS_REF);
         List<VisitorStatistics> visitorStatistics = responseEntity.getBody();
-        visitorStatistics.forEach(temp->{
+        visitorStatistics.forEach(temp -> {
             if (temp.getStatistics().getArticleId() == -1L) {
                 temp.setTarget("主页");
             } else {
@@ -340,14 +355,18 @@ public class AdminControllerFront extends FrontBaseController {
 //        List<VisitorStatistics> visitorStatistics = (List<VisitorStatistics>) restTemplate.getForObject(STATISTICS_SERVICE_PREFIX + "/statistics/visitorStatistics", List.class);
         VisitStatistics visitStatistics = restTemplate.getForObject(STATISTICS_SERVICE_PREFIX + "/statistics/visitStatistics", VisitStatistics.class);
         Integer unreadRows = restTemplate.postForObject(COMMENT_SERVICE_PREFIX + "/comments/rows", param, Integer.class);
-        Map<String, StatisticsCount> statisticsCount = (Map<String, StatisticsCount>)restTemplate.getForObject(STATISTICS_SERVICE_PREFIX + "/statistics/statisticsCount", Map.class);
-        model.addAttribute("statistics",visitStatistics);
+        Map<String, StatisticsCount> statisticsCount = (Map<String, StatisticsCount>) restTemplate.getForObject(STATISTICS_SERVICE_PREFIX + "/statistics/statisticsCount", Map.class);
+        model.addAttribute("statistics", visitStatistics);
         // 获取所有访客信息
-        model.addAttribute("visitors",visitorStatistics);
+        model.addAttribute("visitors", visitorStatistics);
         // 获取统计数量信息
-        model.addAttribute("statisticsCount",statisticsCount);
+        model.addAttribute("statisticsCount", statisticsCount);
         // 获取未读评论数
-        model.addAttribute("unRead",unreadRows);
+        model.addAttribute("unRead", unreadRows);
         return "/admin/statistics";
+    }
+
+    @RequestMapping(value = "/resetEs", method = RequestMethod.GET)
+    public void resetEs() {
     }
 }

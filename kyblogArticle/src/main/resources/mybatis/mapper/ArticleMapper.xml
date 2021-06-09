@@ -5,11 +5,11 @@
 
 <mapper namespace="com.kyblog.article.Dao.ArticleDao">
     <sql id="selectField">
-        id, object_id, title, status, read_count, introduce, publish_time, edict_time,background
+        id, title, status, read_count, introduce, publish_time, edict_time,background
     </sql>
 
     <sql id="insertField">
-        title, object_id, status, read_count, introduce, publish_time, edict_time,background
+        title, status, read_count, introduce, publish_time, edict_time,background
     </sql>
 
 
@@ -48,9 +48,9 @@
         </if>
     </select>
 
-    <insert id="insertArticle" parameterType="com.kyblog.api.entity.Article" keyProperty="id">
+    <insert id="insertArticle" parameterType="com.kyblog.api.entity.Article" useGeneratedKeys="true" keyProperty="id">
         insert into article (<include refid="insertField"></include>)
-        values (#{title},#{objectId},#{status},#{readCount},#{introduce},#{publishTime},#{edictTime},#{background})
+        values (#{title},#{status},#{readCount},#{introduce},#{publishTime},#{edictTime},#{background})
     </insert>
 
     <update id="deleteById">

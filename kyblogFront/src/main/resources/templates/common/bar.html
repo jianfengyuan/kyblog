@@ -100,7 +100,7 @@
                 </li>
 
                 <li class="submenu">
-                    <a th:href="@{/admin/comments}" th:class="${currUri == 'comments' ? 'active':''}"><i class="fa fa-comment bigfonts"></i><span> 评论 </span> <span th:if="${unRead > 0}" class="label radius-circle bg-danger float-right">[[${unRead}]]</span> </a>
+                    <a th:href="@{/admin/comments/list}" th:class="${currUri == 'comments' ? 'active':''}"><i class="fa fa-comment bigfonts"></i><span> 评论 </span> <span th:if="${unRead > 0}" class="label radius-circle bg-danger float-right">[[${unRead}]]</span> </a>
                 </li>
 
                 <li class="submenu">

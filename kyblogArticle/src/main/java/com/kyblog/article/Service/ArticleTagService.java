@@ -12,7 +12,11 @@ public class ArticleTagService {
     @Autowired
     private ArticleTagDao articleTagDao;
 
-    List<ArticleTag> selectByArticleId(Long articleId) {
+    public List<ArticleTag> selectByArticleId(Long articleId) {
         return articleTagDao.queryByArticleId(articleId);
+    }
+
+    public List<ArticleTag> selectByTagId(Long tagId) {
+        return articleTagDao.queryByTagId(tagId);
     }
 }
