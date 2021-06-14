@@ -16,12 +16,11 @@
         <module>kyblogArticle</module>
         <module>kyblogComment</module>
         <module>kyblogAPI</module>
-        <module>kyblogAdmin</module>
         <module>kyblogFront</module>
-        <module>kyblogAccountManagement</module>
         <module>kyblogImage</module>
         <module>eurekaCluster</module>
         <module>kyblogStatistic</module>
+        <module>kyblogGateway</module>
     </modules>
 
     <packaging>pom</packaging>
@@ -221,7 +220,18 @@
 <!--                <artifactId>spring-boot-starter-data-jpa</artifactId>-->
 <!--                <version>2.4.5</version>-->
 <!--            </dependency>-->
-
+            <!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-gateway -->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-gateway</artifactId>
+                <version>3.0.1</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-consul-discovery -->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-consul-discovery</artifactId>
+                <version>3.0.1</version>
+            </dependency>
         </dependencies>
 
     </dependencyManagement>
