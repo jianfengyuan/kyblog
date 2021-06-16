@@ -1,6 +1,15 @@
 server:
   port: 80
 spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri:
+  redis:
+    database: 11
+    port: 6379
+    host: 192:168:50:212
   application:
     name: gateway
   cloud:
@@ -14,26 +23,31 @@ spring:
           # 转发地址: http://front
           lower-case-service-id: true
       routes:
+
         - id: test
           uri: http://127.0.0.1:8080/ # 当前的路由定义对应的微服务转发地址
           predicates:
-            - Path=/**
-          #filters: # 配置过滤器集合
+            - Path=/front/**
+          filters: # 配置过滤器集合
             # 过滤器转发地址前缀, 过滤1节
             # 如: 请求地址 - http://localhost:9999/api/getArgs?name=admin&age=20
             # 对应的谓词, 规则是/api, 符合
             # 对应的uri是 lb://ribbon-app-service 转换成 http://ribbon-app-service
             # 转发地址是: http://ribbon-app-service/api/getArgs?name=admin&age=20
             # 过滤器是过滤转发地址的前缀, 过滤第1节, 即删除/api -> http://ribbon-service/getArgs?name=admin&age=20
-          #  - StripPrefix=1
+            - StripPrefix=1
         - id: static
           uri: http://127.0.0.1:8080/ # 当前的路由定义对应的微服务转发地址
           predicates:
             - Path=/front/**,/background/**,/common/**
-#        - id: static
-#          uri: http://127.0.0.1:8080/admin # 当前的路由定义对应的微服务转发地址
-#          predicates:
-#            - Path=/admin/**
+        - id: static
+          uri: http://127.0.0.1:8080/admin # 当前的路由定义对应的微服务转发地址
+          predicates:
+            - Path=/admin/**
+        - id: oauth
+          uri: http://127.0.0.1:10008
+          predicates:
+            - Path=/oauth/**
 eureka:
   instance:
     instance-id: gateway

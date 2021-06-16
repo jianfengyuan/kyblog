@@ -26,6 +26,7 @@ import static com.kyblog.api.utils.BlogUtils.getJsonString;
  * @create: 2021-05-08 16:20
  **/
 @Controller
+@RequestMapping("/front")
 public class FrontControllerFront extends FrontBaseController {
 
     @RequestMapping(value = {"/", "/index"}, method = RequestMethod.GET)

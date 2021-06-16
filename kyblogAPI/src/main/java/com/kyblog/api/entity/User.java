@@ -1,80 +1,54 @@
 package com.kyblog.api.entity;
 
-public class User {
-    Long uid;
-    String account;
-    String password;
-    String salt;
-    String headerUrl;
-    String qrCodeUrl;
-    Integer status;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
+import java.util.List;
+
+public class User implements UserDetails {
+    private String username;
+    private String password;
+    private List<GrantedAuthority> authorities;
+
+    public User(String username, String password, List<GrantedAuthority> authorities) {
+        this.username = username;
+        this.password = password;
+        this.authorities = authorities;
+    }
 
     @Override
-    public String toString() {
-        return "user{" +
-                "uid=" + uid +
-                ", account='" + account + '\'' +
-                ", password='" + password + '\'' +
-                ", salt='" + salt + '\'' +
-                ", headerUrl='" + headerUrl + '\'' +
-                ", qrCodeUrl='" + qrCodeUrl + '\'' +
-                ", status=" + status +
-                '}';
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return authorities;
     }
 
-    public Long getUid() {
-        return uid;
-    }
-
-    public void setUid(Long uid) {
-        this.uid = uid;
-    }
-
-    public String getAccount() {
-        return account;
-    }
-
-    public void setAccount(String account) {
-        this.account = account;
-    }
-
+    @Override
     public String getPassword() {
-        return password;
+        return null;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    @Override
+    public String getUsername() {
+        return username;
     }
 
-    public String getSalt() {
-        return salt;
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
     }
 
-    public void setSalt(String salt) {
-        this.salt = salt;
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
     }
 
-    public String getHeaderUrl() {
-        return headerUrl;
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
     }
 
-    public void setHeaderUrl(String headerUrl) {
-        this.headerUrl = headerUrl;
-    }
-
-    public String getQrCodeUrl() {
-        return qrCodeUrl;
-    }
-
-    public void setQrCodeUrl(String qrCodeUrl) {
-        this.qrCodeUrl = qrCodeUrl;
-    }
-
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }
