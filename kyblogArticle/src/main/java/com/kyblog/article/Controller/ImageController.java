@@ -24,8 +24,8 @@ import static com.kyblog.api.utils.BlogUtils.getJsonString;
  * @create: 2021-05-06 13:35
  **/
 
-@Controller
-@RequestMapping("/image")
+//@Controller
+//@RequestMapping("/image")
 public class ImageController extends BaseController {
     private static final Logger logger = LoggerFactory.getLogger(ImageController.class);
     @RequestMapping(value = "/upload", method = RequestMethod.POST)

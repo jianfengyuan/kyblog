@@ -31,7 +31,7 @@
 <body class="adminbody">
 <div id="main">
     <div th:replace="common/bar::#top"></div>
-    <div th:replace="common/bar::#sidebar(currUri='kinds',unRead=0)"></div>
+    <div th:replace="common/bar::#sidebar(currUri='kinds',unRead=${unRead})"></div>
     <!--编辑标签弹出框-->
     <div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-sm" role="document">

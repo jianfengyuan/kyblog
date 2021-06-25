@@ -162,49 +162,49 @@
                                         <a th:href= "@{/admin/articles/new}" target="_blank">写文章</a>
                                     </li>
                                     <li >
-                                        <a href="comments" target="_blank">评论</a>
+                                        <a th:href="@{/admin/comments}" target="_blank">评论</a>
                                     </li>
                                     <li >
-                                        <a href="admin-login" target="_blank">登录后台</a>
+                                        <a href="login" target="_blank">登录后台</a>
                                     </li>
                                 </ul>
                             </div>
 
                         </div>
 
-                        <div class="control-block-button">
+<!--                        <div class="control-block-button">-->
 
-                            <div class="btn btn-control bg-primary more">
-                                <img src="https://gitee.com/cn_moti/moti-img/raw/master/2020-10-06/57d8d5912f734ee7b7b5d967140add3f.png" class="author-thumb" alt="">
-                                <ul class="more-dropdown more-with-triangle triangle-bottom-right">
-                                    <li>
-                                        <a href="#">QQ：user.qq</a>
-                                    </li>
-                                </ul>
-                            </div>
-<!--                            <div class="btn btn-control bg-purple more">-->
-<!--                                <img src="https://gitee.com/cn_moti/moti-img/raw/master/2020-10-06/0a6296556d5c41788eddb1f44b9f6824.png" class="author-thumb" alt="">-->
+<!--                            <div class="btn btn-control bg-primary more">-->
+<!--                                <img src="https://gitee.com/cn_moti/moti-img/raw/master/2020-10-06/57d8d5912f734ee7b7b5d967140add3f.png" class="author-thumb" alt="">-->
 <!--                                <ul class="more-dropdown more-with-triangle triangle-bottom-right">-->
 <!--                                    <li>-->
-<!--                                        <a href="#">微信</a>-->
-<!--                                    </li>-->
-<!--                                    <li>-->
-<!--                                        <img style="width: 150px;height: 150px" src="https://gitee.com/cn_moti/moti-img/raw/master/other/1a01632ad1654c14b1a7e769a8600b62.jpg" alt="photo">-->
+<!--                                        <a href="#">QQ：user.qq</a>-->
 <!--                                    </li>-->
 <!--                                </ul>-->
 <!--                            </div>-->
-<!--                            <div class="btn btn-control bg-blue more">-->
-<!--                                <img src="https://gitee.com/cn_moti/moti-img/raw/master/2020-10-06/0a6296556d5c41788eddb1f44b9f6824.png" class="author-thumb" alt="">-->
-<!--                                <ul class="more-dropdown more-with-triangle triangle-bottom-right">-->
-<!--                                    <li>-->
-<!--                                        <a href="#">微信公众号</a>-->
-<!--                                    </li>-->
-<!--                                    <li>-->
-<!--                                        <img style="width: 150px;height: 150px" src="https://gitee.com/cn_moti/moti-img/raw/master/other/1a01632ad1654c14b1a7e769a8600b62.jpg" alt="photo">-->
-<!--                                    </li>-->
-<!--                                </ul>-->
-<!--                            </div>-->
-                        </div>
+<!--&lt;!&ndash;                            <div class="btn btn-control bg-purple more">&ndash;&gt;-->
+<!--&lt;!&ndash;                                <img src="https://gitee.com/cn_moti/moti-img/raw/master/2020-10-06/0a6296556d5c41788eddb1f44b9f6824.png" class="author-thumb" alt="">&ndash;&gt;-->
+<!--&lt;!&ndash;                                <ul class="more-dropdown more-with-triangle triangle-bottom-right">&ndash;&gt;-->
+<!--&lt;!&ndash;                                    <li>&ndash;&gt;-->
+<!--&lt;!&ndash;                                        <a href="#">微信</a>&ndash;&gt;-->
+<!--&lt;!&ndash;                                    </li>&ndash;&gt;-->
+<!--&lt;!&ndash;                                    <li>&ndash;&gt;-->
+<!--&lt;!&ndash;                                        <img style="width: 150px;height: 150px" src="https://gitee.com/cn_moti/moti-img/raw/master/other/1a01632ad1654c14b1a7e769a8600b62.jpg" alt="photo">&ndash;&gt;-->
+<!--&lt;!&ndash;                                    </li>&ndash;&gt;-->
+<!--&lt;!&ndash;                                </ul>&ndash;&gt;-->
+<!--&lt;!&ndash;                            </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                            <div class="btn btn-control bg-blue more">&ndash;&gt;-->
+<!--&lt;!&ndash;                                <img src="https://gitee.com/cn_moti/moti-img/raw/master/2020-10-06/0a6296556d5c41788eddb1f44b9f6824.png" class="author-thumb" alt="">&ndash;&gt;-->
+<!--&lt;!&ndash;                                <ul class="more-dropdown more-with-triangle triangle-bottom-right">&ndash;&gt;-->
+<!--&lt;!&ndash;                                    <li>&ndash;&gt;-->
+<!--&lt;!&ndash;                                        <a href="#">微信公众号</a>&ndash;&gt;-->
+<!--&lt;!&ndash;                                    </li>&ndash;&gt;-->
+<!--&lt;!&ndash;                                    <li>&ndash;&gt;-->
+<!--&lt;!&ndash;                                        <img style="width: 150px;height: 150px" src="https://gitee.com/cn_moti/moti-img/raw/master/other/1a01632ad1654c14b1a7e769a8600b62.jpg" alt="photo">&ndash;&gt;-->
+<!--&lt;!&ndash;                                    </li>&ndash;&gt;-->
+<!--&lt;!&ndash;                                </ul>&ndash;&gt;-->
+<!--&lt;!&ndash;                            </div>&ndash;&gt;-->
+<!--                        </div>-->
                     </div>
                     <div class="top-header-author">
                         <a href="" class="author-thumb">
@@ -237,7 +237,8 @@
 
                             <div class="post-thumb">
                                 <a th:href="@{article(articleId=${article.id})}">
-                                    <img th:if="${article != null}" style="width: 100%;height: 300px" src="https://gitee.com/cn_moti/moti-img/raw/master/other/1a01632ad1654c14b1a7e769a8600b62.jpg" alt="photo">
+                                    <img th:if="${article.background != null}" th:src="${article.background}" class="img-thumbnail" id="img_head" style="width: 100%;height:150px " alt="">
+                                    <img th:if="${article.background == null}" style="width: 100%;height: 300px" src="https://gitee.com/cn_moti/moti-img/raw/master/other/1a01632ad1654c14b1a7e769a8600b62.jpg" alt="photo">
                                 </a>
                             </div>
 

@@ -50,7 +50,7 @@ function updatePublish() {
         type: "POST",
         url: "/admin/articles/update",
         data: {id:id,title:title,content:content,tags:tags,kind:kind,
-            introduce:introduce,status:1, background:img_head},
+            introduce:introduce,status:1, img:img_head},
         dataType: "json",
         success: function(data){
             if (data['code']== 200){

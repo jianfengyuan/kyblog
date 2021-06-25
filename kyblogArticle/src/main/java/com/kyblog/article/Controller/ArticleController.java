@@ -113,7 +113,7 @@ public class ArticleController extends BaseController implements kyblogConstant 
         String introduce = (String) param.get("introduce");
         Integer status = (Integer) param.get("status");
         String img = (String) param.get("img");
-        articleService.updateArticle(id, title, content, tags, kind, introduce, status, img);
+            articleService.updateArticle(id, title, content, tags, kind, introduce, status, img);
         return getJsonString(200);
     }
 

@@ -42,6 +42,7 @@ public class FrontBaseController implements kyblogConstant {
     protected HttpServletRequest request;
     protected HttpServletResponse response;
     protected HttpSession session;
+    protected String JwtToken;
 
     protected ParameterizedTypeReference<List<Tag>> TAG_REF = new ParameterizedTypeReference<List<Tag>>() {
     };
@@ -62,6 +63,10 @@ public class FrontBaseController implements kyblogConstant {
     public void setReqAndRes(HttpServletRequest request, HttpServletResponse response) {
         this.request = request;
         this.response = response;
+        this.session = request.getSession();
+        if (redisOpsUtils.hasKey("LOGIN_SESSION")) {
+            this.JwtToken = (String) redisOpsUtils.get("LOGIN_SESSION");
+        }
     }
 
 

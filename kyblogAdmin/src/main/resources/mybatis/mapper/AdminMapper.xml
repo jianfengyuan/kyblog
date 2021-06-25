@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kyblog.admin.Dao.AdminDao">
+    <sql id="profileCommonsValue">
+        <if test="name != null">
+            name = #{name},
+        </if>
+        <if test="email != null">
+            email = #{email},
+        </if>
+        <if test="header != null">
+            header = #{header},
+        </if>
+        <if test="info != null">
+            info = #{info},
+        </if>
+        <if test="background != null">
+            background = #{background},
+        </if>
+    </sql>
+    <sql id="ProfileQueryValue">
+        <if test="profile.id != null">
+            and id = #{profile.id}
+        </if>
+        <if test="profile.uid != null">
+            and uid = #{profile.uid}
+        </if>
+
+        <if test="profile.name != null">
+            and name = #{profile.name}
+        </if>
+        <if test="profile.email != null">
+            and email = #{profile.email}
+        </if>
+        <if test="profile.header != null ">
+            and header = #{profile.header}
+        </if>
+        <if test="profile.info != null ">
+            and info = #{profile.info}
+        </if>
+        <if test="profile.background != null ">
+            and background = #{profile.background}
+        </if>
+    </sql>
+    <sql id="insertProfileColumn">
+        <if test="uid != null">
+            uid,
+        </if>
+        <if test="name != null">
+            name,
+        </if>
+        <if test="header != null">
+            header,
+        </if>
+        <if test="email != null">
+            email,
+        </if>
+        <if test="info != null">
+            info,
+        </if>
+        <if test="background != null">
+            background,
+        </if>
+    </sql>
+    <sql id="insertProfileValue">
+        <if test="uid != null">
+            #{uid},
+        </if>
+        <if test="name != null">
+            #{name},
+        </if>
+        <if test="header != null">
+            #{header},
+        </if>
+    </sql>
+    <sql id="selectProfileField">
+        uid, name, header, email, info, background
+    </sql>
+    <select id="findProfileByUid" resultType="Profile">
+        select <include refid="selectProfileField"></include>
+        from profile
+        where uid=#{uid}
+    </select>
+    <select id="findProfileByUsername" resultType="Profile">
+        select <include refid="selectProfileField"></include>
+        from profile p inner join user u on p.uid = u.id
+        where u.username = #{username}
+    </select>
+    <update id="updateProfile">
+        update profile
+        <set>
+            <include refid="profileCommonsValue"></include>
+        </set>
+        where uid = #{uid}
+    </update>
+</mapper>

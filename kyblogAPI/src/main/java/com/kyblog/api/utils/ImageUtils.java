@@ -24,7 +24,7 @@ import java.io.IOException;
 @Component
 public class ImageUtils implements GitHubConstant {
     @Qualifier("restTemplateNoRibbon")
-//    @Autowired
+    @Autowired
     private RestTemplate restTemplate;
 
     public String upload(MultipartFile file, String flag)throws IOException {

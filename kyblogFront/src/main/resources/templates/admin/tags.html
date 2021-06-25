@@ -31,7 +31,7 @@
 <body class="adminbody">
 <div id="main">
   <div th:replace="common/bar::#top"></div>
-  <div th:replace="common/bar::#sidebar(currUri='tags',unRead=0)"></div>
+  <div th:replace="common/bar::#sidebar(currUri='tags',unRead=${unRead})"></div>
   <div class="content-page">
 
     <!-- Start content -->

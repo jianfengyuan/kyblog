@@ -36,10 +36,8 @@
                             <b>清空Redis</b>
                         </p>
                     </a>
-                    <!-- All-->
-                    <a title="Clcik to visit Pike Admin Website" target="_blank" href="#"
-                       class="dropdown-item notify-item notify-all">
-                        <i class="fa fa-link"></i> 访问作者网站
+                    <a href="/logout" class="dropdown-item notify-item">
+                        <i class="fa fa-power-off"></i> <span>退出登录</span>
                     </a>
                 </div>
             </li>
@@ -80,11 +78,11 @@
 
             <ul>
                 <li class="submenu">
-                    <a href="dashboard" th:class="${currUri == 'index' ? 'active':''}"><i class="fa fa-dashboard bigfonts"></i><span> 仪表盘 </span> </a>
+                    <a th:href="@{/admin/dashboard}" th:class="${currUri == 'dashboard' ? 'active':''}"><i class="fa fa-dashboard bigfonts"></i><span> 仪表盘 </span> </a>
                 </li>
 
                 <li class="submenu">
-                    <a href="profile" th:class="${currUri == 'profile' ? 'active':''}"><i class="fa fa-user bigfonts"></i><span> 我的资料 </span> </a>
+                    <a th:href="@{/admin/profile}" th:class="${currUri == 'profile' ? 'active':''}"><i class="fa fa-user bigfonts"></i><span> 我的资料 </span> </a>
                 </li>
 
                 <li class="submenu">

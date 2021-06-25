@@ -26,7 +26,6 @@ import static com.kyblog.api.utils.BlogUtils.getJsonString;
  * @create: 2021-05-08 16:20
  **/
 @Controller
-@RequestMapping("/front")
 public class FrontControllerFront extends FrontBaseController {
 
     @RequestMapping(value = {"/", "/index"}, method = RequestMethod.GET)
@@ -39,7 +38,7 @@ public class FrontControllerFront extends FrontBaseController {
 
 
         map.put("status", ARTICLE_STATUS_ACTIVE);
-        int articleRows = restTemplate.getForObject(ARTICLE_SERVICE_PREFIX + "/articles/rows?status=1", int.class);
+        int articleRows = restTemplate.getForObject(GATEWAY_PREFIX + ARTICLE_SERVICE_PREFIX + "/articles/rows?status=1", int.class);
         page.setRows(articleRows);
         page.setPath("/");
         orderModeTemplate.setColumn("read_count");
@@ -50,7 +49,7 @@ public class FrontControllerFront extends FrontBaseController {
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         ResponseEntity<List<Article>> articleResponseEntity =
-                restTemplate.exchange(ARTICLE_SERVICE_PREFIX + "/articles/list",
+                restTemplate.exchange(GATEWAY_PREFIX + ARTICLE_SERVICE_PREFIX + "/articles/list",
                         HttpMethod.POST,
                         new HttpEntity<>(map),
                         ARTICLE_REF);
@@ -70,22 +69,22 @@ public class FrontControllerFront extends FrontBaseController {
         for (Article article :
                 articles) {
             ResponseEntity<List<Tag>> tagResponseEntity =
-                    restTemplate.exchange(ARTICLE_SERVICE_PREFIX + "/tags/list?articleId={articleId}",
+                    restTemplate.exchange(GATEWAY_PREFIX + ARTICLE_SERVICE_PREFIX + "/tags/list?articleId={articleId}",
                             HttpMethod.GET,
                             null,
                             TAG_REF, new HashMap<>().put("articleId", article.getId()));
-//            Long readCount = restTemplate.getForObject(ARTICLE_SERVICE_PREFIX + "/articles/readCount/" + article.getId(), Long.class);
+//            Long readCount = restTemplate.getForObject(GATEWAY_PREFIX + ARTICLE_SERVICE_PREFIX + "/articles/readCount/" + article.getId(), Long.class);
 //            article.setReadCount(readCount);
             tagList = tagResponseEntity.getBody();
             article.setTags(tagList);
             commentTemplate.setArticleId(article.getId());
             commentTemplate.setType(COMMENT);
             map.put("comment", commentTemplate);
-            rows = restTemplate.postForObject(COMMENT_SERVICE_PREFIX + "/comments/rows", map, Integer.class);
+            rows = restTemplate.postForObject(GATEWAY_PREFIX + COMMENT_SERVICE_PREFIX + "/comments/rows", map, Integer.class);
             article.setCommentCount(rows);
             if (rows != null && rows > 0) {
                 ResponseEntity<List<Comment>> commentResponseEntity =
-                        restTemplate.exchange(COMMENT_SERVICE_PREFIX + "/comments/list",
+                        restTemplate.exchange(GATEWAY_PREFIX + COMMENT_SERVICE_PREFIX + "/comments/list",
                                 HttpMethod.POST,
                                 new HttpEntity<>(map),
                                 COMMENT_REF);
@@ -109,7 +108,7 @@ public class FrontControllerFront extends FrontBaseController {
             map.put("page", pageTemplate);
             map.put("orderMode", orderModeTemplate);
             ResponseEntity<List<Article>> articlesResponseEntity = restTemplate.exchange(
-                    ARTICLE_SERVICE_PREFIX + "/articles/list", HttpMethod.POST,
+                    GATEWAY_PREFIX + ARTICLE_SERVICE_PREFIX + "/articles/list", HttpMethod.POST,
                     new HttpEntity<>(map), ARTICLE_REF
             );
             famousArticleList = articlesResponseEntity.getBody();
@@ -126,18 +125,18 @@ public class FrontControllerFront extends FrontBaseController {
 //        orderModeTemplate.setColumn("read_count");
 //        map.put("page", pageTemplate);
 //        map.put("orderMode", orderModeTemplate);
-//        articleResponseEntity = restTemplate.exchange(ARTICLE_SERVICE_PREFIX + "/articles/list", HttpMethod.POST,
+//        articleResponseEntity = restTemplate.exchange(GATEWAY_PREFIX + ARTICLE_SERVICE_PREFIX + "/articles/list", HttpMethod.POST,
 //                new HttpEntity<>(map), ARTICLE_REF);
 //        List<Article> famousArticleList = articleResponseEntity.getBody();
         orderModeTemplate.setColumn("article_count");
         map.remove("page");
         map.put("status", KIND_STATUS_ACTIVE);
-        ResponseEntity<List<Kind>> kindResponseEntity = restTemplate.exchange(ARTICLE_SERVICE_PREFIX + "/kinds/list",
+        ResponseEntity<List<Kind>> kindResponseEntity = restTemplate.exchange(GATEWAY_PREFIX + ARTICLE_SERVICE_PREFIX + "/kinds/list",
                 HttpMethod.POST, new HttpEntity<>(map), KIND_REF);
         List<Kind> kindList = kindResponseEntity.getBody();
         orderModeTemplate.setColumn("article_count");
         map.put("status", TAG_STATUS_ACTIVE);
-        ResponseEntity<List<Tag>> tagResponseEntity = restTemplate.exchange(ARTICLE_SERVICE_PREFIX + "/tags/list",
+        ResponseEntity<List<Tag>> tagResponseEntity = restTemplate.exchange(GATEWAY_PREFIX + ARTICLE_SERVICE_PREFIX + "/tags/list",
                 HttpMethod.POST, new HttpEntity<>(map), TAG_REF);
         List<Tag> tagCloud = tagResponseEntity.getBody();
         model.addAttribute("articles", articles);
@@ -163,7 +162,7 @@ public class FrontControllerFront extends FrontBaseController {
             article = (Article) redisOpsUtils.get(ArticleKey.getById.getPrefix() + ":" + articleId);
         } else {
             article = restTemplate.getForObject(
-                    ARTICLE_SERVICE_PREFIX + "/articles/article/" + articleId, Article.class
+                    GATEWAY_PREFIX + ARTICLE_SERVICE_PREFIX + "/articles/article/" + articleId, Article.class
             );
         }
         assert article != null;
@@ -173,14 +172,14 @@ public class FrontControllerFront extends FrontBaseController {
         Long count = redisOpsUtils.incr(ArticleKey.getByReadCount.getPrefix() + ":" + articleId, 1L);
         // 查询文章对应的 Tag 和 Kind
         ResponseEntity<List<Tag>> tagsResponseEntity = restTemplate.exchange(
-                ARTICLE_SERVICE_PREFIX + "/tags/list?articleId=" + articleId,
+                GATEWAY_PREFIX + ARTICLE_SERVICE_PREFIX + "/tags/list?articleId=" + articleId,
                 HttpMethod.GET, new HttpEntity<>(map), TAG_REF
         );
         List<Tag> tagList = tagsResponseEntity.getBody();
         System.out.println(tagList);
         map.put("articleId", articleId);
         Kind kind = restTemplate.getForObject(
-                ARTICLE_SERVICE_PREFIX + "/kinds/kind?articleId={articleId}", Kind.class,
+                GATEWAY_PREFIX + ARTICLE_SERVICE_PREFIX + "/kinds/kind?articleId={articleId}", Kind.class,
                 map
         );
 //        assert article != null;
@@ -204,7 +203,7 @@ public class FrontControllerFront extends FrontBaseController {
             map.put("page", pageTemplate);
             map.put("orderMode", orderModeTemplate);
             ResponseEntity<List<Article>> articlesResponseEntity = restTemplate.exchange(
-                    ARTICLE_SERVICE_PREFIX + "/articles/list", HttpMethod.POST,
+                    GATEWAY_PREFIX + ARTICLE_SERVICE_PREFIX + "/articles/list", HttpMethod.POST,
                     new HttpEntity<>(map), ARTICLE_REF
             );
             famousArticleList = articlesResponseEntity.getBody();
@@ -223,7 +222,7 @@ public class FrontControllerFront extends FrontBaseController {
         map.put("orderMode", orderModeTemplate);
         map.remove("page");
         ResponseEntity<List<Kind>> kindResponseEntity = restTemplate.exchange(
-                ARTICLE_SERVICE_PREFIX + "/kinds/list", HttpMethod.POST,
+                GATEWAY_PREFIX + ARTICLE_SERVICE_PREFIX + "/kinds/list", HttpMethod.POST,
                 new HttpEntity<>(map), KIND_REF
         );
         List<Kind> kindList = kindResponseEntity.getBody();
@@ -232,7 +231,7 @@ public class FrontControllerFront extends FrontBaseController {
         // 按 article_count 排序
         orderModeTemplate.setColumn("article_count");
         ResponseEntity<List<Tag>> tagResponseEntity = restTemplate.exchange(
-                ARTICLE_SERVICE_PREFIX + "/tags/list",
+                GATEWAY_PREFIX + ARTICLE_SERVICE_PREFIX + "/tags/list",
                 HttpMethod.POST, new HttpEntity<>(map), TAG_REF);
         List<Tag> tagCloud = tagResponseEntity.getBody();
 
@@ -245,7 +244,7 @@ public class FrontControllerFront extends FrontBaseController {
         map.put("comment", commentTemplate);
         map.put("orderMode", orderModeTemplate);
         ResponseEntity<List<Comment>> commentResponseEntity = restTemplate.exchange(
-                COMMENT_SERVICE_PREFIX + "/comments/list", HttpMethod.POST,
+                GATEWAY_PREFIX + COMMENT_SERVICE_PREFIX + "/comments/list", HttpMethod.POST,
                 new HttpEntity<>(map), COMMENT_REF
         );
         List<Comment> commentList = commentResponseEntity.getBody();
@@ -259,7 +258,7 @@ public class FrontControllerFront extends FrontBaseController {
                 commentList) {
             replyTemplate.setReplyId(comment.getId());
             ResponseEntity<List<Comment>> replyResponseEntity = restTemplate.exchange(
-                    COMMENT_SERVICE_PREFIX + "/comments/list", HttpMethod.POST,
+                    GATEWAY_PREFIX + COMMENT_SERVICE_PREFIX + "/comments/list", HttpMethod.POST,
                     new HttpEntity<>(map), COMMENT_REF
             );
             List<Comment> replies = replyResponseEntity.getBody();
@@ -285,43 +284,43 @@ public class FrontControllerFront extends FrontBaseController {
         Map<String, Object> param = new HashMap<>();
         if (!ObjectUtils.isEmpty(content)) {
             param.put("content", content);
-            ResponseEntity<List<Article>> responseEntity = restTemplate.exchange(ARTICLE_SERVICE_PREFIX + "/search/content?content={content}",
+            ResponseEntity<List<Article>> responseEntity = restTemplate.exchange(GATEWAY_PREFIX + ARTICLE_SERVICE_PREFIX + "/search/content?content={content}",
                     HttpMethod.GET, null, ARTICLE_REF, param);
             articles = responseEntity.getBody();
             model.addAttribute("content", content);
         } else if (!ObjectUtils.isEmpty(tagId)) {
             param.put("tagId", tagId);
-            ResponseEntity<List<Article>> responseEntity = restTemplate.exchange(ARTICLE_SERVICE_PREFIX + "/search/tag?tagId={tagId}",
+            ResponseEntity<List<Article>> responseEntity = restTemplate.exchange(GATEWAY_PREFIX + ARTICLE_SERVICE_PREFIX + "/search/tag?tagId={tagId}",
                     HttpMethod.GET, null, ARTICLE_REF, param);
-            Tag tag = restTemplate.getForObject(ARTICLE_SERVICE_PREFIX + "/tags/tag?tagId=" + tagId, Tag.class);
+            Tag tag = restTemplate.getForObject(GATEWAY_PREFIX + ARTICLE_SERVICE_PREFIX + "/tags/tag?tagId=" + tagId, Tag.class);
             articles = responseEntity.getBody();
             for (Article article :
                     articles) {
                 param.put("articleId", article.getId());
-                ResponseEntity<List<Tag>> tagRes = restTemplate.exchange(ARTICLE_SERVICE_PREFIX + "/tags/list?articleId={articleId}",
+                ResponseEntity<List<Tag>> tagRes = restTemplate.exchange(GATEWAY_PREFIX + ARTICLE_SERVICE_PREFIX + "/tags/list?articleId={articleId}",
                         HttpMethod.GET, null, TAG_REF, param);
                 List<Tag> tags = tagRes.getBody();
                 article.setTags(tags);
-                Kind kind = restTemplate.getForObject(ARTICLE_SERVICE_PREFIX + "/kinds/kind?articleId={articleId}", Kind.class, param);
+                Kind kind = restTemplate.getForObject(GATEWAY_PREFIX + ARTICLE_SERVICE_PREFIX + "/kinds/kind?articleId={articleId}", Kind.class, param);
                 article.setKind(kind);
             }
             model.addAttribute("tag", tag);
         } else if (!ObjectUtils.isEmpty(kindId)) {
             param.put("kindId", kindId);
-            ResponseEntity<List<Article>> responseEntity = restTemplate.exchange(ARTICLE_SERVICE_PREFIX + "/search/kind?kindId={kindId}",
+            ResponseEntity<List<Article>> responseEntity = restTemplate.exchange(GATEWAY_PREFIX + ARTICLE_SERVICE_PREFIX + "/search/kind?kindId={kindId}",
                     HttpMethod.GET, null, ARTICLE_REF, param);
             articles = responseEntity.getBody();
             for (Article article :
                     articles) {
                 param.put("articleId", article.getId());
-                ResponseEntity<List<Tag>> tagRes = restTemplate.exchange(ARTICLE_SERVICE_PREFIX + "/tags/list?articleId={articleId}",
+                ResponseEntity<List<Tag>> tagRes = restTemplate.exchange(GATEWAY_PREFIX + ARTICLE_SERVICE_PREFIX + "/tags/list?articleId={articleId}",
                         HttpMethod.GET, null, TAG_REF, param);
                 List<Tag> tags = tagRes.getBody();
                 article.setTags(tags);
-                Kind kind = restTemplate.getForObject(ARTICLE_SERVICE_PREFIX + "/kinds/kind?articleId={articleId}", Kind.class, param);
+                Kind kind = restTemplate.getForObject(GATEWAY_PREFIX + ARTICLE_SERVICE_PREFIX + "/kinds/kind?articleId={articleId}", Kind.class, param);
                 article.setKind(kind);
             }
-            Kind kind = restTemplate.getForObject(ARTICLE_SERVICE_PREFIX + "/kinds/kind?id=" + kindId, Kind.class);
+            Kind kind = restTemplate.getForObject(GATEWAY_PREFIX + ARTICLE_SERVICE_PREFIX + "/kinds/kind?id=" + kindId, Kind.class);
             model.addAttribute("kind", kind);
         } else if (!ObjectUtils.isEmpty(date)) {
 
@@ -336,7 +335,7 @@ public class FrontControllerFront extends FrontBaseController {
         Map<String, Object> map = new HashMap<>();
         String ip = IPUtils.getIpAddress(this.request);
         comment.setIp(ip);
-        restTemplate.postForObject(COMMENT_SERVICE_PREFIX + "/comments", comment,String.class);
+        restTemplate.postForObject(GATEWAY_PREFIX + COMMENT_SERVICE_PREFIX + "/comments", comment,String.class);
         return getJsonString(200, null, map);
     }
 }

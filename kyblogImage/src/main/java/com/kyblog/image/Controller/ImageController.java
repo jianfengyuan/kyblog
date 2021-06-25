@@ -32,6 +32,12 @@ public class ImageController {
     private ImageUtils imageUtils;
 
     private static final Logger logger = LoggerFactory.getLogger(ImageController.class);
+
+    @RequestMapping(value = "/test")
+    @ResponseBody
+    public String test() {
+        return "test";
+    }
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
     @ResponseBody
     public String upload(@RequestParam("image") MultipartFile file, @RequestParam("flag") Integer flag, Long id) throws IOException {
@@ -50,7 +56,23 @@ public class ImageController {
 
     @RequestMapping(value = "/article", method = RequestMethod.POST)
     @ResponseBody
-    public String markdownImg(@RequestParam("editormd-image-file") MultipartFile file) throws IOException {
+    public String markdownImg(@RequestParam("image") MultipartFile file) throws IOException {
+        String url = imageUtils.upload(file, "o");
+        Map<String, Object> map = new HashMap<>();
+        map.put("img", url);
+        if (url != null) {
+            logger.info("图片上传成功, url: " + url);
+            return getJsonString(200, "上传成功", map);
+        } else {
+            logger.info("上传失败");
+            return getJsonString(404, "上传失败");
+        }
+
+    }
+
+    @RequestMapping(value = "/", method = RequestMethod.POST)
+    @ResponseBody
+    public String uploadImage(@RequestParam("editormd-image-file") MultipartFile file) throws IOException {
         String url = imageUtils.upload(file, "o");
         Map<String, Object> map = new HashMap<>();
         map.put("img", url);
