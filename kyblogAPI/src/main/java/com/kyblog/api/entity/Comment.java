@@ -24,7 +24,7 @@ public class Comment {
     private String email;
     private Integer readStatus;
     private List<Comment> replies;
-
+//    id, article_id, name, email, reply_id, time, ip, type, status, read_status
     @Override
     public String toString() {
         return "Comment{" +

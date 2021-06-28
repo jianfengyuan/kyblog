@@ -5,12 +5,16 @@ import com.kyblog.api.vo.StatisticsCount;
 import com.kyblog.api.vo.VisitStatistics;
 import com.kyblog.api.vo.VisitorStatistics;
 import com.kyblog.front.Config.JwtTokenUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,11 +32,15 @@ import static com.kyblog.api.utils.BlogUtils.getJsonString;
 @Controller
 @RequestMapping(value = "/admin")
 public class AdminControllerFront extends FrontBaseController {
+    @Qualifier("restTemplateWithRibbon")
+    @Autowired
+    RestTemplate restTemplate;
+
     @RequestMapping(value = "/articles/new", method = RequestMethod.GET)
     public String newPage(Model model) {
         Map<String, Object> param = new HashMap<>();
         param.put("status", KIND_STATUS_ACTIVE);
-        ResponseEntity<List<Kind>> kindResponseEntity = restTemplate.exchange(GATEWAY_PREFIX + ARTICLE_SERVICE_PREFIX + "/kinds/list",
+        ResponseEntity<List<Kind>> kindResponseEntity = restTemplate.exchange( ARTICLE_SERVICE_PREFIX + "/kinds/list",
                 HttpMethod.POST, new HttpEntity<>(param), KIND_REF);
         List<Kind> kinds = kindResponseEntity.getBody();
         Comment comment = new Comment();
@@ -40,7 +48,7 @@ public class AdminControllerFront extends FrontBaseController {
         param.put("comment", comment);
         comment.setStatus(COMMENT_ACTIVE);
         comment.setReadStatus(COMMENT_UNREAD);
-        int unreadRows = restTemplate.postForObject(GATEWAY_PREFIX + COMMENT_SERVICE_PREFIX + "/comments/rows", param, Integer.class);
+        int unreadRows = restTemplate.postForObject( COMMENT_SERVICE_PREFIX + "/comments/rows", param, Integer.class);
         model.addAttribute("unRead", unreadRows);
         model.addAttribute("kinds", kinds);
         return "/admin/new";
@@ -57,7 +65,7 @@ public class AdminControllerFront extends FrontBaseController {
         param.put("introduce", introduce);
         param.put("status", status);
         param.put("img", img);
-        restTemplate.postForObject(GATEWAY_PREFIX + ARTICLE_SERVICE_PREFIX + "/articles/publish", param, String.class);
+        restTemplate.postForObject( ARTICLE_SERVICE_PREFIX + "/articles/publish", param, String.class);
         return getJsonString(200);
     }
 
@@ -74,7 +82,7 @@ public class AdminControllerFront extends FrontBaseController {
         param.put("introduce", introduce);
         param.put("status", status);
         param.put("img", img);
-        restTemplate.postForObject(GATEWAY_PREFIX + ARTICLE_SERVICE_PREFIX + "/articles/update", param, String.class);
+        restTemplate.postForObject( ARTICLE_SERVICE_PREFIX + "/articles/update", param, String.class);
         return getJsonString(200);
     }
 
@@ -83,21 +91,21 @@ public class AdminControllerFront extends FrontBaseController {
         List<String> tagNameList = new ArrayList<>();
         Map<String, Object> param = new HashMap<>();
         param.put("status", KIND_STATUS_ACTIVE);
-        ResponseEntity<List<Kind>> kindResponseEntity = restTemplate.exchange(GATEWAY_PREFIX + ARTICLE_SERVICE_PREFIX + "/kinds/list",
+        ResponseEntity<List<Kind>> kindResponseEntity = restTemplate.exchange( ARTICLE_SERVICE_PREFIX + "/kinds/list",
                 HttpMethod.POST, new HttpEntity<>(param), KIND_REF);
         List<Kind> kinds = kindResponseEntity.getBody();
         param.put("articleId", articleId);
         Kind kind = restTemplate.getForObject(
-                GATEWAY_PREFIX + ARTICLE_SERVICE_PREFIX + "/kinds/kind?articleId={articleId}", Kind.class,
+                 ARTICLE_SERVICE_PREFIX + "/kinds/kind?articleId={articleId}", Kind.class,
                 param
         );
         Article article = restTemplate.getForObject(
-                GATEWAY_PREFIX + ARTICLE_SERVICE_PREFIX + "/articles/article/" + articleId, Article.class
+                 ARTICLE_SERVICE_PREFIX + "/articles/article/" + articleId, Article.class
         );
         assert article != null;
         article.setKind(kind);
         ResponseEntity<List<Tag>> tagsResponseEntity = restTemplate.exchange(
-                GATEWAY_PREFIX + ARTICLE_SERVICE_PREFIX + "/tags/list?articleId=" + articleId,
+                 ARTICLE_SERVICE_PREFIX + "/tags/list?articleId=" + articleId,
                 HttpMethod.GET, new HttpEntity<>(param), TAG_REF
         );
         List<Tag> tagList = tagsResponseEntity.getBody();
@@ -126,36 +134,39 @@ public class AdminControllerFront extends FrontBaseController {
         map.put("page", page);
         map.put("orderMode", orderMode);
         ResponseEntity<List<Article>> articleResponseEntity =
-                restTemplate.exchange(GATEWAY_PREFIX + ARTICLE_SERVICE_PREFIX + "/articles/list",
+                restTemplate.exchange( ARTICLE_SERVICE_PREFIX + "/articles/list",
                         HttpMethod.POST,
                         new HttpEntity<>(map),
                         ARTICLE_REF);
         List<Article> articleList = articleResponseEntity.getBody();
         map = new HashMap<>();
         map.put("comment", commentTemplate);
-        for (Article article : articleList) {
-            map.put("articleId", article.getId());
-            kind = restTemplate.getForObject(
-                    GATEWAY_PREFIX + ARTICLE_SERVICE_PREFIX + "/kinds/kind?articleId={articleId}", Kind.class,
-                    map
-            );
-            article.setKind(kind);
-            ResponseEntity<List<Tag>> tagsResponseEntity = restTemplate.exchange(
-                    GATEWAY_PREFIX + ARTICLE_SERVICE_PREFIX + "/tags/list?articleId=" + article.getId(),
-                    HttpMethod.GET, new HttpEntity<>(map), TAG_REF
-            );
-            List<Tag> tagList = tagsResponseEntity.getBody();
-            article.setTags(tagList);
-            commentTemplate.setArticleId(article.getId());
-            rows = restTemplate.postForObject(GATEWAY_PREFIX + COMMENT_SERVICE_PREFIX + "/comments/rows", map, Integer.class);
-            article.setCommentCount(rows);
+        if (articleList != null) {
+            for (Article article : articleList) {
+                map.put("articleId", article.getId());
+                kind = restTemplate.getForObject(
+                         ARTICLE_SERVICE_PREFIX + "/kinds/kind?articleId={articleId}", Kind.class,
+                        map
+                );
+                article.setKind(kind);
+                ResponseEntity<List<Tag>> tagsResponseEntity = restTemplate.exchange(
+                         ARTICLE_SERVICE_PREFIX + "/tags/list?articleId=" + article.getId(),
+                        HttpMethod.GET, new HttpEntity<>(map), TAG_REF
+                );
+                List<Tag> tagList = tagsResponseEntity.getBody();
+                article.setTags(tagList);
+                commentTemplate.setArticleId(article.getId());
+                rows = restTemplate.postForObject( COMMENT_SERVICE_PREFIX + "/comments/rows", map, Integer.class);
+                article.setCommentCount(rows);
+            }
         }
+
         Comment comment = new Comment();
         Map<String, Object> param = new HashMap<>();
         param.put("comment", comment);
         comment.setStatus(COMMENT_ACTIVE);
         comment.setReadStatus(COMMENT_UNREAD);
-        int unreadRows = restTemplate.postForObject(GATEWAY_PREFIX + COMMENT_SERVICE_PREFIX + "/comments/rows", param, Integer.class);
+        int unreadRows = restTemplate.postForObject( COMMENT_SERVICE_PREFIX + "/comments/rows", param, Integer.class);
         model.addAttribute("unRead", unreadRows);
         model.addAttribute("articles", articleList);
         return "/admin/articles";
@@ -168,7 +179,7 @@ public class AdminControllerFront extends FrontBaseController {
         param.put("comment", comment);
         comment.setStatus(COMMENT_ACTIVE);
         comment.setReadStatus(COMMENT_UNREAD);
-        int unreadRows = restTemplate.postForObject(GATEWAY_PREFIX + COMMENT_SERVICE_PREFIX + "/comments/rows", param, Integer.class);
+        int unreadRows = restTemplate.postForObject( COMMENT_SERVICE_PREFIX + "/comments/rows", param, Integer.class);
         model.addAttribute("unRead", unreadRows);
         return "/admin/tags";
     }
@@ -180,14 +191,14 @@ public class AdminControllerFront extends FrontBaseController {
         Map<String, Object> param = new HashMap<>();
         page.setPath("/");
         int rows =
-                restTemplate.getForObject(GATEWAY_PREFIX + ARTICLE_SERVICE_PREFIX + "/tags/rows?status=" + TAG_STATUS_ACTIVE, Integer.class);
+                restTemplate.getForObject( ARTICLE_SERVICE_PREFIX + "/tags/rows?status=" + TAG_STATUS_ACTIVE, Integer.class);
         page.setRows(rows);
         orderMode.setColumn(camel4underline(orderMode.getColumn()));
         param.put("status", TAG_STATUS_ACTIVE);
         param.put("orderMode", orderMode);
         param.put("page", page);
         ResponseEntity<List<Tag>> tagsResponseEntity = restTemplate.exchange(
-                GATEWAY_PREFIX + ARTICLE_SERVICE_PREFIX + "/tags/list",
+                 ARTICLE_SERVICE_PREFIX + "/tags/list",
                 HttpMethod.POST, new HttpEntity<>(param), TAG_REF
         );
         List<Tag> tagList = tagsResponseEntity.getBody();
@@ -199,14 +210,14 @@ public class AdminControllerFront extends FrontBaseController {
     @RequestMapping(value = "/tags", method = RequestMethod.PUT)
     @ResponseBody
     public String add(Tag tag) {
-        restTemplate.put(GATEWAY_PREFIX + ARTICLE_SERVICE_PREFIX + "/tags", tag);
+        restTemplate.put( ARTICLE_SERVICE_PREFIX + "/tags", tag);
         return getJsonString(200);
     }
 
     @RequestMapping(value = "/tags/{tagId}", method = RequestMethod.DELETE)
     @ResponseBody
     public String deleteTag(@PathVariable("tagId") String tagId) {
-        restTemplate.delete(GATEWAY_PREFIX + ARTICLE_SERVICE_PREFIX + "/tags/" + tagId);
+        restTemplate.delete( ARTICLE_SERVICE_PREFIX + "/tags/" + tagId);
         return getJsonString(200);
     }
 
@@ -217,7 +228,7 @@ public class AdminControllerFront extends FrontBaseController {
         param.put("comment", comment);
         comment.setStatus(COMMENT_ACTIVE);
         comment.setReadStatus(COMMENT_UNREAD);
-        int unreadRows = restTemplate.postForObject(GATEWAY_PREFIX + COMMENT_SERVICE_PREFIX + "/comments/rows", param, Integer.class);
+        int unreadRows = restTemplate.postForObject( COMMENT_SERVICE_PREFIX + "/comments/rows", param, Integer.class);
         model.addAttribute("unRead", unreadRows);
         return "/admin/kinds";
     }
@@ -231,12 +242,12 @@ public class AdminControllerFront extends FrontBaseController {
         System.out.println(orderMode);
         orderMode.setColumn(camel4underline(orderMode.getColumn()));
         int rows =
-                restTemplate.getForObject(GATEWAY_PREFIX + ARTICLE_SERVICE_PREFIX + "/kinds/rows?status=" + TAG_STATUS_ACTIVE, Integer.class);
+                restTemplate.getForObject( ARTICLE_SERVICE_PREFIX + "/kinds/rows?status=" + TAG_STATUS_ACTIVE, Integer.class);
         page.setRows(rows);
         param.put("status", KIND_STATUS_ACTIVE);
         param.put("orderMode", orderMode);
         param.put("page", page);
-        ResponseEntity<List<Kind>> kindResponseEntity = restTemplate.exchange(GATEWAY_PREFIX + ARTICLE_SERVICE_PREFIX + "/kinds/list",
+        ResponseEntity<List<Kind>> kindResponseEntity = restTemplate.exchange( ARTICLE_SERVICE_PREFIX + "/kinds/list",
                 HttpMethod.POST, new HttpEntity<>(param), KIND_REF);
         List<Kind> kindList = kindResponseEntity.getBody();
         map.put("kinds", kindList);
@@ -247,14 +258,14 @@ public class AdminControllerFront extends FrontBaseController {
     @RequestMapping(value = "/kinds", method = RequestMethod.PUT)
     @ResponseBody
     public String add(Kind kind) {
-        restTemplate.put(GATEWAY_PREFIX + ARTICLE_SERVICE_PREFIX + "/kinds", kind);
+        restTemplate.put( ARTICLE_SERVICE_PREFIX + "/kinds", kind);
         return getJsonString(200);
     }
 
     @RequestMapping(value = "/kinds/{kindId}", method = RequestMethod.DELETE)
     @ResponseBody
     public String deleteKind(@PathVariable("kindId") String kindId) {
-        restTemplate.delete(GATEWAY_PREFIX + ARTICLE_SERVICE_PREFIX + "/kinds/" + kindId);
+        restTemplate.delete( ARTICLE_SERVICE_PREFIX + "/kinds/" + kindId);
         return getJsonString(200);
     }
 
@@ -264,9 +275,9 @@ public class AdminControllerFront extends FrontBaseController {
         Map<String, Object> param = new HashMap<>();
         param.put("comment", comment);
         comment.setStatus(COMMENT_ACTIVE);
-        int activeRows = restTemplate.postForObject(GATEWAY_PREFIX + COMMENT_SERVICE_PREFIX + "/comments/rows", param, Integer.class);
+        int activeRows = restTemplate.postForObject( COMMENT_SERVICE_PREFIX + "/comments/rows", param, Integer.class);
         comment.setReadStatus(COMMENT_UNREAD);
-        int unreadRows = restTemplate.postForObject(GATEWAY_PREFIX + COMMENT_SERVICE_PREFIX + "/comments/rows", param, Integer.class);
+        int unreadRows = restTemplate.postForObject( COMMENT_SERVICE_PREFIX + "/comments/rows", param, Integer.class);
         model.addAttribute("rows", activeRows);
         model.addAttribute("unRead", unreadRows);
         return "/admin/comments";
@@ -281,11 +292,11 @@ public class AdminControllerFront extends FrontBaseController {
         param.put("orderMode", orderMode);
         param.put("page", page);
 
-        int rows = restTemplate.postForObject(GATEWAY_PREFIX + COMMENT_SERVICE_PREFIX + "/comments/rows", param, Integer.class);
+        int rows = restTemplate.postForObject( COMMENT_SERVICE_PREFIX + "/comments/rows", param, Integer.class);
         page.setRows(rows);
         orderMode.setColumn(camel4underline(orderMode.getColumn()));
         ResponseEntity<List<Comment>> commentResponseEntity =
-                restTemplate.exchange(GATEWAY_PREFIX + COMMENT_SERVICE_PREFIX + "/comments/list",
+                restTemplate.exchange( COMMENT_SERVICE_PREFIX + "/comments/list",
                         HttpMethod.POST,
                         new HttpEntity<>(param),
                         COMMENT_REF);
@@ -294,7 +305,7 @@ public class AdminControllerFront extends FrontBaseController {
         for (Comment c :
                 commentList) {
             article =
-                    restTemplate.getForObject(GATEWAY_PREFIX + ARTICLE_SERVICE_PREFIX + "/articles/article/" + c.getArticleId(), Article.class);
+                    restTemplate.getForObject( ARTICLE_SERVICE_PREFIX + "/articles/article/" + c.getArticleId(), Article.class);
             c.setArticleTitle(article.getTitle());
         }
         map.put("comments", commentList);
@@ -305,14 +316,14 @@ public class AdminControllerFront extends FrontBaseController {
     @RequestMapping(value = "/comments", method = RequestMethod.PUT)
     @ResponseBody
     public String updateComments(Comment comment) {
-        restTemplate.put(GATEWAY_PREFIX + COMMENT_SERVICE_PREFIX + "/comments", comment);
+        restTemplate.put( COMMENT_SERVICE_PREFIX + "/comments", comment);
         return getJsonString(200);
     }
 
     @RequestMapping(value = "/comments", method = RequestMethod.POST)
     @ResponseBody
     public String add(Comment comment) {
-        restTemplate.postForObject(GATEWAY_PREFIX + COMMENT_SERVICE_PREFIX + "/comments", comment, String.class);
+        restTemplate.postForObject( COMMENT_SERVICE_PREFIX + "/comments", comment, String.class);
         return getJsonString(200);
     }
 
@@ -324,13 +335,13 @@ public class AdminControllerFront extends FrontBaseController {
         Comment commentTemplate = new Comment();
         param.put("comment", commentTemplate);
         commentTemplate.setStatus(COMMENT_ACTIVE);
-        Integer commentCount = restTemplate.postForObject(GATEWAY_PREFIX + COMMENT_SERVICE_PREFIX + "/comments/rows", param, Integer.class);
-        Integer kindCount = restTemplate.getForObject(GATEWAY_PREFIX + ARTICLE_SERVICE_PREFIX + "/kinds/rows?status=" + TAG_STATUS_ACTIVE, Integer.class);
-        Integer tagCount = restTemplate.getForObject(GATEWAY_PREFIX + ARTICLE_SERVICE_PREFIX + "/tags/rows?status=" + TAG_STATUS_ACTIVE, Integer.class);
+        Integer commentCount = restTemplate.postForObject( COMMENT_SERVICE_PREFIX + "/comments/rows", param, Integer.class);
+        Integer kindCount = restTemplate.getForObject( ARTICLE_SERVICE_PREFIX + "/kinds/rows?status=" + TAG_STATUS_ACTIVE, Integer.class);
+        Integer tagCount = restTemplate.getForObject( ARTICLE_SERVICE_PREFIX + "/tags/rows?status=" + TAG_STATUS_ACTIVE, Integer.class);
         commentTemplate.setReadStatus(COMMENT_UNREAD);
-        Integer unreadRows = restTemplate.postForObject(GATEWAY_PREFIX + COMMENT_SERVICE_PREFIX + "/comments/rows", param, Integer.class);
-        Map<String, StatisticsCount> statisticsCount = (Map<String, StatisticsCount>) restTemplate.getForObject(GATEWAY_PREFIX + STATISTICS_SERVICE_PREFIX + "/statistics/statisticsCount", Map.class);
-        VisitStatistics visitStatistics = restTemplate.getForObject(GATEWAY_PREFIX + STATISTICS_SERVICE_PREFIX + "/statistics/visitStatistics", VisitStatistics.class);
+        Integer unreadRows = restTemplate.postForObject( COMMENT_SERVICE_PREFIX + "/comments/rows", param, Integer.class);
+        Map<String, StatisticsCount> statisticsCount = (Map<String, StatisticsCount>) restTemplate.getForObject( STATISTICS_SERVICE_PREFIX + "/statistics/statisticsCount", Map.class);
+        VisitStatistics visitStatistics = restTemplate.getForObject( STATISTICS_SERVICE_PREFIX + "/statistics/visitStatistics", VisitStatistics.class);
         model.addAttribute("publishCount", countMap.get("publish"));
         model.addAttribute("draftCount", countMap.get("draft"));
         model.addAttribute("trashCount", countMap.get("trash"));
@@ -353,11 +364,11 @@ public class AdminControllerFront extends FrontBaseController {
     public Map<String, Integer> statusCount() {
         Map<String, Integer> map = new HashMap<>();
         Integer draft = restTemplate.getForObject(
-                GATEWAY_PREFIX + ARTICLE_SERVICE_PREFIX + "/articles/rows?status=" + ARTICLE_STATUS_DRAFT, Integer.class);
+                 ARTICLE_SERVICE_PREFIX + "/articles/rows?status=" + ARTICLE_STATUS_DRAFT, Integer.class);
         Integer publish = restTemplate.getForObject(
-                GATEWAY_PREFIX + ARTICLE_SERVICE_PREFIX + "/articles/rows?status=" + ARTICLE_STATUS_ACTIVE, Integer.class);
+                 ARTICLE_SERVICE_PREFIX + "/articles/rows?status=" + ARTICLE_STATUS_ACTIVE, Integer.class);
         Integer trash = restTemplate.getForObject(
-                GATEWAY_PREFIX + ARTICLE_SERVICE_PREFIX + "/articles/rows?status=" + ARTICLE_STATUS_DELETED, Integer.class);
+                 ARTICLE_SERVICE_PREFIX + "/articles/rows?status=" + ARTICLE_STATUS_DELETED, Integer.class);
         map.put("draft", draft);
         map.put("publish", publish);
         map.put("trash", trash);
@@ -369,7 +380,7 @@ public class AdminControllerFront extends FrontBaseController {
         Map<String, Object> param = new HashMap<>();
         Comment commentTemplate = new Comment();
         param.put("comment", commentTemplate);
-        ResponseEntity<List<VisitorStatistics>> responseEntity = restTemplate.exchange(GATEWAY_PREFIX + STATISTICS_SERVICE_PREFIX + "/statistics/visitorStatistics",
+        ResponseEntity<List<VisitorStatistics>> responseEntity = restTemplate.exchange( STATISTICS_SERVICE_PREFIX + "/statistics/visitorStatistics",
                 HttpMethod.GET, null, VISITORSTATISTICS_REF);
         List<VisitorStatistics> visitorStatistics = responseEntity.getBody();
         visitorStatistics.forEach(temp -> {
@@ -377,14 +388,14 @@ public class AdminControllerFront extends FrontBaseController {
                 temp.setTarget("主页");
             } else {
                 Long articleId = temp.getStatistics().getArticleId();
-                Article article = restTemplate.getForObject(GATEWAY_PREFIX + ARTICLE_SERVICE_PREFIX + "/articles/article/" + articleId, Article.class);
+                Article article = restTemplate.getForObject( ARTICLE_SERVICE_PREFIX + "/articles/article/" + articleId, Article.class);
                 temp.setTarget(article.getTitle());
             }
         });
-//        List<VisitorStatistics> visitorStatistics = (List<VisitorStatistics>) restTemplate.getForObject(GATEWAY_PREFIX + STATISTICS_SERVICE_PREFIX + "/statistics/visitorStatistics", List.class);
-        VisitStatistics visitStatistics = restTemplate.getForObject(GATEWAY_PREFIX + STATISTICS_SERVICE_PREFIX + "/statistics/visitStatistics", VisitStatistics.class);
-        Integer unreadRows = restTemplate.postForObject(GATEWAY_PREFIX + COMMENT_SERVICE_PREFIX + "/comments/rows", param, Integer.class);
-        Map<String, StatisticsCount> statisticsCount = (Map<String, StatisticsCount>) restTemplate.getForObject(GATEWAY_PREFIX + STATISTICS_SERVICE_PREFIX + "/statistics/statisticsCount", Map.class);
+//        List<VisitorStatistics> visitorStatistics = (List<VisitorStatistics>) restTemplate.getForObject( STATISTICS_SERVICE_PREFIX + "/statistics/visitorStatistics", List.class);
+        VisitStatistics visitStatistics = restTemplate.getForObject( STATISTICS_SERVICE_PREFIX + "/statistics/visitStatistics", VisitStatistics.class);
+        Integer unreadRows = restTemplate.postForObject( COMMENT_SERVICE_PREFIX + "/comments/rows", param, Integer.class);
+        Map<String, StatisticsCount> statisticsCount = (Map<String, StatisticsCount>) restTemplate.getForObject( STATISTICS_SERVICE_PREFIX + "/statistics/statisticsCount", Map.class);
         model.addAttribute("statistics", visitStatistics);
         // 获取所有访客信息
         model.addAttribute("visitors", visitorStatistics);
@@ -405,9 +416,9 @@ public class AdminControllerFront extends FrontBaseController {
         Map<String, Object> param = new HashMap<>();
         param.put("comment", comment);
         comment.setReadStatus(COMMENT_UNREAD);
-        int unreadRows = restTemplate.postForObject(GATEWAY_PREFIX + COMMENT_SERVICE_PREFIX + "/comments/rows", param, Integer.class);
+        int unreadRows = restTemplate.postForObject( COMMENT_SERVICE_PREFIX + "/comments/rows", param, Integer.class);
         String username = JwtTokenUtil.getUsername(JwtToken);
-        Profile profile = restTemplate.getForObject(GATEWAY_PREFIX + ADMIN_SERVICE_PREFIX + "/profile/" + username, Profile.class);
+        Profile profile = restTemplate.getForObject( ADMIN_SERVICE_PREFIX + "/profile/" + username, Profile.class);
         model.addAttribute("unRead", unreadRows);
         model.addAttribute("profile", profile);
         return "/admin/profile";
@@ -417,13 +428,13 @@ public class AdminControllerFront extends FrontBaseController {
     @ResponseBody
     public String update(Profile profile, String flag) {
         Integer uid = profile.getUid();
-//        Profile profileRaw = restTemplate.getForObject(GATEWAY_PREFIX + ADMIN_SERVICE_PREFIX + "/profile/id/" + uid, Profile.class);
+//        Profile profileRaw = restTemplate.getForObject( ADMIN_SERVICE_PREFIX + "/profile/id/" + uid, Profile.class);
 //        if ("basic".equals(flag)) {
 //            if (profile.getName().equals(profileRaw.getName())) {
 //                profile.getName() = nu
 //            }
 //        }
-        restTemplate.put(GATEWAY_PREFIX + ADMIN_SERVICE_PREFIX + "/profile", profile);
+        restTemplate.put( ADMIN_SERVICE_PREFIX + "/profile", profile);
         return getJsonString(200);
     }
 }

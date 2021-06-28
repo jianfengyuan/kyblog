@@ -65,6 +65,16 @@
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <image>
+                        <name>kyblogAdmin</name>
+                        <publish>true</publish>
+                    </image>
+                    <docker>
+                        <host>${docker.host}</host>
+                        <tlsVerify>false</tlsVerify>
+                    </docker>
+                </configuration>
             </plugin>
         </plugins>
     </build>

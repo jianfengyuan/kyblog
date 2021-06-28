@@ -118,7 +118,7 @@ public class CommentService implements kyblogConstant {
     }
 
     public int selectRows(Comment comment) {
-        comment.setStatus(COMMENT_ACTIVE);
+//        comment.setStatus(COMMENT_ACTIVE);
         int rows = commentDao.queryRows(comment);
         return rows;
     }

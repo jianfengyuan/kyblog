@@ -31,10 +31,6 @@ import java.util.Map;
 
 @Controller
 public class FrontBaseController implements kyblogConstant {
-    @Qualifier("restTemplateWithRibbon")
-    @Autowired
-    protected RestTemplate restTemplate;
-
     @Qualifier("redisOpsUtils")
     @Autowired
     protected RedisOpsUtils redisOpsUtils;

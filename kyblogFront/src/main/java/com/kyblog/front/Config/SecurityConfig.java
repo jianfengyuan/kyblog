@@ -1,15 +1,12 @@
 package com.kyblog.front.Config;
 
-import com.kyblog.front.Filter.JwtAuthenticationTokenFilter;
 import com.kyblog.front.Filter.JwtLoginFilter;
 import com.kyblog.front.Filter.JwtPreAuthFilter;
 import com.kyblog.front.Handler.KyblogAccessDeniedServletHandler;
 import com.kyblog.front.Handler.KyblogAuthenticationSuccessHandler;
 import com.kyblog.front.Handler.KyblogLogoutSuccessHandler;
 import com.kyblog.front.Service.KyblogUserDetailsService;
-import com.kyblog.front.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -17,13 +14,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
@@ -64,7 +56,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         ;
 //        http.addFilterBefore(new JwtAuthenticationTokenFilter(), UsernamePasswordAuthenticationFilter.class);
         http.addFilterAt(new JwtLoginFilter(authenticationManager()), UsernamePasswordAuthenticationFilter.class);
-        http.addFilter(new JwtPreAuthFilter(authenticationManager()));
+        //        http.addFilter(new JwtPreAuthFilter(authenticationManager()));
     }
 
     @Override

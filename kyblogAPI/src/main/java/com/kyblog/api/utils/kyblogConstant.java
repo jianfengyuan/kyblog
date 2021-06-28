@@ -35,9 +35,13 @@ public interface kyblogConstant {
     Integer COMMENT_READ = 1;
 
     //    如果配置了server.servlet.context-path, 服务名后记得带上context-path
-    String ARTICLE_SERVICE_PREFIX = "/articleservice";
-    String COMMENT_SERVICE_PREFIX = "/commentservice";
-    String STATISTICS_SERVICE_PREFIX = "/statisticservice";
-    String ADMIN_SERVICE_PREFIX = "/adminservice";
+    String ARTICLE_SERVICE_PREFIX = "http://ARTICLESERVICE";
+    String COMMENT_SERVICE_PREFIX = "http://COMMENTSERVICE";
+    String STATISTICS_SERVICE_PREFIX = "http://STATISTICSERVICE";
+    String ADMIN_SERVICE_PREFIX = "http://ADMINSERVICE";
+//    String ARTICLE_SERVICE_PREFIX = "http://1.13.4.35:7200";
+//    String COMMENT_SERVICE_PREFIX = "http://1.13.4.35:7300";
+//    String STATISTICS_SERVICE_PREFIX = "http://1.13.4.35:7900";
+//    String ADMIN_SERVICE_PREFIX = "http://1.13.4.35:7700";
     String GATEWAY_PREFIX = "http://GATEWAY";
 }
